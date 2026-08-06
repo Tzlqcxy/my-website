@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="green">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,489 +8,771 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  font-family: 'Inter', 'JetBrains Mono', monospace;
-  background: #0b0d12;
-  background-image: radial-gradient(circle at 10% 20%, #13171f 0%, #080a0e 90%);
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.8rem;
-  color: #d6e0f0;
-  line-height: 1.5;
-}
-.card {
-  max-width: 1180px;
-  width: 100%;
-  background: rgba(12, 16, 24, 0.78);
-  backdrop-filter: blur(12px) saturate(180%);
-  border-radius: 3.2rem;
-  padding: 2.8rem;
-  border: 1px solid rgba(0, 255, 200, 0.12);
-  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(0, 255, 200, 0.05) inset;
-}
-.card:hover { border-color: rgba(0, 255, 200, 0.25); }
-.profile-grid {
-  display: grid;
-  grid-template-columns: 1fr 2.1fr;
-  gap: 2.8rem;
-  align-items: start;
-}
-.profile-side {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-.avatar-wrapper {
-  position: relative;
-  width: 100%;
-  max-width: 200px;
-  aspect-ratio: 1/1;
-  border-radius: 50%;
-  padding: 5px;
-  background: linear-gradient(145deg, #1a2a3a, #0d1b2a);
-  box-shadow: 0 0 30px rgba(0, 255, 200, 0.15), 0 0 8px rgba(0, 200, 255, 0.3) inset;
-  margin-bottom: 1.8rem;
-  border: 1px solid rgba(0, 255, 200, 0.2);
-}
-.avatar-wrapper:hover { box-shadow: 0 0 48px rgba(0, 255, 200, 0.25), 0 0 12px #00e5b0 inset; }
-.avatar-placeholder {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background: #10171f;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 4.8rem;
-  font-weight: 600;
-  color: #b0f0e0;
-  text-shadow: 0 0 18px rgba(0, 255, 200, 0.4);
-  border: 1px solid rgba(0, 255, 200, 0.1);
-  background-image: radial-gradient(circle at 30% 30%, #1d3347, #0d1823);
-}
-.profile-name {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 2.4rem;
-  font-weight: 600;
-  color: #eaf2fc;
-  text-shadow: 0 0 12px rgba(0, 200, 255, 0.2);
-  margin-bottom: 0.2rem;
-}
-.profile-title {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.75rem;
-  font-weight: 400;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: #84d4c0;
-  background: rgba(0, 255, 200, 0.06);
-  padding: 0.35rem 1.2rem;
-  border-radius: 40px;
-  border: 1px solid rgba(0, 255, 200, 0.12);
-  display: inline-block;
-  margin-bottom: 1rem;
-}
-.profile-bio {
-  font-size: 0.9rem;
-  color: #b3c9e0;
-  max-width: 240px;
-  margin: 0.5rem auto 1.6rem;
-  opacity: 0.8;
-  background: rgba(0, 0, 0, 0.2);
-  padding: 0.4rem 1rem;
-  border-radius: 30px;
-  border-left: 2px solid #00e5b0;
-}
-.social-links { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
-.social-links a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background: rgba(20, 30, 44, 0.7);
-  color: #b0d0e8;
-  font-size: 1.3rem;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  border: 1px solid rgba(0, 255, 200, 0.08);
-}
-.social-links a:hover {
-  background: #00e5b0;
-  color: #0b0f18;
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 0 30px rgba(0, 255, 200, 0.25);
-}
-.profile-content { display: flex; flex-direction: column; gap: 2.2rem; }
-.quote-section {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 1.6rem;
-  padding: 1.2rem 1.6rem;
-  border: 1px solid rgba(0, 255, 200, 0.06);
-  border-left: 3px solid #00e5b0;
-}
-.quote-section:hover { border-color: #00e5b0; }
-.quote-text {
-  font-size: 0.95rem;
-  color: #c8dcec;
-  line-height: 1.6;
-  font-style: italic;
-}
-.quote-text i { color: #4a7a7a; margin: 0 4px; }
-.quote-author {
-  display: block;
-  margin-top: 0.4rem;
-  font-size: 0.75rem;
-  color: #6a9a8a;
-  font-family: 'JetBrains Mono', monospace;
-  text-align: right;
-}
-.quote-author::before { content: "— "; }
-.skills-section {
-  border-top: 1px solid rgba(0, 255, 200, 0.08);
-  padding-top: 1.6rem;
-}
-.section-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  font-weight: 500;
-  color: #6a9a8a;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.section-label i { color: #00e5b0; font-size: 0.8rem; }
-.skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem 0.8rem; }
-.skill-tag {
-  font-family: 'JetBrains Mono', monospace;
-  background: rgba(0, 255, 200, 0.04);
-  padding: 0.25rem 1rem;
-  border-radius: 30px;
-  font-size: 0.75rem;
-  font-weight: 400;
-  color: #b0d8e0;
-  border: 1px solid rgba(0, 255, 200, 0.08);
-  transition: all 0.15s;
-}
-.skill-tag:hover {
-  border-color: #00e5b0;
-  background: rgba(0, 255, 200, 0.08);
-  color: #e0f5f0;
-}
-.work-section {
-  border-top: 1px solid rgba(0, 255, 200, 0.08);
-  padding-top: 1.6rem;
-}
-.work-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: 1rem;
-  margin-top: 0.4rem;
-}
-.work-item {
-  background: rgba(12, 22, 34, 0.6);
-  border-radius: 1.6rem;
-  padding: 1.2rem 0.6rem;
-  text-align: center;
-  border: 1px solid rgba(0, 255, 200, 0.05);
-  transition: all 0.25s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  text-decoration: none;
-  display: block;
-  color: inherit;
-  cursor: pointer;
-}
-.work-item:hover {
-  transform: translateY(-6px);
-  border-color: #00e5b0;
-  background: rgba(0, 255, 200, 0.04);
-  box-shadow: 0 0 40px rgba(0, 255, 200, 0.04);
-}
-.work-item i {
-  font-size: 1.8rem;
-  color: #58d0b0;
-  margin-bottom: 0.4rem;
-  display: block;
-  text-shadow: 0 0 12px rgba(0, 255, 200, 0.15);
-}
-.work-item span {
-  display: block;
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 500;
-  font-size: 0.8rem;
-  color: #d6e8f0;
-}
-.work-item small {
-  display: block;
-  font-size: 0.6rem;
-  color: #6a8e8a;
-  margin-top: 0.2rem;
-}
-.work-item.game-entry {
-  border-color: rgba(0, 255, 200, 0.15);
-  background: rgba(0, 255, 200, 0.02);
-}
-.work-item.game-entry i {
-  color: #00e5b0;
-  text-shadow: 0 0 24px rgba(0, 255, 200, 0.2);
-}
-.work-item.game-entry:hover {
-  border-color: #00e5b0;
-  background: rgba(0, 255, 200, 0.06);
-}
-.guestbook-section {
-  border-top: 1px solid rgba(0, 255, 200, 0.08);
-  padding-top: 1.6rem;
-  margin-top: 0.2rem;
-}
-.guestbook-area { display: flex; flex-direction: column; gap: 1.2rem; }
-.guestbook-form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  background: rgba(0, 0, 0, 0.2);
-  padding: 1.2rem;
-  border-radius: 1.6rem;
-  border: 1px solid rgba(0, 255, 200, 0.06);
-}
-.form-row { display: flex; gap: 0.8rem; flex-wrap: wrap; }
-.form-row input, .form-row textarea {
-  flex: 1;
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(0, 255, 200, 0.08);
-  border-radius: 60px;
-  padding: 0.6rem 1.2rem;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.8rem;
-  color: #d6e8f0;
-  outline: none;
-  min-width: 140px;
-}
-.form-row input:focus, .form-row textarea:focus {
-  border-color: #00e5b0;
-  box-shadow: 0 0 20px rgba(0, 255, 200, 0.04);
-}
-.form-row textarea {
-  border-radius: 1.2rem;
-  resize: vertical;
-  min-height: 60px;
-  flex-basis: 100%;
-}
-.form-row input::placeholder, .form-row textarea::placeholder {
-  color: #5a7a7a;
-  font-weight: 300;
-}
-.btn-submit {
-  align-self: flex-end;
-  background: transparent;
-  border: 1px solid #00e5b0;
-  color: #b0f0e0;
-  padding: 0.5rem 1.8rem;
-  border-radius: 60px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.75rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-.btn-submit:hover {
-  background: #00e5b0;
-  color: #0b0f18;
-  box-shadow: 0 0 40px rgba(0, 255, 200, 0.15);
-}
-.btn-submit i { font-size: 0.8rem; }
-.messages-container {
-  display: flex;
-  flex-direction: column;
-  gap: 0.9rem;
-  max-height: 340px;
-  overflow-y: auto;
-  padding-right: 4px;
-  scrollbar-width: thin;
-  scrollbar-color: #1a3340 transparent;
-}
-.messages-container::-webkit-scrollbar { width: 4px; }
-.messages-container::-webkit-scrollbar-track { background: transparent; }
-.messages-container::-webkit-scrollbar-thumb { background: #1a3340; border-radius: 12px; }
-.message-item {
-  background: rgba(0, 20, 20, 0.25);
-  border-radius: 1.2rem;
-  padding: 0.8rem 1.2rem;
-  border-left: 3px solid #00e5b0;
-  border: 1px solid rgba(0, 255, 200, 0.04);
-  border-left-width: 4px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 0.8rem;
-}
-.message-item:hover { background: rgba(0, 255, 200, 0.02); }
-.message-body { flex: 1; }
-.message-meta {
-  display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
-  flex-wrap: wrap;
-  margin-bottom: 0.15rem;
-}
-.message-author {
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 600;
-  font-size: 0.8rem;
-  color: #8cf0d0;
-}
-.message-time {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.55rem;
-  color: #4a7a7a;
-  letter-spacing: 0.3px;
-}
-.message-text {
-  font-size: 0.9rem;
-  color: #c8dcec;
-  word-break: break-word;
-  line-height: 1.5;
-}
-.message-delete {
-  background: transparent;
-  border: none;
-  color: #4a6a6a;
-  cursor: pointer;
-  font-size: 0.9rem;
-  padding: 0.2rem 0.4rem;
-  border-radius: 30px;
-  transition: all 0.15s;
-  flex-shrink: 0;
-  margin-top: 0.1rem;
-}
-.message-delete:hover {
-  color: #ff7a7a;
-  background: rgba(255, 100, 100, 0.06);
-  transform: scale(1.1);
-}
-.empty-messages {
-  color: #4a7a7a;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.8rem;
-  text-align: center;
-  padding: 1.2rem 0;
-  border: 1px dashed rgba(0, 255, 200, 0.06);
-  border-radius: 1.6rem;
-  opacity: 0.6;
-}
-.contact-row {
-  margin-top: 0.2rem;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1.2rem 1.8rem;
-  border-top: 1px solid rgba(0, 255, 200, 0.06);
-  padding-top: 2rem;
-}
-.contact-item {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  color: #b0c8da;
-  font-size: 0.85rem;
-  font-family: 'JetBrains Mono', monospace;
-  text-decoration: none;
-  padding: 0.2rem 0.6rem;
-  border-radius: 30px;
-}
-.contact-item i {
-  font-size: 1rem;
-  color: #58d0b0;
-  width: 1.4rem;
-  text-align: center;
-}
-.contact-item:hover {
-  color: #e0f5f0;
-  border-color: rgba(0, 255, 200, 0.1);
-  background: rgba(0, 255, 200, 0.02);
-}
-.btn-cta {
-  background: transparent;
-  color: #b0f0e0;
-  padding: 0.5rem 1.8rem;
-  border-radius: 60px;
-  font-weight: 500;
-  font-size: 0.8rem;
-  font-family: 'JetBrains Mono', monospace;
-  text-decoration: none;
-  border: 1px solid #00e5b0;
-  transition: all 0.25s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-left: auto;
-}
-.btn-cta i { color: #00e5b0; font-size: 0.9rem; }
-.btn-cta:hover {
-  background: #00e5b0;
-  color: #0b0f18;
-  box-shadow: 0 0 40px rgba(0, 255, 200, 0.15);
-}
-.btn-cta:hover i { color: #0b0f18; }
-.scanline {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  pointer-events: none;
-  z-index: 9999;
-  background: repeating-linear-gradient(0deg, rgba(0, 255, 200, 0.01) 0px, rgba(0, 0, 0, 0.01) 2px, transparent 4px, transparent 6px);
-  opacity: 0.15;
-}
-.glow-dot {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  background: #00e5b0;
-  border-radius: 50%;
-  margin-right: 8px;
-  box-shadow: 0 0 16px #00e5b0;
-  animation: pulse-dot 1.8s infinite;
-}
-@keyframes pulse-dot {
-  0%, 100% { opacity: 0.3; transform: scale(0.9); }
-  50% { opacity: 1; transform: scale(1.2); }
-}
-@media (max-width: 820px) {
-  .profile-grid { grid-template-columns: 1fr; gap: 1.8rem; }
-  .card { padding: 2rem 1.6rem; border-radius: 2.4rem; }
-  .profile-side { max-width: 280px; margin: 0 auto; }
-  .avatar-wrapper { max-width: 150px; }
-  .profile-name { font-size: 2rem; }
-  .work-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
-  .contact-row { flex-direction: column; align-items: stretch; gap: 0.6rem; }
-  .btn-cta { margin-left: 0; justify-content: center; }
-  .form-row { flex-direction: column; }
-  .form-row input { flex-basis: auto; }
-  .btn-submit { align-self: stretch; justify-content: center; }
-}
-@media (max-width: 480px) {
-  .card { padding: 1.2rem 1rem; border-radius: 1.8rem; }
-  .profile-name { font-size: 1.6rem; }
-  .skill-tags { gap: 0.3rem; }
-  .skill-tag { font-size: 0.7rem; padding: 0.2rem 0.7rem; }
-  .message-item { flex-wrap: wrap; }
-  .message-delete { align-self: flex-end; }
-}
+    :root {
+      /* 默认绿色主题 */
+      --primary: #00e5b0;
+      --primary-dark: #00b894;
+      --primary-light: #55efc4;
+      --primary-glow: rgba(0, 255, 200, 0.25);
+      --primary-border: rgba(0, 255, 200, 0.12);
+      --primary-border-hover: rgba(0, 255, 200, 0.25);
+      --text-primary: #d6e0f0;
+      --text-accent: #b0f0e0;
+      --text-secondary: #6a8e8a;
+      --text-muted: #4a7a7a;
+      --bg-body: #0b0d12;
+      --bg-card: rgba(12, 16, 24, 0.78);
+      --bg-input: rgba(0, 0, 0, 0.3);
+      --border-color: rgba(0, 255, 200, 0.08);
+    }
+
+    [data-theme="blue"] {
+      --primary: #3b6eff;
+      --primary-dark: #2952d0;
+      --primary-light: #7aa2ff;
+      --primary-glow: rgba(59, 110, 255, 0.25);
+      --primary-border: rgba(59, 110, 255, 0.12);
+      --primary-border-hover: rgba(59, 110, 255, 0.25);
+      --text-accent: #b0caf5;
+      --text-secondary: #6a7f9e;
+      --text-muted: #4a5f7a;
+      --border-color: rgba(59, 110, 255, 0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', 'JetBrains Mono', monospace;
+      background: var(--bg-body);
+      background-image: radial-gradient(circle at 10% 20%, #13171f 0%, #080a0e 90%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.8rem;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+
+    .card {
+      max-width: 1180px;
+      width: 100%;
+      background: var(--bg-card);
+      backdrop-filter: blur(12px) saturate(180%);
+      border-radius: 3.2rem;
+      padding: 2.8rem;
+      border: 1px solid var(--primary-border);
+      box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.8), 0 0 0 1px var(--primary-border) inset;
+      transition: border-color 0.3s;
+    }
+
+    .card:hover {
+      border-color: var(--primary-border-hover);
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr 2.1fr;
+      gap: 2.8rem;
+      align-items: start;
+    }
+
+    .profile-side {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 200px;
+      aspect-ratio: 1/1;
+      border-radius: 50%;
+      padding: 5px;
+      background: linear-gradient(145deg, #1a2a3a, #0d1b2a);
+      box-shadow: 0 0 30px var(--primary-glow), 0 0 8px var(--primary) inset;
+      margin-bottom: 1.8rem;
+      border: 1px solid var(--primary-border);
+      transition: box-shadow 0.3s;
+    }
+
+    .avatar-wrapper:hover {
+      box-shadow: 0 0 48px var(--primary-glow), 0 0 12px var(--primary) inset;
+    }
+
+    .avatar-placeholder {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: #10171f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4.8rem;
+      font-weight: 600;
+      color: var(--text-accent);
+      text-shadow: 0 0 18px var(--primary-glow);
+      border: 1px solid var(--primary-border);
+      background-image: radial-gradient(circle at 30% 30%, #1d3347, #0d1823);
+    }
+
+    .profile-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.4rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-shadow: 0 0 12px var(--primary-glow);
+      margin-bottom: 0.2rem;
+    }
+
+    .profile-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-accent);
+      background: rgba(0, 255, 200, 0.04);
+      padding: 0.35rem 1.2rem;
+      border-radius: 40px;
+      border: 1px solid var(--primary-border);
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
+
+    .profile-bio {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      max-width: 240px;
+      margin: 0.5rem auto 1.6rem;
+      opacity: 0.8;
+      background: var(--bg-input);
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      border-left: 2px solid var(--primary);
+    }
+
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .social-links a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: rgba(20, 30, 44, 0.7);
+      color: var(--text-secondary);
+      font-size: 1.3rem;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      border: 1px solid var(--primary-border);
+    }
+
+    .social-links a:hover {
+      background: var(--primary);
+      color: #0b0f18;
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 0 30px var(--primary-glow);
+    }
+
+    /* 换肤按钮 */
+    .theme-switcher {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      margin-top: 1.2rem;
+    }
+
+    .theme-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--primary-border);
+      cursor: pointer;
+      transition: 0.2s;
+      flex-shrink: 0;
+    }
+
+    .theme-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .theme-btn.active {
+      border-color: var(--text-primary);
+      box-shadow: 0 0 20px var(--primary-glow);
+    }
+
+    .theme-label {
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+      margin-left: 4px;
+    }
+
+    .profile-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2.2rem;
+    }
+
+    .quote-section {
+      background: var(--bg-input);
+      border-radius: 1.6rem;
+      padding: 1.2rem 1.6rem;
+      border: 1px solid var(--border-color);
+      border-left: 3px solid var(--primary);
+      transition: border-color 0.3s;
+    }
+
+    .quote-section:hover {
+      border-color: var(--primary);
+    }
+
+    .quote-text {
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    .quote-text i {
+      color: var(--text-muted);
+      margin: 0 4px;
+    }
+
+    .quote-author {
+      display: block;
+      margin-top: 0.4rem;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+      text-align: right;
+    }
+
+    .quote-author::before {
+      content: "— ";
+    }
+
+    .skills-section {
+      border-top: 1px solid var(--border-color);
+      padding-top: 1.6rem;
+    }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-label i {
+      color: var(--primary);
+      font-size: 0.8rem;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 0.8rem;
+    }
+
+    .skill-tag {
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(0, 255, 200, 0.02);
+      padding: 0.25rem 1rem;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+      transition: all 0.15s;
+    }
+
+    .skill-tag:hover {
+      border-color: var(--primary);
+      background: rgba(0, 255, 200, 0.04);
+      color: var(--text-accent);
+    }
+
+    .work-section {
+      border-top: 1px solid var(--border-color);
+      padding-top: 1.6rem;
+    }
+
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 1rem;
+      margin-top: 0.4rem;
+    }
+
+    .work-item {
+      background: var(--bg-input);
+      border-radius: 1.6rem;
+      padding: 1.2rem 0.6rem;
+      text-align: center;
+      border: 1px solid var(--border-color);
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      text-decoration: none;
+      display: block;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .work-item:hover {
+      transform: translateY(-6px);
+      border-color: var(--primary);
+      background: rgba(0, 255, 200, 0.02);
+      box-shadow: 0 0 40px var(--primary-glow);
+    }
+
+    .work-item i {
+      font-size: 1.8rem;
+      color: var(--primary-light);
+      margin-bottom: 0.4rem;
+      display: block;
+      text-shadow: 0 0 12px var(--primary-glow);
+    }
+
+    .work-item span {
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      font-size: 0.8rem;
+      color: var(--text-primary);
+    }
+
+    .work-item small {
+      display: block;
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    .work-item.game-entry {
+      border-color: var(--primary-border);
+      background: rgba(0, 255, 200, 0.01);
+    }
+
+    .work-item.game-entry i {
+      color: var(--primary);
+      text-shadow: 0 0 24px var(--primary-glow);
+    }
+
+    .work-item.game-entry:hover {
+      border-color: var(--primary);
+      background: rgba(0, 255, 200, 0.03);
+    }
+
+    .guestbook-section {
+      border-top: 1px solid var(--border-color);
+      padding-top: 1.6rem;
+      margin-top: 0.2rem;
+    }
+
+    .guestbook-area {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .guestbook-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      background: var(--bg-input);
+      padding: 1.2rem;
+      border-radius: 1.6rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .form-row {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .form-row input,
+    .form-row textarea {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-color);
+      border-radius: 60px;
+      padding: 0.6rem 1.2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-primary);
+      outline: none;
+      min-width: 140px;
+      transition: border-color 0.3s;
+    }
+
+    .form-row input:focus,
+    .form-row textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 20px var(--primary-glow);
+    }
+
+    .form-row textarea {
+      border-radius: 1.2rem;
+      resize: vertical;
+      min-height: 60px;
+      flex-basis: 100%;
+    }
+
+    .form-row input::placeholder,
+    .form-row textarea::placeholder {
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+
+    .btn-submit {
+      align-self: flex-end;
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--text-accent);
+      padding: 0.5rem 1.8rem;
+      border-radius: 60px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .btn-submit:hover {
+      background: var(--primary);
+      color: #0b0f18;
+      box-shadow: 0 0 40px var(--primary-glow);
+    }
+
+    .btn-submit i {
+      font-size: 0.8rem;
+    }
+
+    .messages-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      max-height: 340px;
+      overflow-y: auto;
+      padding-right: 4px;
+      scrollbar-width: thin;
+      scrollbar-color: #1a3340 transparent;
+    }
+
+    .messages-container::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .messages-container::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .messages-container::-webkit-scrollbar-thumb {
+      background: #1a3340;
+      border-radius: 12px;
+    }
+
+    .message-item {
+      background: rgba(0, 20, 20, 0.15);
+      border-radius: 1.2rem;
+      padding: 0.8rem 1.2rem;
+      border-left: 3px solid var(--primary);
+      border: 1px solid var(--border-color);
+      border-left-width: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.8rem;
+      transition: background 0.2s;
+    }
+
+    .message-item:hover {
+      background: rgba(0, 255, 200, 0.01);
+    }
+
+    .message-body {
+      flex: 1;
+    }
+
+    .message-meta {
+      display: flex;
+      align-items: baseline;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.15rem;
+    }
+
+    .message-author {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--text-accent);
+    }
+
+    .message-time {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem;
+      color: var(--text-muted);
+      letter-spacing: 0.3px;
+    }
+
+    .message-text {
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      word-break: break-word;
+      line-height: 1.5;
+    }
+
+    .message-delete {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 0.2rem 0.4rem;
+      border-radius: 30px;
+      transition: all 0.15s;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .message-delete:hover {
+      color: #ff6b6b;
+      background: rgba(255, 100, 100, 0.06);
+      transform: scale(1.1);
+    }
+
+    .empty-messages {
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      text-align: center;
+      padding: 1.2rem 0;
+      border: 1px dashed var(--border-color);
+      border-radius: 1.6rem;
+      opacity: 0.6;
+    }
+
+    .contact-row {
+      margin-top: 0.2rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.2rem 1.8rem;
+      border-top: 1px solid var(--border-color);
+      padding-top: 2rem;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      font-family: 'JetBrains Mono', monospace;
+      text-decoration: none;
+      padding: 0.2rem 0.6rem;
+      border-radius: 30px;
+      transition: color 0.2s;
+    }
+
+    .contact-item i {
+      font-size: 1rem;
+      color: var(--primary-light);
+      width: 1.4rem;
+      text-align: center;
+    }
+
+    .contact-item:hover {
+      color: var(--text-accent);
+    }
+
+    .btn-cta {
+      background: transparent;
+      color: var(--text-accent);
+      padding: 0.5rem 1.8rem;
+      border-radius: 60px;
+      font-weight: 500;
+      font-size: 0.8rem;
+      font-family: 'JetBrains Mono', monospace;
+      text-decoration: none;
+      border: 1px solid var(--primary);
+      transition: all 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-left: auto;
+    }
+
+    .btn-cta i {
+      color: var(--primary);
+      font-size: 0.9rem;
+      transition: color 0.25s;
+    }
+
+    .btn-cta:hover {
+      background: var(--primary);
+      color: #0b0f18;
+      box-shadow: 0 0 40px var(--primary-glow);
+    }
+
+    .btn-cta:hover i {
+      color: #0b0f18;
+    }
+
+    .scanline {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      background: repeating-linear-gradient(0deg, rgba(0, 255, 200, 0.01) 0px, rgba(0, 0, 0, 0.01) 2px, transparent 4px,
+          transparent 6px);
+      opacity: 0.15;
+    }
+
+    .glow-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: var(--primary);
+      border-radius: 50%;
+      margin-right: 8px;
+      box-shadow: 0 0 16px var(--primary);
+      animation: pulse-dot 1.8s infinite;
+    }
+
+    @keyframes pulse-dot {
+
+      0%,
+      100% {
+        opacity: 0.3;
+        transform: scale(0.9);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1.2);
+      }
+    }
+
+    @media (max-width: 820px) {
+      .profile-grid {
+        grid-template-columns: 1fr;
+        gap: 1.8rem;
+      }
+
+      .card {
+        padding: 2rem 1.6rem;
+        border-radius: 2.4rem;
+      }
+
+      .profile-side {
+        max-width: 280px;
+        margin: 0 auto;
+      }
+
+      .avatar-wrapper {
+        max-width: 150px;
+      }
+
+      .profile-name {
+        font-size: 2rem;
+      }
+
+      .work-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      }
+
+      .contact-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.6rem;
+      }
+
+      .btn-cta {
+        margin-left: 0;
+        justify-content: center;
+      }
+
+      .form-row {
+        flex-direction: column;
+      }
+
+      .form-row input {
+        flex-basis: auto;
+      }
+
+      .btn-submit {
+        align-self: stretch;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 1.2rem 1rem;
+        border-radius: 1.8rem;
+      }
+
+      .profile-name {
+        font-size: 1.6rem;
+      }
+
+      .skill-tags {
+        gap: 0.3rem;
+      }
+
+      .skill-tag {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.7rem;
+      }
+
+      .message-item {
+        flex-wrap: wrap;
+      }
+
+      .message-delete {
+        align-self: flex-end;
+      }
+
+      .theme-switcher {
+        justify-content: center;
+      }
+    }
   </style>
 </head>
+
 <body>
   <div class="scanline" aria-hidden="true"></div>
   <main class="card">
@@ -508,6 +791,12 @@ body {
           <a href="https://github.com/Tzlqcxy" target="_blank" aria-label="GitHub">
             <i class="fab fa-github"></i>
           </a>
+        </div>
+        <!-- 换肤 -->
+        <div class="theme-switcher">
+          <button class="theme-btn active" data-theme="green" style="background:#00e5b0;" title="绿色主题"></button>
+          <button class="theme-btn" data-theme="blue" style="background:#3b6eff;" title="蓝色主题"></button>
+          <span class="theme-label" id="themeLabel">🌿 绿</span>
         </div>
       </aside>
       <!-- 右侧 -->
@@ -563,13 +852,22 @@ body {
               <span>贪吃蛇</span>
               <small>经典 · 有趣</small>
             </a>
-            <!-- 👇 新增俄罗斯方块入口 -->
             <a href="tetris.html" class="work-item game-entry">
               <i class="fas fa-cubes"></i>
               <span>俄罗斯方块</span>
               <small>经典 · 挑战</small>
             </a>
-            </div>
+            <a href="tool.html" class="work-item game-entry">
+              <i class="fas fa-terminal"></i>
+              <span>GeekTool</span>
+              <small>工具箱 · 开发利器</small>
+            </a>
+            <a href="type.html" class="work-item game-entry">
+              <i class="fas fa-keyboard"></i>
+              <span>TypeRush</span>
+              <small>打字速度测试</small>
+            </a>
+          </div>
         </div>
         <!-- 留言板 -->
         <div class="guestbook-section">
@@ -597,144 +895,182 @@ body {
       </section>
     </div>
   </main>
-  <script>
-    // ===== 每日名言 =====
-(function() {
-  const quotes = [
-    { text: "代码是写给人看的，只是顺便让机器执行。", author: "计算机科学格言" },
-    { text: "简单是可靠的先决条件。", author: "Edsger Dijkstra" },
-    { text: "任何傻瓜都能写出计算机能理解的代码。优秀的程序员写出人能读懂的代码。", author: "Martin Fowler" },
-    { text: "程序必须是为了让人阅读而写，只是顺便让机器执行。", author: "Harold Abelson" },
-    { text: "好的设计是显而易见的，伟大的设计是隐形的。", author: "Jared Spool" },
-    { text: "在软件中，唯一不变的就是变化本身。", author: "敏捷宣言" },
-    { text: "复杂性是万恶之源。", author: "计算机科学格言" },
-    { text: "先让它工作，再让它正确，最后让它更快。", author: "编程格言" },
-    { text: "最有效的调试工具是仔细思考。", author: "Brian Kernighan" },
-    { text: "优秀的设计师会简化，而不是复杂化。", author: "设计格言" },
-    { text: "不要重复自己。", author: "DRY 原则" },
-    { text: "保持简单，傻瓜。", author: "KISS 原则" },
-    { text: "预见变化并拥抱它。", author: "敏捷价值观" },
-    { text: "最好的方式是去做，而不是空谈。", author: "实践格言" },
-    { text: "创造力是聪明地玩耍。", author: "Albert Einstein" },
-    { text: "完美不是没有东西可加，而是没有东西可减。", author: "Antoine de Saint-Exupéry" },
-    { text: "设计不只是它看起来怎样，还在于它怎样工作。", author: "Steve Jobs" },
-  ];
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 0);
-  const diff = now - start;
-  const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const index = dayOfYear % quotes.length;
-  const quote = quotes[index];
-  const textEl = document.getElementById('quoteText');
-  const authorEl = document.getElementById('quoteAuthor');
-  if (textEl && authorEl) {
-    textEl.innerHTML = `<i class="fas fa-quote-left"></i> ${quote.text} <i class="fas fa-quote-right"></i>`;
-    authorEl.textContent = `— ${quote.author}`;
-  }
-})();
 
-// ===== 留言板 =====
-(function() {
-  const STORAGE_KEY = 'geek_guestbook_messages';
-  function getMessages() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed)) return parsed;
+  <script>
+    // ===== 换肤 =====
+    (function () {
+      const themeBtns = document.querySelectorAll('.theme-btn');
+      const themeLabel = document.getElementById('themeLabel');
+      const html = document.documentElement;
+
+      function setTheme(theme) {
+        html.setAttribute('data-theme', theme);
+        themeBtns.forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.theme === theme);
+        });
+        const names = { green: '🌿 绿', blue: '💠 蓝' };
+        if (themeLabel) themeLabel.textContent = names[theme] || '🌿 绿';
+        localStorage.setItem('preferred_theme', theme);
       }
-    } catch (_) {}
-    return [];
-  }
-  function saveMessages(messages) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
-  }
-  function formatTime(timestamp) {
-    const date = new Date(timestamp);
-    const pad = (n) => String(n).padStart(2, '0');
-    return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
-  }
-  function escapeHtml(unsafe) {
-    if (!unsafe) return '';
-    return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-  }
-  function renderMessages() {
-    const container = document.getElementById('messagesContainer');
-    const messages = getMessages();
-    if (!container) return;
-    if (messages.length === 0) {
-      container.innerHTML = `<div class="empty-messages"><i class="fas fa-satellite-dish" style="margin-right: 8px;"></i> 暂无信号，成为第一个留言者</div>`;
-      return;
-    }
-    const sorted = [...messages].sort((a, b) => b.time - a.time);
-    let html = '';
-    sorted.forEach(msg => {
-      const name = msg.name || '匿名';
-      const text = msg.text || '…';
-      const timeStr = formatTime(msg.time);
-      html += `
-        <div class="message-item" data-id="${msg.id}">
-          <div class="message-body">
-            <div class="message-meta">
-              <span class="message-author">${escapeHtml(name)}</span>
-              <span class="message-time">${timeStr}</span>
-            </div>
-            <div class="message-text">${escapeHtml(text)}</div>
-          </div>
-          <button class="message-delete" data-id="${msg.id}" title="删除信号"><i class="fas fa-trash-alt"></i></button>
-        </div>
-      `;
-    });
-    container.innerHTML = html;
-    container.querySelectorAll('.message-delete').forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        const id = Number(this.getAttribute('data-id'));
-        if (id && confirm('确定要抹除这条信号吗？')) {
-          let messages = getMessages();
-          messages = messages.filter(msg => msg.id !== id);
-          saveMessages(messages);
-          renderMessages();
-        }
+
+      const saved = localStorage.getItem('preferred_theme') || 'green';
+      setTheme(saved);
+
+      themeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          setTheme(btn.dataset.theme);
+        });
       });
-    });
-  }
-  function addMessage(name, text) {
-    if (!name.trim() || !text.trim()) return false;
-    const messages = getMessages();
-    const newMsg = {
-      id: Date.now() + Math.floor(Math.random() * 1000),
-      name: name.trim().slice(0, 20),
-      text: text.trim().slice(0, 120),
-      time: Date.now(),
-    };
-    messages.push(newMsg);
-    saveMessages(messages);
-    renderMessages();
-    return true;
-  }
-  const form = document.getElementById('guestbookForm');
-  const nameInput = document.getElementById('nameInput');
-  const messageInput = document.getElementById('messageInput');
-  if (form) {
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const name = nameInput.value.trim();
-      const text = messageInput.value.trim();
-      if (!name || !text) {
-        alert('代号和信号都不能为空 ✦');
-        return;
+    })();
+
+    // ===== 每日名言 =====
+    (function () {
+      const quotes = [
+        { text: "代码是写给人看的，只是顺便让机器执行。", author: "计算机科学格言" },
+        { text: "简单是可靠的先决条件。", author: "Edsger Dijkstra" },
+        { text: "任何傻瓜都能写出计算机能理解的代码。优秀的程序员写出人能读懂的代码。", author: "Martin Fowler" },
+        { text: "程序必须是为了让人阅读而写，只是顺便让机器执行。", author: "Harold Abelson" },
+        { text: "好的设计是显而易见的，伟大的设计是隐形的。", author: "Jared Spool" },
+        { text: "在软件中，唯一不变的就是变化本身。", author: "敏捷宣言" },
+        { text: "复杂性是万恶之源。", author: "计算机科学格言" },
+        { text: "先让它工作，再让它正确，最后让它更快。", author: "编程格言" },
+        { text: "最有效的调试工具是仔细思考。", author: "Brian Kernighan" },
+        { text: "优秀的设计师会简化，而不是复杂化。", author: "设计格言" },
+        { text: "不要重复自己。", author: "DRY 原则" },
+        { text: "保持简单，傻瓜。", author: "KISS 原则" },
+        { text: "预见变化并拥抱它。", author: "敏捷价值观" },
+        { text: "最好的方式是去做，而不是空谈。", author: "实践格言" },
+        { text: "创造力是聪明地玩耍。", author: "Albert Einstein" },
+        { text: "完美不是没有东西可加，而是没有东西可减。", author: "Antoine de Saint-Exupéry" },
+        { text: "设计不只是它看起来怎样，还在于它怎样工作。", author: "Steve Jobs" },
+      ];
+      const now = new Date();
+      const start = new Date(now.getFullYear(), 0, 0);
+      const diff = now - start;
+      const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const index = dayOfYear % quotes.length;
+      const quote = quotes[index];
+      const textEl = document.getElementById('quoteText');
+      const authorEl = document.getElementById('quoteAuthor');
+      if (textEl && authorEl) {
+        textEl.innerHTML = `<i class="fas fa-quote-left"></i> ${quote.text} <i class="fas fa-quote-right"></i>`;
+        authorEl.textContent = `— ${quote.author}`;
       }
-      if (addMessage(name, text)) {
-        nameInput.value = '';
-        messageInput.value = '';
+    })();
+
+    // ===== 留言板 =====
+    (function () {
+      const STORAGE_KEY = 'geek_guestbook_messages';
+
+      function getMessages() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed)) return parsed;
+          }
+        } catch (_) { }
+        return [];
+      }
+
+      function saveMessages(messages) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+      }
+
+      function formatTime(timestamp) {
+        const date = new Date(timestamp);
+        const pad = (n) => String(n).padStart(2, '0');
+        return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+      }
+
+      function escapeHtml(unsafe) {
+        if (!unsafe) return '';
+        return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function renderMessages() {
         const container = document.getElementById('messagesContainer');
-        if (container) container.scrollTop = 0;
+        const messages = getMessages();
+        if (!container) return;
+        if (messages.length === 0) {
+          container.innerHTML =
+            `<div class="empty-messages"><i class="fas fa-satellite-dish" style="margin-right: 8px;"></i> 暂无信号，成为第一个留言者</div>`;
+          return;
+        }
+        const sorted = [...messages].sort((a, b) => b.time - a.time);
+        let html = '';
+        sorted.forEach(msg => {
+          const name = msg.name || '匿名';
+          const text = msg.text || '…';
+          const timeStr = formatTime(msg.time);
+          html += `
+                        <div class="message-item" data-id="${msg.id}">
+                            <div class="message-body">
+                                <div class="message-meta">
+                                    <span class="message-author">${escapeHtml(name)}</span>
+                                    <span class="message-time">${timeStr}</span>
+                                </div>
+                                <div class="message-text">${escapeHtml(text)}</div>
+                            </div>
+                            <button class="message-delete" data-id="${msg.id}" title="删除信号"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    `;
+        });
+        container.innerHTML = html;
+        container.querySelectorAll('.message-delete').forEach(btn => {
+          btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            const id = Number(this.getAttribute('data-id'));
+            if (id && confirm('确定要抹除这条信号吗？')) {
+              let messages = getMessages();
+              messages = messages.filter(msg => msg.id !== id);
+              saveMessages(messages);
+              renderMessages();
+            }
+          });
+        });
       }
-    });
-  }
-  renderMessages();
-})();
+
+      function addMessage(name, text) {
+        if (!name.trim() || !text.trim()) return false;
+        const messages = getMessages();
+        const newMsg = {
+          id: Date.now() + Math.floor(Math.random() * 1000),
+          name: name.trim().slice(0, 20),
+          text: text.trim().slice(0, 120),
+          time: Date.now(),
+        };
+        messages.push(newMsg);
+        saveMessages(messages);
+        renderMessages();
+        return true;
+      }
+
+      const form = document.getElementById('guestbookForm');
+      const nameInput = document.getElementById('nameInput');
+      const messageInput = document.getElementById('messageInput');
+      if (form) {
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          const name = nameInput.value.trim();
+          const text = messageInput.value.trim();
+          if (!name || !text) {
+            alert('代号和信号都不能为空 ✦');
+            return;
+          }
+          if (addMessage(name, text)) {
+            nameInput.value = '';
+            messageInput.value = '';
+            const container = document.getElementById('messagesContainer');
+            if (container) container.scrollTop = 0;
+          }
+        });
+      }
+      renderMessages();
+    })();
   </script>
+
 </body>
+
 </html>
