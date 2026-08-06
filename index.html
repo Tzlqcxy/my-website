@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="green">
+<html lang="zh-CN">
 
 <head>
   <meta charset="UTF-8" />
@@ -13,13 +13,14 @@
     rel="stylesheet" />
   <style>
     :root {
-      /* 默认绿色主题 */
+      /* 主色 - 由 JS 控制 */
       --primary: #00e5b0;
       --primary-dark: #00b894;
       --primary-light: #55efc4;
       --primary-glow: rgba(0, 255, 200, 0.25);
       --primary-border: rgba(0, 255, 200, 0.12);
       --primary-border-hover: rgba(0, 255, 200, 0.25);
+      /* 固定色 */
       --text-primary: #d6e0f0;
       --text-accent: #b0f0e0;
       --text-secondary: #6a8e8a;
@@ -28,19 +29,6 @@
       --bg-card: rgba(12, 16, 24, 0.78);
       --bg-input: rgba(0, 0, 0, 0.3);
       --border-color: rgba(0, 255, 200, 0.08);
-    }
-
-    [data-theme="blue"] {
-      --primary: #3b6eff;
-      --primary-dark: #2952d0;
-      --primary-light: #7aa2ff;
-      --primary-glow: rgba(59, 110, 255, 0.25);
-      --primary-border: rgba(59, 110, 255, 0.12);
-      --primary-border-hover: rgba(59, 110, 255, 0.25);
-      --text-accent: #b0caf5;
-      --text-secondary: #6a7f9e;
-      --text-muted: #4a5f7a;
-      --border-color: rgba(59, 110, 255, 0.08);
     }
 
     * {
@@ -191,12 +179,14 @@
       box-shadow: 0 0 30px var(--primary-glow);
     }
 
-    /* 换肤按钮 */
+    /* 换肤 + 调色盘 */
     .theme-switcher {
       display: flex;
       gap: 0.5rem;
       align-items: center;
       margin-top: 1.2rem;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     .theme-btn {
@@ -210,12 +200,13 @@
     }
 
     .theme-btn:hover {
-      transform: scale(1.1);
+      transform: scale(1.15);
     }
 
     .theme-btn.active {
       border-color: var(--text-primary);
       box-shadow: 0 0 20px var(--primary-glow);
+      transform: scale(1.1);
     }
 
     .theme-label {
@@ -223,6 +214,31 @@
       color: var(--text-secondary);
       font-family: 'JetBrains Mono', monospace;
       margin-left: 4px;
+    }
+
+    #customColorPicker {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 2px solid var(--primary-border);
+      cursor: pointer;
+      background: transparent;
+      padding: 0;
+      flex-shrink: 0;
+      transition: 0.2s;
+    }
+
+    #customColorPicker:hover {
+      transform: scale(1.15);
+    }
+
+    #customColorPicker::-webkit-color-swatch-wrapper {
+      padding: 2px;
+    }
+
+    #customColorPicker::-webkit-color-swatch {
+      border-radius: 50%;
+      border: none;
     }
 
     .profile-content {
@@ -767,7 +783,17 @@
       }
 
       .theme-switcher {
-        justify-content: center;
+        gap: 0.3rem;
+      }
+
+      .theme-btn {
+        width: 24px;
+        height: 24px;
+      }
+
+      #customColorPicker {
+        width: 26px;
+        height: 26px;
       }
     }
   </style>
@@ -792,10 +818,15 @@
             <i class="fab fa-github"></i>
           </a>
         </div>
-        <!-- 换肤 -->
+        <!-- 换肤 + 调色盘 -->
         <div class="theme-switcher">
-          <button class="theme-btn active" data-theme="green" style="background:#00e5b0;" title="绿色主题"></button>
-          <button class="theme-btn" data-theme="blue" style="background:#3b6eff;" title="蓝色主题"></button>
+          <button class="theme-btn active" data-theme="green" style="background:#00e5b0;" title="绿色"></button>
+          <button class="theme-btn" data-theme="blue" style="background:#3b6eff;" title="蓝色"></button>
+          <button class="theme-btn" data-theme="purple" style="background:#a855f7;" title="紫色"></button>
+          <button class="theme-btn" data-theme="orange" style="background:#f97316;" title="橙色"></button>
+          <button class="theme-btn" data-theme="pink" style="background:#ec4899;" title="粉色"></button>
+          <button class="theme-btn" data-theme="cyan" style="background:#06b6d4;" title="青色"></button>
+          <input type="color" id="customColorPicker" value="#00e5b0" title="自定义颜色" />
           <span class="theme-label" id="themeLabel">🌿 绿</span>
         </div>
       </aside>
@@ -897,30 +928,130 @@
   </main>
 
   <script>
-    // ===== 换肤 =====
+    // ===== 换肤 + 调色盘 =====
     (function () {
       const themeBtns = document.querySelectorAll('.theme-btn');
       const themeLabel = document.getElementById('themeLabel');
+      const colorPicker = document.getElementById('customColorPicker');
       const html = document.documentElement;
 
-      function setTheme(theme) {
-        html.setAttribute('data-theme', theme);
-        themeBtns.forEach(btn => {
-          btn.classList.toggle('active', btn.dataset.theme === theme);
-        });
-        const names = { green: '🌿 绿', blue: '💠 蓝' };
-        if (themeLabel) themeLabel.textContent = names[theme] || '🌿 绿';
-        localStorage.setItem('preferred_theme', theme);
+      const themes = {
+        green: { primary: '#00e5b0', dark: '#00b894', light: '#55efc4', name: '🌿 绿' },
+        blue: { primary: '#3b6eff', dark: '#2952d0', light: '#7aa2ff', name: '💠 蓝' },
+        purple: { primary: '#a855f7', dark: '#7c3aed', light: '#c084fc', name: '🟣 紫' },
+        orange: { primary: '#f97316', dark: '#ea580c', light: '#fb923c', name: '🟠 橙' },
+        pink: { primary: '#ec4899', dark: '#db2777', light: '#f472b6', name: '🩷 粉' },
+        cyan: { primary: '#06b6d4', dark: '#0891b2', light: '#22d3ee', name: '🩵 青' },
+      };
+
+      function hexToRgb(hex) {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16)
+        } : { r: 0, g: 229, b: 176 };
       }
 
-      const saved = localStorage.getItem('preferred_theme') || 'green';
-      setTheme(saved);
+      function rgbToRgba(r, g, b, alpha) {
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      }
+
+      function setTheme(theme, customColor) {
+        let colors;
+        if (customColor) {
+          const rgb = hexToRgb(customColor);
+          colors = {
+            primary: customColor,
+            dark: customColor,
+            light: customColor,
+            glow: rgbToRgba(rgb.r, rgb.g, rgb.b, 0.25),
+            border: rgbToRgba(rgb.r, rgb.g, rgb.b, 0.12),
+            borderHover: rgbToRgba(rgb.r, rgb.g, rgb.b, 0.25),
+            name: '🎨 自定义'
+          };
+          localStorage.setItem('custom_theme_color', customColor);
+          localStorage.setItem('preferred_theme', 'custom');
+        } else if (themes[theme]) {
+          const t = themes[theme];
+          const rgb = hexToRgb(t.primary);
+          colors = {
+            primary: t.primary,
+            dark: t.dark,
+            light: t.light,
+            glow: rgbToRgba(rgb.r, rgb.g, rgb.b, 0.25),
+            border: rgbToRgba(rgb.r, rgb.g, rgb.b, 0.12),
+            borderHover: rgbToRgba(rgb.r, rgb.g, rgb.b, 0.25),
+            name: t.name
+          };
+          localStorage.setItem('preferred_theme', theme);
+          localStorage.removeItem('custom_theme_color');
+        } else {
+          return;
+        }
+
+        html.style.setProperty('--primary', colors.primary);
+        html.style.setProperty('--primary-dark', colors.dark);
+        html.style.setProperty('--primary-light', colors.light);
+        html.style.setProperty('--primary-glow', colors.glow);
+        html.style.setProperty('--primary-border', colors.border);
+        html.style.setProperty('--primary-border-hover', colors.borderHover);
+
+        themeBtns.forEach(btn => {
+          const isActive = btn.dataset.theme === theme ||
+            (theme === 'custom' && btn.dataset.theme === 'custom');
+          btn.classList.toggle('active', isActive);
+        });
+
+        if (themeLabel) themeLabel.textContent = colors.name;
+        if (colorPicker) colorPicker.value = colors.primary;
+
+        localStorage.setItem('current_primary_color', colors.primary);
+        localStorage.setItem('current_theme_name', colors.name);
+      }
+
+      // 恢复主题
+      const savedTheme = localStorage.getItem('preferred_theme') || 'green';
+      const customColor = localStorage.getItem('custom_theme_color');
+      const savedPrimary = localStorage.getItem('current_primary_color');
+
+      if (savedTheme === 'custom' && customColor) {
+        setTheme('custom', customColor);
+      } else if (savedPrimary && !themes[savedTheme]) {
+        setTheme('custom', savedPrimary);
+      } else {
+        setTheme(savedTheme);
+      }
 
       themeBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          setTheme(btn.dataset.theme);
+        btn.addEventListener('click', function () {
+          setTheme(this.dataset.theme);
         });
       });
+
+      if (colorPicker) {
+        colorPicker.addEventListener('input', function () {
+          setTheme('custom', this.value);
+        });
+      }
+
+      window.addEventListener('storage', function (e) {
+        if (e.key === 'current_primary_color' || e.key === 'preferred_theme' || e.key ===
+          'custom_theme_color') {
+          const newTheme = localStorage.getItem('preferred_theme') || 'green';
+          const newCustom = localStorage.getItem('custom_theme_color');
+          const newPrimary = localStorage.getItem('current_primary_color');
+          if (newTheme === 'custom' && newCustom) {
+            setTheme('custom', newCustom);
+          } else if (newPrimary) {
+            setTheme(newTheme, newPrimary);
+          } else {
+            setTheme(newTheme);
+          }
+        }
+      });
+
+      window.setTheme = setTheme;
     })();
 
     // ===== 每日名言 =====
@@ -1005,17 +1136,17 @@
           const text = msg.text || '…';
           const timeStr = formatTime(msg.time);
           html += `
-                        <div class="message-item" data-id="${msg.id}">
-                            <div class="message-body">
-                                <div class="message-meta">
-                                    <span class="message-author">${escapeHtml(name)}</span>
-                                    <span class="message-time">${timeStr}</span>
+                            <div class="message-item" data-id="${msg.id}">
+                                <div class="message-body">
+                                    <div class="message-meta">
+                                        <span class="message-author">${escapeHtml(name)}</span>
+                                        <span class="message-time">${timeStr}</span>
+                                    </div>
+                                    <div class="message-text">${escapeHtml(text)}</div>
                                 </div>
-                                <div class="message-text">${escapeHtml(text)}</div>
+                                <button class="message-delete" data-id="${msg.id}" title="删除信号"><i class="fas fa-trash-alt"></i></button>
                             </div>
-                            <button class="message-delete" data-id="${msg.id}" title="删除信号"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-                    `;
+                        `;
         });
         container.innerHTML = html;
         container.querySelectorAll('.message-delete').forEach(btn => {
