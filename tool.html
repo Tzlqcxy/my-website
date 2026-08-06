@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="green">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GeekTool · 极客工具箱</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=JetBrains+Mono:wght@400;600&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            /* 默认绿色主题 */
+            --primary: #00e5b0;
+            --primary-dark: #00b894;
+            --primary-light: #55efc4;
+            --primary-glow: rgba(0, 255, 200, 0.25);
+            --primary-border: rgba(0, 255, 200, 0.12);
+            --primary-border-hover: rgba(0, 255, 200, 0.25);
+            --text-primary: #d6e0f0;
+            --text-accent: #b0f0e0;
+            --text-secondary: #6a8e8a;
+            --text-muted: #4a7a7a;
+            --bg-body: #0b0d12;
+            --bg-card: rgba(12, 16, 24, 0.78);
+            --bg-input: rgba(0, 0, 0, 0.3);
+            --bg-panel: rgba(0, 0, 0, 0.2);
+            --border-color: rgba(0, 255, 200, 0.08);
+        }
+
+        [data-theme="blue"] {
+            --primary: #3b6eff;
+            --primary-dark: #2952d0;
+            --primary-light: #7aa2ff;
+            --primary-glow: rgba(59, 110, 255, 0.25);
+            --primary-border: rgba(59, 110, 255, 0.12);
+            --primary-border-hover: rgba(59, 110, 255, 0.25);
+            --text-accent: #b0caf5;
+            --text-secondary: #6a7f9e;
+            --text-muted: #4a5f7a;
+            --border-color: rgba(59, 110, 255, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-body);
+            background-image: radial-gradient(circle at 20% 30%, #13171f 0%, #080a0e 90%);
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--primary-border);
+            border-radius: 2.5rem;
+            padding: 2.2rem 2.5rem;
+            max-width: 700px;
+            width: 100%;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--primary-border) inset;
+        }
+
+        .glass-card:hover {
+            border-color: var(--primary-border-hover);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--text-primary), var(--primary-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .header h1 i {
+            color: var(--primary);
+            margin-right: 8px;
+        }
+
+        .back-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 0.3rem 1rem;
+            border: 1px solid var(--primary-border);
+            border-radius: 30px;
+            transition: 0.2s;
+        }
+
+        .back-link:hover {
+            background: rgba(0, 255, 200, 0.06);
+            border-color: var(--primary);
+        }
+
+        /* 换肤按钮 */
+        .theme-switcher {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .theme-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-border);
+            cursor: pointer;
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+
+        .theme-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .theme-btn.active {
+            border-color: var(--text-primary);
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        .theme-label {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            margin-left: 4px;
+        }
+
+        /* Tab 导航 */
+        .tabs {
+            display: flex;
+            gap: 0.3rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.8rem;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.4rem 1.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-family: 'Inter', sans-serif;
+            transition: 0.2s;
+            font-weight: 500;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-accent);
+            background: rgba(0, 255, 200, 0.04);
+        }
+
+        .tab-btn.active {
+            color: var(--text-accent);
+            background: rgba(0, 255, 200, 0.06);
+            border: 1px solid var(--primary-border);
+        }
+
+        .tab-btn i {
+            margin-right: 6px;
+        }
+
+        /* 面板 */
+        .panel {
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .panel label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.3rem;
+            font-weight: 500;
+        }
+
+        .panel textarea,
+        .panel input[type="text"],
+        .panel input[type="number"] {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            outline: none;
+            transition: 0.2s;
+            resize: vertical;
+        }
+
+        .panel textarea {
+            min-height: 80px;
+        }
+
+        .panel input:focus,
+        .panel textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        .tool-row {
+            display: flex;
+            gap: 0.6rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tool-row .btn {
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            border: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: 'Inter', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 20px var(--primary-glow);
+        }
+
+        .btn-secondary {
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 255, 200, 0.04);
+            border-color: var(--primary);
+        }
+
+        .btn-success {
+            background: rgba(0, 200, 100, 0.15);
+            color: var(--primary-light);
+            border: 1px solid rgba(0, 200, 100, 0.15);
+        }
+
+        .btn-success:hover {
+            background: rgba(0, 200, 100, 0.25);
+        }
+
+        .result-box {
+            margin-top: 0.8rem;
+            padding: 0.8rem 1rem;
+            border-radius: 16px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-accent);
+            word-break: break-all;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .result-box .copy-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .result-box .copy-btn:hover {
+            color: var(--text-accent);
+            background: rgba(0, 255, 200, 0.04);
+        }
+
+        .result-box .empty {
+            color: var(--text-muted);
+        }
+
+        .inline-group {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .inline-group input {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .inline-group .btn {
+            flex-shrink: 0;
+        }
+
+        /* 密码生成器强度条 */
+        .strength-bar {
+            display: flex;
+            gap: 4px;
+            margin-top: 0.5rem;
+        }
+
+        .strength-bar span {
+            height: 4px;
+            flex: 1;
+            border-radius: 4px;
+            background: var(--border-color);
+            transition: 0.3s;
+        }
+
+        .strength-bar span.active.weak {
+            background: #ff6b6b;
+        }
+
+        .strength-bar span.active.medium {
+            background: #fcc419;
+        }
+
+        .strength-bar span.active.strong {
+            background: #51cf66;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 0.5rem 0;
+        }
+
+        .checkbox-group label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            accent-color: var(--primary);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 480px) {
+            .glass-card {
+                padding: 1.5rem 1rem;
+                border-radius: 1.8rem;
+            }
+
+            .header h1 {
+                font-size: 1.2rem;
+            }
+
+            .tabs {
+                gap: 0.2rem;
+            }
+
+            .tab-btn {
+                padding: 0.3rem 0.8rem;
+                font-size: 0.7rem;
+            }
+
+            .inline-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="glass-card">
+        <!-- 头部 -->
+        <div class="header">
+            <h1><i class="fas fa-terminal"></i> GeekTool</h1>
+            <div style="display:flex;align-items:center;gap:0.8rem;">
+                <div class="theme-switcher">
+                    <button class="theme-btn active" data-theme="green" style="background:#00e5b0;"
+                        title="绿色主题"></button>
+                    <button class="theme-btn" data-theme="blue" style="background:#3b6eff;" title="蓝色主题"></button>
+                    <span class="theme-label" id="themeLabel">🌿 绿</span>
+                </div>
+                <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> 返回</a>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="timestamp"><i class="far fa-clock"></i> 时间戳</button>
+            <button class="tab-btn" data-tab="base64"><i class="fas fa-code"></i> Base64</button>
+            <button class="tab-btn" data-tab="color"><i class="fas fa-palette"></i> 颜色</button>
+            <button class="tab-btn" data-tab="uuid"><i class="fas fa-hashtag"></i> UUID</button>
+            <button class="tab-btn" data-tab="json"><i class="fas fa-brackets-curly"></i> JSON</button>
+            <button class="tab-btn" data-tab="password"><i class="fas fa-key"></i> 密码</button>
+        </div>
+
+        <!-- ========== 面板1: 时间戳 ========== -->
+        <div id="panel-timestamp" class="panel active">
+            <label><i class="far fa-calendar-alt"></i> Unix 时间戳 ↔ 日期时间</label>
+            <div class="inline-group">
+                <input type="number" id="tsInput" placeholder="1734567890" />
+                <button class="btn btn-primary" id="tsToDate"><i class="fas fa-arrow-right"></i> 转日期</button>
+                <button class="btn btn-secondary" id="tsNow"><i class="fas fa-bolt"></i> 现在</button>
+            </div>
+            <div class="result-box" id="tsResult">
+                <span class="empty">输入时间戳或点击"现在"</span>
+            </div>
+            <div class="inline-group" style="margin-top:0.5rem;">
+                <input type="datetime-local" id="dtInput" />
+                <button class="btn btn-primary" id="dtToTs"><i class="fas fa-arrow-left"></i> 转时间戳</button>
+            </div>
+            <div class="result-box" id="dtResult">
+                <span class="empty">选择日期时间后点击转换</span>
+            </div>
+        </div>
+
+        <!-- ========== 面板2: Base64 ========== -->
+        <div id="panel-base64" class="panel">
+            <label><i class="fas fa-code"></i> Base64 编解码</label>
+            <textarea id="b64Input" placeholder="输入要编码/解码的文本..."></textarea>
+            <div class="tool-row">
+                <button class="btn btn-primary" id="b64Encode"><i class="fas fa-lock"></i> 编码</button>
+                <button class="btn btn-secondary" id="b64Decode"><i class="fas fa-unlock"></i> 解码</button>
+                <button class="btn btn-secondary" id="b64Clear"><i class="fas fa-eraser"></i> 清空</button>
+            </div>
+            <div class="result-box" id="b64Result">
+                <span class="empty">结果将显示在这里</span>
+            </div>
+        </div>
+
+        <!-- ========== 面板3: 颜色转换 ========== -->
+        <div id="panel-color" class="panel">
+            <label><i class="fas fa-palette"></i> 颜色转换 (HEX ↔ RGB ↔ HSL)</label>
+            <div class="inline-group">
+                <input type="text" id="colorInput" placeholder="#3b6eff 或 rgb(59,110,255)" value="#3b6eff" />
+                <button class="btn btn-primary" id="colorConvert"><i class="fas fa-sync"></i> 转换</button>
+                <input type="color" id="colorPicker" value="#3b6eff"
+                    style="width:44px;height:44px;border-radius:12px;border:none;cursor:pointer;background:transparent;" />
+            </div>
+            <div class="result-box" id="colorResult" style="flex-direction:column;align-items:flex-start;gap:4px;">
+                <span>HEX: <span id="colorHex">#3b6eff</span></span>
+                <span>RGB: <span id="colorRgb">rgb(59, 110, 255)</span></span>
+                <span>HSL: <span id="colorHsl">hsl(224, 100%, 62%)</span></span>
+            </div>
+        </div>
+
+        <!-- ========== 面板4: UUID ========== -->
+        <div id="panel-uuid" class="panel">
+            <label><i class="fas fa-hashtag"></i> UUID 生成器</label>
+            <div class="tool-row">
+                <button class="btn btn-primary" id="uuidGen"><i class="fas fa-dice"></i> 生成 UUID v4</button>
+                <button class="btn btn-secondary" id="uuidCopy"><i class="fas fa-copy"></i> 复制</button>
+                <button class="btn btn-secondary" id="uuidBatch"><i class="fas fa-layer-group"></i> 生成 5 个</button>
+            </div>
+            <div class="result-box" id="uuidResult">
+                <span class="empty">点击生成</span>
+            </div>
+        </div>
+
+        <!-- ========== 面板5: JSON ========== -->
+        <div id="panel-json" class="panel">
+            <label><i class="fas fa-brackets-curly"></i> JSON 格式化 / 压缩</label>
+            <textarea id="jsonInput" placeholder='{"name":"cxy","tools":["timestamp","base64"]}'></textarea>
+            <div class="tool-row">
+                <button class="btn btn-primary" id="jsonFormat"><i class="fas fa-expand"></i> 格式化</button>
+                <button class="btn btn-secondary" id="jsonMinify"><i class="fas fa-compress"></i> 压缩</button>
+                <button class="btn btn-secondary" id="jsonValidate"><i class="fas fa-check-circle"></i> 验证</button>
+            </div>
+            <div class="result-box" id="jsonResult">
+                <span class="empty">结果将显示在这里</span>
+            </div>
+        </div>
+
+        <!-- ========== 面板6: 密码生成 ========== -->
+        <div id="panel-password" class="panel">
+            <label><i class="fas fa-key"></i> 强密码生成器</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" id="pwUpper" checked /> 大写</label>
+                <label><input type="checkbox" id="pwLower" checked /> 小写</label>
+                <label><input type="checkbox" id="pwNumber" checked /> 数字</label>
+                <label><input type="checkbox" id="pwSymbol" checked /> 符号</label>
+            </div>
+            <div class="inline-group">
+                <label style="color:var(--text-secondary);font-size:0.85rem;">长度:</label>
+                <input type="number" id="pwLength" value="16" min="4" max="64" style="width:70px;" />
+                <button class="btn btn-primary" id="pwGen"><i class="fas fa-dice"></i> 生成密码</button>
+                <button class="btn btn-secondary" id="pwCopy"><i class="fas fa-copy"></i> 复制</button>
+            </div>
+            <div class="result-box" id="pwResult">
+                <span class="empty">点击生成</span>
+            </div>
+            <div class="strength-bar" id="pwStrength">
+                <span></span><span></span><span></span><span></span><span></span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        (function () {
+            // ===== 换肤 =====
+            const themeBtns = document.querySelectorAll('.theme-btn');
+            const themeLabel = document.getElementById('themeLabel');
+            const html = document.documentElement;
+
+            function setTheme(theme) {
+                html.setAttribute('data-theme', theme);
+                themeBtns.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.theme === theme);
+                });
+                const names = { green: '🌿 绿', blue: '💠 蓝' };
+                themeLabel.textContent = names[theme] || '🌿 绿';
+                localStorage.setItem('preferred_theme', theme);
+            }
+
+            // 恢复主题
+            const saved = localStorage.getItem('preferred_theme') || 'green';
+            setTheme(saved);
+
+            themeBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    setTheme(btn.dataset.theme);
+                });
+            });
+
+            // ===== Tab 切换 =====
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const panels = {
+                timestamp: document.getElementById('panel-timestamp'),
+                base64: document.getElementById('panel-base64'),
+                color: document.getElementById('panel-color'),
+                uuid: document.getElementById('panel-uuid'),
+                json: document.getElementById('panel-json'),
+                password: document.getElementById('panel-password'),
+            };
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    Object.keys(panels).forEach(key => {
+                        panels[key].classList.toggle('active', key === btn.dataset.tab);
+                    });
+                });
+            });
+
+            // ===== 通用: 复制 =====
+            function copyText(text, resultEl) {
+                navigator.clipboard.writeText(text).then(() => {
+                    const orig = resultEl.innerHTML;
+                    resultEl.innerHTML = `<span style="color:#51cf66;"><i class="fas fa-check"></i> 已复制!</span>`;
+                    setTimeout(() => resultEl.innerHTML = orig, 1500);
+                }).catch(() => {
+                    const ta = document.createElement('textarea');
+                    ta.value = text;
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    ta.remove();
+                    const orig = resultEl.innerHTML;
+                    resultEl.innerHTML = `<span style="color:#51cf66;"><i class="fas fa-check"></i> 已复制!</span>`;
+                    setTimeout(() => resultEl.innerHTML = orig, 1500);
+                });
+            }
+
+            function setResult(el, text, isError = false) {
+                if (isError) {
+                    el.innerHTML = `<span style="color:#ff6b6b;"><i class="fas fa-exclamation-circle"></i> ${text}</span>`;
+                    return;
+                }
+                el.innerHTML = `<span>${text}</span><button class="copy-btn" onclick="this.closest('.result-box').__copy()"><i class="fas fa-copy"></i></button>`;
+                el.__copy = () => copyText(text, el);
+            }
+
+            // ===== 1. 时间戳 =====
+            const tsInput = document.getElementById('tsInput');
+            const tsToDate = document.getElementById('tsToDate');
+            const tsNow = document.getElementById('tsNow');
+            const tsResult = document.getElementById('tsResult');
+            const dtInput = document.getElementById('dtInput');
+            const dtToTs = document.getElementById('dtToTs');
+            const dtResult = document.getElementById('dtResult');
+
+            tsToDate.addEventListener('click', () => {
+                const val = parseInt(tsInput.value);
+                if (isNaN(val) || val < 0) {
+                    setResult(tsResult, '请输入有效的时间戳', true);
+                    return;
+                }
+                const d = new Date(val * 1000);
+                setResult(tsResult, d.toLocaleString('zh-CN', { hour12: false }) + ' (UTC+8)');
+            });
+
+            tsNow.addEventListener('click', () => {
+                const now = Math.floor(Date.now() / 1000);
+                tsInput.value = now;
+                const d = new Date(now * 1000);
+                setResult(tsResult, d.toLocaleString('zh-CN', { hour12: false }) + ' (UTC+8)');
+            });
+
+            dtToTs.addEventListener('click', () => {
+                if (!dtInput.value) {
+                    setResult(dtResult, '请选择日期时间', true);
+                    return;
+                }
+                const d = new Date(dtInput.value);
+                if (isNaN(d.getTime())) {
+                    setResult(dtResult, '无效的日期', true);
+                    return;
+                }
+                const ts = Math.floor(d.getTime() / 1000);
+                setResult(dtResult, ts.toString());
+            });
+
+            // ===== 2. Base64 =====
+            const b64Input = document.getElementById('b64Input');
+            const b64Encode = document.getElementById('b64Encode');
+            const b64Decode = document.getElementById('b64Decode');
+            const b64Clear = document.getElementById('b64Clear');
+            const b64Result = document.getElementById('b64Result');
+
+            b64Encode.addEventListener('click', () => {
+                try {
+                    setResult(b64Result, btoa(unescape(encodeURIComponent(b64Input.value))));
+                } catch (e) {
+                    setResult(b64Result, '编码失败: ' + e.message, true);
+                }
+            });
+
+            b64Decode.addEventListener('click', () => {
+                try {
+                    setResult(b64Result, decodeURIComponent(escape(atob(b64Input.value))));
+                } catch (e) {
+                    setResult(b64Result, '解码失败: 输入不是有效的Base64', true);
+                }
+            });
+
+            b64Clear.addEventListener('click', () => {
+                b64Input.value = '';
+                setResult(b64Result, '已清空');
+            });
+
+            // ===== 3. 颜色 =====
+            const colorInput = document.getElementById('colorInput');
+            const colorPicker = document.getElementById('colorPicker');
+            const colorConvert = document.getElementById('colorConvert');
+            const colorHex = document.getElementById('colorHex');
+            const colorRgb = document.getElementById('colorRgb');
+            const colorHsl = document.getElementById('colorHsl');
+
+            function parseColor(str) {
+                str = str.trim().toLowerCase();
+                const hexMatch = str.match(/^#?([0-9a-f]{3,6})$/);
+                if (hexMatch) {
+                    let hex = hexMatch[1];
+                    if (hex.length === 3) hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+                    const r = parseInt(hex.slice(0, 2), 16);
+                    const g = parseInt(hex.slice(2, 4), 16);
+                    const b = parseInt(hex.slice(4, 6), 16);
+                    return { r, g, b, hex: '#' + hex };
+                }
+                const rgbMatch = str.match(/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/);
+                if (rgbMatch) {
+                    const r = parseInt(rgbMatch[1]),
+                        g = parseInt(rgbMatch[2]),
+                        b = parseInt(rgbMatch[3]);
+                    return { r, g, b, hex: '#' + [r, g, b].map(c => c.toString(16).padStart(2, '0')).join('') };
+                }
+                return null;
+            }
+
+            function rgbToHsl(r, g, b) {
+                r /= 255;
+                g /= 255;
+                b /= 255;
+                const max = Math.max(r, g, b),
+                    min = Math.min(r, g, b);
+                let h, s, l = (max + min) / 2;
+                if (max === min) { h = s = 0; } else {
+                    const d = max - min;
+                    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                    if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+                    else if (max === g) h = ((b - r) / d + 2) / 6;
+                    else h = ((r - g) / d + 4) / 6;
+                }
+                return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+            }
+
+            function updateColorDisplay(str) {
+                const parsed = parseColor(str);
+                if (!parsed) {
+                    colorHex.textContent = '无效颜色';
+                    colorRgb.textContent = '无效颜色';
+                    colorHsl.textContent = '无效颜色';
+                    return;
+                }
+                const { r, g, b, hex } = parsed;
+                const hsl = rgbToHsl(r, g, b);
+                colorHex.textContent = hex;
+                colorRgb.textContent = `rgb(${r}, ${g}, ${b})`;
+                colorHsl.textContent = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+                colorPicker.value = hex;
+                document.getElementById('colorResult').style.borderColor = hex;
+            }
+
+            colorConvert.addEventListener('click', () => updateColorDisplay(colorInput.value));
+            colorPicker.addEventListener('input', () => {
+                colorInput.value = colorPicker.value;
+                updateColorDisplay(colorPicker.value);
+            });
+
+            updateColorDisplay('#3b6eff');
+
+            // ===== 4. UUID =====
+            const uuidGen = document.getElementById('uuidGen');
+            const uuidCopy = document.getElementById('uuidCopy');
+            const uuidBatch = document.getElementById('uuidBatch');
+            const uuidResult = document.getElementById('uuidResult');
+
+            function genUUID() {
+                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+                    const r = Math.random() * 16 | 0;
+                    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+                });
+            }
+
+            uuidGen.addEventListener('click', () => {
+                const u = genUUID();
+                setResult(uuidResult, u);
+            });
+
+            uuidBatch.addEventListener('click', () => {
+                const list = Array.from({ length: 5 }, () => genUUID());
+                setResult(uuidResult, list.join('\n'));
+            });
+
+            uuidCopy.addEventListener('click', () => {
+                const text = uuidResult.textContent.trim();
+                if (text && !text.includes('点击生成')) {
+                    copyText(text, uuidResult);
+                }
+            });
+
+            // ===== 5. JSON =====
+            const jsonInput = document.getElementById('jsonInput');
+            const jsonFormat = document.getElementById('jsonFormat');
+            const jsonMinify = document.getElementById('jsonMinify');
+            const jsonValidate = document.getElementById('jsonValidate');
+            const jsonResult = document.getElementById('jsonResult');
+
+            function handleJSON(mode) {
+                try {
+                    const parsed = JSON.parse(jsonInput.value);
+                    if (mode === 'format') {
+                        setResult(jsonResult, JSON.stringify(parsed, null, 2));
+                    } else if (mode === 'minify') {
+                        setResult(jsonResult, JSON.stringify(parsed));
+                    } else if (mode === 'validate') {
+                        setResult(jsonResult, '✅ 有效 JSON');
+                    }
+                } catch (e) {
+                    setResult(jsonResult, '❌ ' + e.message, true);
+                }
+            }
+
+            jsonFormat.addEventListener('click', () => handleJSON('format'));
+            jsonMinify.addEventListener('click', () => handleJSON('minify'));
+            jsonValidate.addEventListener('click', () => handleJSON('validate'));
+
+            // ===== 6. 密码生成 =====
+            const pwUpper = document.getElementById('pwUpper');
+            const pwLower = document.getElementById('pwLower');
+            const pwNumber = document.getElementById('pwNumber');
+            const pwSymbol = document.getElementById('pwSymbol');
+            const pwLength = document.getElementById('pwLength');
+            const pwGen = document.getElementById('pwGen');
+            const pwCopy = document.getElementById('pwCopy');
+            const pwResult = document.getElementById('pwResult');
+            const pwStrength = document.getElementById('pwStrength');
+
+            function generatePassword() {
+                let chars = '';
+                if (pwUpper.checked) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                if (pwLower.checked) chars += 'abcdefghijklmnopqrstuvwxyz';
+                if (pwNumber.checked) chars += '0123456789';
+                if (pwSymbol.checked) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+                if (!chars) {
+                    setResult(pwResult, '请至少选择一种字符类型', true);
+                    return null;
+                }
+                const len = parseInt(pwLength.value) || 16;
+                let pw = '';
+                for (let i = 0; i < len; i++) {
+                    pw += chars[Math.floor(Math.random() * chars.length)];
+                }
+                return pw;
+            }
+
+            function checkStrength(pw) {
+                let score = 0;
+                if (pw.length >= 12) score++;
+                if (pw.length >= 16) score++;
+                if (/[a-z]/.test(pw)) score++;
+                if (/[A-Z]/.test(pw)) score++;
+                if (/\d/.test(pw)) score++;
+                if (/[^a-zA-Z0-9]/.test(pw)) score++;
+                return Math.min(score, 5);
+            }
+
+            function updateStrength(pw) {
+                const score = checkStrength(pw);
+                const spans = pwStrength.querySelectorAll('span');
+                const labels = ['weak', 'weak', 'medium', 'medium', 'strong'];
+                spans.forEach((span, i) => {
+                    span.className = '';
+                    if (i < score) {
+                        span.classList.add('active', labels[i] || 'medium');
+                    }
+                });
+            }
+
+            pwGen.addEventListener('click', () => {
+                const pw = generatePassword();
+                if (pw) {
+                    setResult(pwResult, pw);
+                    updateStrength(pw);
+                }
+            });
+
+            pwCopy.addEventListener('click', () => {
+                const text = pwResult.textContent.trim();
+                if (text && !text.includes('点击生成')) {
+                    copyText(text, pwResult);
+                }
+            });
+
+            setTimeout(() => {
+                const pw = generatePassword();
+                if (pw) {
+                    setResult(pwResult, pw);
+                    updateStrength(pw);
+                }
+            }, 300);
+
+        })();
+    </script>
+
+</body>
+
+</html>
