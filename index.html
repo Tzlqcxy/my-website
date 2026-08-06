@@ -644,10 +644,7 @@ body {
         if (Array.isArray(parsed)) return parsed;
       }
     } catch (_) {}
-    return [
-      { id: Date.now() - 100000, name: 'CyberPunk', text: '极客风格拉满！信号已收到。', time: Date.now() - 100000 },
-      { id: Date.now() - 50000, name: 'Neo', text: '矩阵里又多了一个有趣的节点。', time: Date.now() - 50000 },
-    ];
+    return [];
   }
   function saveMessages(messages) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
