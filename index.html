@@ -403,6 +403,138 @@
       background: rgba(0, 255, 200, 0.03);
     }
 
+    /* ===== 打字排名 ===== */
+    .rankings-section {
+      border-top: 1px solid var(--border-color);
+      padding-top: 1.6rem;
+      margin-top: 0.2rem;
+    }
+
+    .podium {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 1.2rem;
+      padding: 0.8rem 0 1.2rem;
+      min-height: 90px;
+    }
+
+    .podium-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 0.4rem 1rem;
+      border-radius: 1rem;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      min-width: 70px;
+      transition: 0.2s;
+    }
+
+    .podium-item:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .podium-first {
+      border-color: var(--primary);
+      background: rgba(0, 255, 200, 0.04);
+      padding: 0.6rem 1.5rem;
+      transform: scale(1.05);
+    }
+
+    .podium-first:hover {
+      transform: scale(1.08);
+    }
+
+    .podium-medal {
+      font-size: 1.6rem;
+    }
+
+    .podium-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-accent);
+    }
+
+    .podium-score {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+
+    .rankings-table {
+      background: var(--bg-input);
+      border-radius: 1.2rem;
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+    }
+
+    .rank-header {
+      display: grid;
+      grid-template-columns: 36px 1fr 55px 55px 45px;
+      padding: 0.4rem 1rem;
+      background: rgba(0, 0, 0, 0.2);
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .rank-row {
+      display: grid;
+      grid-template-columns: 36px 1fr 55px 55px 45px;
+      padding: 0.3rem 1rem;
+      font-size: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      border-top: 1px solid var(--border-color);
+      transition: 0.15s;
+      align-items: center;
+    }
+
+    .rank-row:hover {
+      background: rgba(0, 255, 200, 0.02);
+    }
+
+    .rank-row .rank-num {
+      color: var(--text-muted);
+      font-size: 0.65rem;
+    }
+
+    .rank-row .rank-name {
+      color: var(--text-accent);
+      font-weight: 500;
+    }
+
+    .rank-row .rank-wpm {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .rank-row .rank-acc {
+      color: var(--text-secondary);
+    }
+
+    .rank-row .rank-time {
+      color: var(--text-muted);
+      font-size: 0.65rem;
+    }
+
+    .rank-row.me {
+      background: rgba(0, 255, 200, 0.04);
+      border-left: 2px solid var(--primary);
+    }
+
+    .rank-empty {
+      padding: 1.2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
     .guestbook-section {
       border-top: 1px solid var(--border-color);
       padding-top: 1.6rem;
@@ -806,7 +938,8 @@
       <!-- 左侧 -->
       <aside class="profile-side">
         <div class="avatar-wrapper">
-          <img src="avatar.jpg" alt="cxy" style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;" />
+          <img src="avatar.jpg" alt="cxy"
+            style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;" />
         </div>
         <h1 class="profile-name">cxy</h1>
         <span class="profile-title"><i class="fas fa-terminal" style="margin-right: 6px;"></i> 创作者</span>
@@ -863,21 +996,21 @@
               <span>WeatherFlow</span>
               <small>实时 · 可视化</small>
             </div>
-            <div class="work-item">
+            <a href="mindnote.html" class="work-item">
               <i class="fas fa-pen-fancy"></i>
               <span>MindNote</span>
               <small>极简 · 知识库</small>
-            </div>
-            <div class="work-item">
+            </a>
+            <a href="artisan.html" class="work-item">
               <i class="fas fa-store"></i>
               <span>Artisan Shop</span>
               <small>独立 · 创作者</small>
-            </div>
-            <div class="work-item">
+            </a>
+            <a href="dash.html" class="work-item">
               <i class="fas fa-chart-line"></i>
               <span>Insight Dash</span>
               <small>数据·仪表板</small>
-            </div>
+            </a>
             <a href="snakegames.html" class="work-item game-entry">
               <i class="fas fa-gamepad"></i>
               <span>贪吃蛇</span>
@@ -900,6 +1033,43 @@
             </a>
           </div>
         </div>
+
+        <!-- ===== 打字排名 ===== -->
+        <div class="rankings-section">
+          <div class="section-label"><i class="fas fa-trophy"></i> 打字排名 · 速度榜</div>
+
+          <div class="podium" id="podium">
+            <div class="podium-item" id="rank2">
+              <span class="podium-medal">🥈</span>
+              <span class="podium-name">-</span>
+              <span class="podium-score">- WPM</span>
+            </div>
+            <div class="podium-item podium-first" id="rank1">
+              <span class="podium-medal">🥇</span>
+              <span class="podium-name">-</span>
+              <span class="podium-score">- WPM</span>
+            </div>
+            <div class="podium-item" id="rank3">
+              <span class="podium-medal">🥉</span>
+              <span class="podium-name">-</span>
+              <span class="podium-score">- WPM</span>
+            </div>
+          </div>
+
+          <div class="rankings-table">
+            <div class="rank-header">
+              <span>#</span>
+              <span>玩家</span>
+              <span>WPM</span>
+              <span>正确率</span>
+              <span>用时</span>
+            </div>
+            <div id="rankingsList">
+              <div class="rank-empty">⏳ 加载中...</div>
+            </div>
+          </div>
+        </div>
+
         <!-- 留言板 -->
         <div class="guestbook-section">
           <div class="section-label"><i class="fas fa-comment-dots"></i> 留言板 · 信号</div>
@@ -1089,96 +1259,96 @@
       }
     })();
 
-  // ===== 留言板 (D1 后端存储) =====
-  (function () {
-    const API_BASE = 'https://api.eggfish.dpdns.org/api';
+    // ===== 留言板 (D1 后端存储) =====
+    (function () {
+      const API_BASE = 'https://api.eggfish.dpdns.org/api';
 
-    async function fetchMessages() {
-      try {
-        const resp = await fetch(`${API_BASE}/messages`);
-        if (!resp.ok) throw new Error('获取失败');
-        const data = await resp.json();
-        localStorage.setItem('geek_guestbook_messages', JSON.stringify(data));
-        return data;
-      } catch (error) {
-        console.warn('从服务器获取留言失败:', error);
+      async function fetchMessages() {
         try {
-          const raw = localStorage.getItem('geek_guestbook_messages');
-          if (raw) {
-            const parsed = JSON.parse(raw);
-            if (Array.isArray(parsed)) return parsed;
-          }
-        } catch (_) { }
-        return [];
-      }
-    }
-
-    async function addMessage(name, text) {
-      try {
-        const resp = await fetch(`${API_BASE}/messages`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: name.trim(), text: text.trim() })
-        });
-        if (!resp.ok) {
-          const errMsg = await resp.text();
-          throw new Error(errMsg || '保存失败');
+          const resp = await fetch(`${API_BASE}/messages`);
+          if (!resp.ok) throw new Error('获取失败');
+          const data = await resp.json();
+          localStorage.setItem('geek_guestbook_messages', JSON.stringify(data));
+          return data;
+        } catch (error) {
+          console.warn('从服务器获取留言失败:', error);
+          try {
+            const raw = localStorage.getItem('geek_guestbook_messages');
+            if (raw) {
+              const parsed = JSON.parse(raw);
+              if (Array.isArray(parsed)) return parsed;
+            }
+          } catch (_) { }
+          return [];
         }
-        return true;
-      } catch (error) {
-        console.warn('发送留言失败:', error);
-        alert('⚠️ ' + error.message);
-        return false;
-      }
-    }
-
-    async function deleteMessage(id) {
-      try {
-        const resp = await fetch(`${API_BASE}/messages/${id}`, {
-          method: 'DELETE'
-        });
-        if (!resp.ok) throw new Error('删除失败');
-        return true;
-      } catch (error) {
-        console.warn('删除留言失败:', error);
-        alert('⚠️ 删除失败，请重试');
-        return false;
-      }
-    }
-
-    function formatTime(timestamp) {
-      const date = new Date(timestamp);
-      const pad = (n) => String(n).padStart(2, '0');
-      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
-    }
-
-    function escapeHtml(unsafe) {
-      if (!unsafe) return '';
-      return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
-
-    function renderMessages(messages) {
-      const container = document.getElementById('messagesContainer');
-      if (!container) return;
-
-      if (!messages || messages.length === 0) {
-        container.innerHTML =
-          `<div class="empty-messages"><i class="fas fa-satellite-dish" style="margin-right: 8px;"></i> 暂无信号，成为第一个留言者</div>`;
-        return;
       }
 
-      const sorted = [...messages].sort((a, b) => (b.created_at || b.time || 0) - (a.created_at || a.time || 0));
+      async function addMessage(name, text) {
+        try {
+          const resp = await fetch(`${API_BASE}/messages`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: name.trim(), text: text.trim() })
+          });
+          if (!resp.ok) {
+            const errMsg = await resp.text();
+            throw new Error(errMsg || '保存失败');
+          }
+          return true;
+        } catch (error) {
+          console.warn('发送留言失败:', error);
+          alert('⚠️ ' + error.message);
+          return false;
+        }
+      }
 
-      let html = '';
-      sorted.forEach(msg => {
-        const name = msg.name || '匿名';
-        const text = msg.text || '…';
-        const time = msg.created_at || msg.time || Date.now();
-        const id = msg.id;
-        const timeStr = formatTime(time);
+      async function deleteMessage(id) {
+        try {
+          const resp = await fetch(`${API_BASE}/messages/${id}`, {
+            method: 'DELETE'
+          });
+          if (!resp.ok) throw new Error('删除失败');
+          return true;
+        } catch (error) {
+          console.warn('删除留言失败:', error);
+          alert('⚠️ 删除失败，请重试');
+          return false;
+        }
+      }
 
-        html += `
+      function formatTime(timestamp) {
+        const date = new Date(timestamp);
+        const pad = (n) => String(n).padStart(2, '0');
+        return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+      }
+
+      function escapeHtml(unsafe) {
+        if (!unsafe) return '';
+        return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function renderMessages(messages) {
+        const container = document.getElementById('messagesContainer');
+        if (!container) return;
+
+        if (!messages || messages.length === 0) {
+          container.innerHTML =
+            `<div class="empty-messages"><i class="fas fa-satellite-dish" style="margin-right: 8px;"></i> 暂无信号，成为第一个留言者</div>`;
+          return;
+        }
+
+        const sorted = [...messages].sort((a, b) => (b.created_at || b.time || 0) - (a.created_at || a.time || 0));
+
+        let html = '';
+        sorted.forEach(msg => {
+          const name = msg.name || '匿名';
+          const text = msg.text || '…';
+          const time = msg.created_at || msg.time || Date.now();
+          const id = msg.id;
+          const timeStr = formatTime(time);
+
+          html += `
                 <div class="message-item" data-id="${id}">
                     <div class="message-body">
                         <div class="message-meta">
@@ -1190,76 +1360,159 @@
                     <button class="message-delete" data-id="${id}" title="删除信号"><i class="fas fa-trash-alt"></i></button>
                 </div>
             `;
-      });
+        });
 
-      container.innerHTML = html;
+        container.innerHTML = html;
 
-      container.querySelectorAll('.message-delete').forEach(btn => {
-        btn.addEventListener('click', async function (e) {
-          e.stopPropagation();
-          const id = Number(this.getAttribute('data-id'));
-          if (!id) return;
-          if (!confirm('确定要抹除这条信号吗？')) return;
+        container.querySelectorAll('.message-delete').forEach(btn => {
+          btn.addEventListener('click', async function (e) {
+            e.stopPropagation();
+            const id = Number(this.getAttribute('data-id'));
+            if (!id) return;
+            if (!confirm('确定要抹除这条信号吗？')) return;
 
-          const ok = await deleteMessage(id);
+            const ok = await deleteMessage(id);
+            if (ok) {
+              const messages = await fetchMessages();
+              renderMessages(messages);
+            }
+          });
+        });
+      }
+
+      async function loadMessages() {
+        const messages = await fetchMessages();
+        renderMessages(messages);
+        return messages;
+      }
+
+      const form = document.getElementById('guestbookForm');
+      const nameInput = document.getElementById('nameInput');
+      const messageInput = document.getElementById('messageInput');
+
+      if (form) {
+        form.addEventListener('submit', async function (e) {
+          e.preventDefault();
+
+          const name = nameInput.value.trim();
+          const text = messageInput.value.trim();
+
+          if (!name || !text) {
+            alert('代号和信号都不能为空 ✦');
+            return;
+          }
+
+          const submitBtn = form.querySelector('.btn-submit');
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 发送中...';
+
+          const ok = await addMessage(name, text);
+
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> 发送';
+
           if (ok) {
+            nameInput.value = '';
+            messageInput.value = '';
             const messages = await fetchMessages();
             renderMessages(messages);
+            const container = document.getElementById('messagesContainer');
+            if (container) container.scrollTop = 0;
           }
         });
-      });
-    }
+      }
 
-    async function loadMessages() {
-      const messages = await fetchMessages();
-      renderMessages(messages);
-      return messages;
-    }
-
-    const form = document.getElementById('guestbookForm');
-    const nameInput = document.getElementById('nameInput');
-    const messageInput = document.getElementById('messageInput');
-
-    if (form) {
-      form.addEventListener('submit', async function (e) {
-        e.preventDefault();
-
-        const name = nameInput.value.trim();
-        const text = messageInput.value.trim();
-
-        if (!name || !text) {
-          alert('代号和信号都不能为空 ✦');
-          return;
-        }
-
-        const submitBtn = form.querySelector('.btn-submit');
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 发送中...';
-
-        const ok = await addMessage(name, text);
-
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> 发送';
-
-        if (ok) {
-          nameInput.value = '';
-          messageInput.value = '';
-          const messages = await fetchMessages();
-          renderMessages(messages);
-          const container = document.getElementById('messagesContainer');
-          if (container) container.scrollTop = 0;
-        }
-      });
-    }
-
-    loadMessages();
-
-    window.refreshGuestbook = loadMessages;
-
-    setInterval(() => {
       loadMessages();
-    }, 30000);
-  })();
+
+      window.refreshGuestbook = loadMessages;
+
+      setInterval(() => {
+        loadMessages();
+      }, 30000);
+    })();
+
+    // ===== 打字排名 =====
+    (function () {
+      const API_BASE = 'https://api.eggfish.dpdns.org/api';
+      const container = document.getElementById('rankingsList');
+      const playerName = localStorage.getItem('typing_name') || 'cxy';
+
+      function escapeHtml(unsafe) {
+        if (!unsafe) return '';
+        return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      // 更新领奖台
+      async function updatePodium() {
+        try {
+          const res = await fetch(`${API_BASE}/rankings/top`);
+          if (!res.ok) throw new Error('获取领奖台失败');
+          const data = await res.json();
+          const ranks = ['rank1', 'rank2', 'rank3'];
+          const medals = ['🥇', '🥈', '🥉'];
+          ranks.forEach((id, i) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const item = data && data[i] ? data[i] : null;
+            if (item) {
+              el.querySelector('.podium-name').textContent = item.player_name;
+              el.querySelector('.podium-score').textContent = `${item.wpm} WPM`;
+              el.querySelector('.podium-medal').textContent = medals[i];
+            } else {
+              el.querySelector('.podium-name').textContent = '---';
+              el.querySelector('.podium-score').textContent = '-- WPM';
+              el.querySelector('.podium-medal').textContent = medals[i];
+            }
+          });
+        } catch (error) {
+          console.warn('领奖台加载失败:', error);
+        }
+      }
+
+      // 更新排名列表
+async function updateRankings() {
+    try {
+        const res = await fetch(`${API_BASE}/rankings?limit=20`);
+        if (!res.ok) throw new Error('获取排名列表失败');
+        const data = await res.json();
+
+        if (!data || data.length === 0) {
+            container.innerHTML = '<div class="rank-empty">🏁 暂无数据，快去打字测试！</div>';
+            return;
+        }
+
+        let html = '';
+        data.forEach((item, index) => {
+            const isMe = item.player_name === playerName;
+            html += `
+                <div class="rank-row ${isMe ? 'me' : ''}">
+                    <span class="rank-num">#${index + 1}</span>
+                    <span class="rank-name">${escapeHtml(item.player_name)}</span>
+                    <span class="rank-wpm">${item.wpm}</span>
+                    <span class="rank-acc">${item.accuracy}%</span>
+                    <span class="rank-time">${item.time_used}s</span>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    } catch (error) {
+        console.warn('排名列表加载失败:', error);
+        // 区分：是网络错误还是真的没数据
+        container.innerHTML = '<div class="rank-empty">⚠️ 加载失败，请刷新</div>';
+    }
+}
+
+      // 首次加载
+      updatePodium();
+      updateRankings();
+
+      // 每 30 秒自动刷新
+      setInterval(() => {
+        updatePodium();
+        updateRankings();
+      }, 30000);
+    })();
   </script>
 
 </body>
