@@ -1089,13 +1089,21 @@
       }
     })();
 
-    // ===== 留言板 =====
-    (function () {
-      const STORAGE_KEY = 'geek_guestbook_messages';
+  // ===== 留言板 (D1 后端存储) =====
+  (function () {
+    const API_BASE = 'https://api.eggfish.dpdns.org/api';
 
-      function getMessages() {
+    async function fetchMessages() {
+      try {
+        const resp = await fetch(`${API_BASE}/messages`);
+        if (!resp.ok) throw new Error('获取失败');
+        const data = await resp.json();
+        localStorage.setItem('geek_guestbook_messages', JSON.stringify(data));
+        return data;
+      } catch (error) {
+        console.warn('从服务器获取留言失败:', error);
         try {
-          const raw = localStorage.getItem(STORAGE_KEY);
+          const raw = localStorage.getItem('geek_guestbook_messages');
           if (raw) {
             const parsed = JSON.parse(raw);
             if (Array.isArray(parsed)) return parsed;
@@ -1103,103 +1111,155 @@
         } catch (_) { }
         return [];
       }
+    }
 
-      function saveMessages(messages) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+    async function addMessage(name, text) {
+      try {
+        const resp = await fetch(`${API_BASE}/messages`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: name.trim(), text: text.trim() })
+        });
+        if (!resp.ok) {
+          const errMsg = await resp.text();
+          throw new Error(errMsg || '保存失败');
+        }
+        return true;
+      } catch (error) {
+        console.warn('发送留言失败:', error);
+        alert('⚠️ ' + error.message);
+        return false;
+      }
+    }
+
+    async function deleteMessage(id) {
+      try {
+        const resp = await fetch(`${API_BASE}/messages/${id}`, {
+          method: 'DELETE'
+        });
+        if (!resp.ok) throw new Error('删除失败');
+        return true;
+      } catch (error) {
+        console.warn('删除留言失败:', error);
+        alert('⚠️ 删除失败，请重试');
+        return false;
+      }
+    }
+
+    function formatTime(timestamp) {
+      const date = new Date(timestamp);
+      const pad = (n) => String(n).padStart(2, '0');
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    }
+
+    function escapeHtml(unsafe) {
+      if (!unsafe) return '';
+      return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function renderMessages(messages) {
+      const container = document.getElementById('messagesContainer');
+      if (!container) return;
+
+      if (!messages || messages.length === 0) {
+        container.innerHTML =
+          `<div class="empty-messages"><i class="fas fa-satellite-dish" style="margin-right: 8px;"></i> 暂无信号，成为第一个留言者</div>`;
+        return;
       }
 
-      function formatTime(timestamp) {
-        const date = new Date(timestamp);
-        const pad = (n) => String(n).padStart(2, '0');
-        return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
-      }
+      const sorted = [...messages].sort((a, b) => (b.created_at || b.time || 0) - (a.created_at || a.time || 0));
 
-      function escapeHtml(unsafe) {
-        if (!unsafe) return '';
-        return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;")
-          .replace(/'/g, "&#039;");
-      }
+      let html = '';
+      sorted.forEach(msg => {
+        const name = msg.name || '匿名';
+        const text = msg.text || '…';
+        const time = msg.created_at || msg.time || Date.now();
+        const id = msg.id;
+        const timeStr = formatTime(time);
 
-      function renderMessages() {
-        const container = document.getElementById('messagesContainer');
-        const messages = getMessages();
-        if (!container) return;
-        if (messages.length === 0) {
-          container.innerHTML =
-            `<div class="empty-messages"><i class="fas fa-satellite-dish" style="margin-right: 8px;"></i> 暂无信号，成为第一个留言者</div>`;
+        html += `
+                <div class="message-item" data-id="${id}">
+                    <div class="message-body">
+                        <div class="message-meta">
+                            <span class="message-author">${escapeHtml(name)}</span>
+                            <span class="message-time">${timeStr}</span>
+                        </div>
+                        <div class="message-text">${escapeHtml(text)}</div>
+                    </div>
+                    <button class="message-delete" data-id="${id}" title="删除信号"><i class="fas fa-trash-alt"></i></button>
+                </div>
+            `;
+      });
+
+      container.innerHTML = html;
+
+      container.querySelectorAll('.message-delete').forEach(btn => {
+        btn.addEventListener('click', async function (e) {
+          e.stopPropagation();
+          const id = Number(this.getAttribute('data-id'));
+          if (!id) return;
+          if (!confirm('确定要抹除这条信号吗？')) return;
+
+          const ok = await deleteMessage(id);
+          if (ok) {
+            const messages = await fetchMessages();
+            renderMessages(messages);
+          }
+        });
+      });
+    }
+
+    async function loadMessages() {
+      const messages = await fetchMessages();
+      renderMessages(messages);
+      return messages;
+    }
+
+    const form = document.getElementById('guestbookForm');
+    const nameInput = document.getElementById('nameInput');
+    const messageInput = document.getElementById('messageInput');
+
+    if (form) {
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const name = nameInput.value.trim();
+        const text = messageInput.value.trim();
+
+        if (!name || !text) {
+          alert('代号和信号都不能为空 ✦');
           return;
         }
-        const sorted = [...messages].sort((a, b) => b.time - a.time);
-        let html = '';
-        sorted.forEach(msg => {
-          const name = msg.name || '匿名';
-          const text = msg.text || '…';
-          const timeStr = formatTime(msg.time);
-          html += `
-                            <div class="message-item" data-id="${msg.id}">
-                                <div class="message-body">
-                                    <div class="message-meta">
-                                        <span class="message-author">${escapeHtml(name)}</span>
-                                        <span class="message-time">${timeStr}</span>
-                                    </div>
-                                    <div class="message-text">${escapeHtml(text)}</div>
-                                </div>
-                                <button class="message-delete" data-id="${msg.id}" title="删除信号"><i class="fas fa-trash-alt"></i></button>
-                            </div>
-                        `;
-        });
-        container.innerHTML = html;
-        container.querySelectorAll('.message-delete').forEach(btn => {
-          btn.addEventListener('click', function (e) {
-            e.stopPropagation();
-            const id = Number(this.getAttribute('data-id'));
-            if (id && confirm('确定要抹除这条信号吗？')) {
-              let messages = getMessages();
-              messages = messages.filter(msg => msg.id !== id);
-              saveMessages(messages);
-              renderMessages();
-            }
-          });
-        });
-      }
 
-      function addMessage(name, text) {
-        if (!name.trim() || !text.trim()) return false;
-        const messages = getMessages();
-        const newMsg = {
-          id: Date.now() + Math.floor(Math.random() * 1000),
-          name: name.trim().slice(0, 20),
-          text: text.trim().slice(0, 120),
-          time: Date.now(),
-        };
-        messages.push(newMsg);
-        saveMessages(messages);
-        renderMessages();
-        return true;
-      }
+        const submitBtn = form.querySelector('.btn-submit');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 发送中...';
 
-      const form = document.getElementById('guestbookForm');
-      const nameInput = document.getElementById('nameInput');
-      const messageInput = document.getElementById('messageInput');
-      if (form) {
-        form.addEventListener('submit', function (e) {
-          e.preventDefault();
-          const name = nameInput.value.trim();
-          const text = messageInput.value.trim();
-          if (!name || !text) {
-            alert('代号和信号都不能为空 ✦');
-            return;
-          }
-          if (addMessage(name, text)) {
-            nameInput.value = '';
-            messageInput.value = '';
-            const container = document.getElementById('messagesContainer');
-            if (container) container.scrollTop = 0;
-          }
-        });
-      }
-      renderMessages();
-    })();
+        const ok = await addMessage(name, text);
+
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> 发送';
+
+        if (ok) {
+          nameInput.value = '';
+          messageInput.value = '';
+          const messages = await fetchMessages();
+          renderMessages(messages);
+          const container = document.getElementById('messagesContainer');
+          if (container) container.scrollTop = 0;
+        }
+      });
+    }
+
+    loadMessages();
+
+    window.refreshGuestbook = loadMessages;
+
+    setInterval(() => {
+      loadMessages();
+    }, 30000);
+  })();
   </script>
 
 </body>
