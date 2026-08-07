@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MindNote · 知识库</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            --primary: #00e5b0;
+            --primary-dark: #00b894;
+            --primary-light: #55efc4;
+            --primary-glow: rgba(0, 255, 200, 0.25);
+            --primary-border: rgba(0, 255, 200, 0.12);
+            --primary-border-hover: rgba(0, 255, 200, 0.25);
+            --text-primary: #d6e0f0;
+            --text-accent: #b0f0e0;
+            --text-secondary: #6a8e8a;
+            --text-muted: #4a7a7a;
+            --bg-body: #0b0d12;
+            --bg-card: rgba(12, 16, 24, 0.78);
+            --bg-input: rgba(0, 0, 0, 0.3);
+            --border-color: rgba(0, 255, 200, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'JetBrains Mono', monospace;
+            background: var(--bg-body);
+            background-image: radial-gradient(circle at 10% 20%, #13171f 0%, #080a0e 90%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* 头部 */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0 2rem;
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--text-primary), var(--primary-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .header h1 i {
+            color: var(--primary);
+            margin-right: 10px;
+        }
+
+        .back-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 0.3rem 1.2rem;
+            border: 1px solid var(--primary-border);
+            border-radius: 30px;
+            transition: 0.2s;
+        }
+
+        .back-link:hover {
+            border-color: var(--primary);
+            color: var(--text-accent);
+        }
+
+        /* 知识库网格 */
+        .note-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .note-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 1.6rem;
+            padding: 1.5rem;
+            transition: 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .note-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 0 40px var(--primary-glow);
+        }
+
+        .note-card .icon {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 0.6rem;
+        }
+
+        .note-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-accent);
+            margin-bottom: 0.3rem;
+        }
+
+        .note-card p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .note-card .tag {
+            display: inline-block;
+            margin-top: 0.6rem;
+            font-size: 0.6rem;
+            padding: 0.15rem 0.8rem;
+            border-radius: 30px;
+            background: rgba(0, 255, 200, 0.06);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--border-color);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .empty-state p {
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.3rem;
+            }
+
+            .note-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <h1><i class="fas fa-pen-fancy"></i> MindNote</h1>
+            <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> 返回</a>
+        </div>
+
+        <!-- 笔记列表 -->
+        <div class="note-grid" id="noteGrid">
+            <!-- 由 JS 动态生成 -->
+        </div>
+    </div>
+
+    <script>
+        // ===== 笔记数据 =====
+        const notes = [
+            {
+                icon: 'fa-code',
+                title: 'TypeScript 进阶',
+                desc: '泛型、装饰器、类型推断与高级类型技巧',
+                tag: '前端'
+            },
+            {
+                icon: 'fa-database',
+                title: 'D1 数据库笔记',
+                desc: 'Cloudflare D1 的使用、迁移与最佳实践',
+                tag: '后端'
+            },
+            {
+                icon: 'fa-cloud',
+                title: 'Cloudflare 全家桶',
+                desc: 'Pages, Workers, D1, R2 的整合与部署',
+                tag: '运维'
+            },
+            {
+                icon: 'fa-terminal',
+                title: 'Linux 常用命令',
+                desc: '系统管理、网络调试、性能监控命令速查',
+                tag: '系统'
+            },
+            {
+                icon: 'fa-palette',
+                title: '设计系统笔记',
+                desc: '色彩、排版、组件化与设计规范',
+                tag: '设计'
+            },
+            {
+                icon: 'fa-robot',
+                title: 'AI 开发实践',
+                desc: 'Prompt 工程、RAG、Agent 与工具调用',
+                tag: 'AI'
+            }
+        ];
+
+        // ===== 渲染笔记 =====
+        const grid = document.getElementById('noteGrid');
+
+        if (notes.length === 0) {
+            grid.innerHTML = `
+            <div class="empty-state" style="grid-column:1/-1;">
+                <i class="fas fa-book-open"></i>
+                <p>知识库还在建设中，<br />稍后回来看看 👀</p>
+            </div>
+        `;
+        } else {
+            grid.innerHTML = notes.map(note => `
+            <a href="#" class="note-card" onclick="alert('📝 ${note.title}\\n\\n${note.desc}\\n\\n🏷️ ${note.tag}'); return false;">
+                <div class="icon"><i class="fas ${note.icon}"></i></div>
+                <h3>${note.title}</h3>
+                <p>${note.desc}</p>
+                <span class="tag">#${note.tag}</span>
+            </a>
+        `).join('');
+        }
+    </script>
+
+</body>
+
+</html>

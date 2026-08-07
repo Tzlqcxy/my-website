@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Artisan Shop · 数字工坊</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            --primary: #00e5b0;
+            --primary-dark: #00b894;
+            --primary-light: #55efc4;
+            --primary-glow: rgba(0, 255, 200, 0.25);
+            --primary-border: rgba(0, 255, 200, 0.12);
+            --primary-border-hover: rgba(0, 255, 200, 0.25);
+            --text-primary: #d6e0f0;
+            --text-accent: #b0f0e0;
+            --text-secondary: #6a8e8a;
+            --text-muted: #4a7a7a;
+            --bg-body: #0b0d12;
+            --bg-card: rgba(12, 16, 24, 0.78);
+            --bg-input: rgba(0, 0, 0, 0.3);
+            --border-color: rgba(0, 255, 200, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'JetBrains Mono', monospace;
+            background: var(--bg-body);
+            background-image: radial-gradient(circle at 10% 20%, #13171f 0%, #080a0e 90%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0 2rem;
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--text-primary), var(--primary-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .header h1 i {
+            color: var(--primary);
+            margin-right: 10px;
+        }
+
+        .back-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 0.3rem 1.2rem;
+            border: 1px solid var(--primary-border);
+            border-radius: 30px;
+            transition: 0.2s;
+        }
+
+        .back-link:hover {
+            border-color: var(--primary);
+            color: var(--text-accent);
+        }
+
+        /* ===== 工坊介绍 ===== */
+        .workshop-intro {
+            text-align: center;
+            padding: 2rem 0 1rem;
+        }
+
+        .workshop-intro h2 {
+            font-size: 1.2rem;
+            color: var(--text-accent);
+            font-weight: 400;
+        }
+
+        .workshop-intro p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+        }
+
+        /* ===== 作品网格 ===== */
+        .artisan-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .artisan-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 1.6rem;
+            padding: 1.8rem 1.5rem;
+            transition: 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .artisan-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 0 40px var(--primary-glow);
+        }
+
+        .artisan-card .badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 0.55rem;
+            padding: 0.15rem 0.8rem;
+            border-radius: 30px;
+            background: rgba(0, 255, 200, 0.08);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .artisan-card .icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.6rem;
+        }
+
+        .artisan-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-accent);
+            margin-bottom: 0.3rem;
+        }
+
+        .artisan-card p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .artisan-card .meta {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.8rem;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .artisan-card .meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .artisan-card .meta i {
+            color: var(--primary);
+            font-size: 0.6rem;
+        }
+
+        /* ===== 特色作品 ===== */
+        .featured {
+            border-color: var(--primary);
+            background: rgba(0, 255, 200, 0.02);
+        }
+
+        .featured .badge {
+            background: var(--primary);
+            color: #0b0f18;
+            border-color: var(--primary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+            grid-column: 1/-1;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--border-color);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .empty-state p {
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.3rem;
+            }
+
+            .artisan-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <h1><i class="fas fa-store"></i> Artisan Shop</h1>
+            <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> 返回</a>
+        </div>
+
+        <!-- 介绍 -->
+        <div class="workshop-intro">
+            <h2>🧰 数字工坊 · 手作之物</h2>
+            <p>一些自己做的小工具、小项目，分享给同样喜欢折腾的人</p>
+        </div>
+
+        <!-- 作品列表 -->
+        <div class="artisan-grid" id="artisanGrid">
+            <!-- 由 JS 动态生成 -->
+        </div>
+    </div>
+
+    <script>
+        // ===== 作品数据 =====
+        const works = [
+            {
+                icon: 'fa-terminal',
+                title: 'GeekTool',
+                desc: '极客工具箱 · 时间戳、Base64、JSON 格式化等开发利器',
+                status: '🚀 已上线',
+                link: 'tool.html'
+            },
+            {
+                icon: 'fa-keyboard',
+                title: 'TypeRush',
+                desc: '打字速度测试 · 支持中/英文模式，实时 WPM 统计',
+                status: '🚀 已上线',
+                link: 'type.html'
+            },
+            {
+                icon: 'fa-gamepad',
+                title: '贪吃蛇',
+                desc: '经典贪吃蛇游戏 · 触屏/键盘双支持',
+                status: '🎮 可玩',
+                link: 'snakegames.html'
+            },
+            {
+                icon: 'fa-cubes',
+                title: '俄罗斯方块',
+                desc: '经典俄罗斯方块 · 计分、等级、下一个预览',
+                status: '🎮 可玩',
+                link: 'tetris.html'
+            },
+            {
+                icon: 'fa-cloud-sun',
+                title: 'WeatherFlow',
+                desc: '极简天气查询 · 支持中英文城市名',
+                status: '🌤️ 开发中',
+                link: '#'
+            },
+            {
+                icon: 'fa-pen-fancy',
+                title: 'MindNote',
+                desc: '个人知识库 · 极简笔记管理',
+                status: '📝 规划中',
+                link: 'mindnote.html'
+            }
+        ];
+
+        // ===== 渲染 =====
+        const grid = document.getElementById('artisanGrid');
+
+        if (works.length === 0) {
+            grid.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-box-open"></i>
+                <p>工坊还在准备中，<br />很快会有新作品 ✨</p>
+            </div>
+        `;
+        } else {
+            grid.innerHTML = works.map((work, index) => {
+                const isFeatured = index < 2;
+                return `
+                <a href="${work.link}" class="artisan-card ${isFeatured ? 'featured' : ''}" 
+                    ${work.link === '#' ? 'onclick="alert(\'⏳ 这个作品正在努力打磨中...\'); return false;"' : ''}>
+                    <span class="badge">${work.status}</span>
+                    <div class="icon"><i class="fas ${work.icon}"></i></div>
+                    <h3>${work.title}</h3>
+                    <p>${work.desc}</p>
+                    <div class="meta">
+                        <span><i class="fas fa-tag"></i> ${isFeatured ? '⭐ 精选' : '作品'}</span>
+                        <span><i class="fas fa-arrow-right"></i> 查看</span>
+                    </div>
+                </a>
+            `;
+            }).join('');
+        }
+    </script>
+
+</body>
+
+</html>
