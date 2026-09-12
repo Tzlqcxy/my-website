@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="cxy">
+  <!-- 站点底色 + 主题绿描边 -->
+  <rect x="1" y="1" width="62" height="62" rx="15" fill="#0b0d12" stroke="#00e5b0" stroke-opacity="0.35" stroke-width="2" />
+  <!-- 终端提示符 >_ （用路径绘制，不依赖字体，各平台渲染一致） -->
+  <path d="M17 21 L29 32 L17 43" fill="none" stroke="#00e5b0" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M35 46 L49 46" fill="none" stroke="#00e5b0" stroke-width="6.5" stroke-linecap="round" />
+</svg>

@@ -86,6 +86,20 @@
         };
     }
 
+    /* 标签页图标跟着主题走；没 JS 时 <link href="favicon.svg"> 是兜底 */
+    function paintIcon(color) {
+        var links = document.querySelectorAll('link[data-theme-icon]');
+        if (!links.length) return;
+        var c = encodeURIComponent(color);
+        var svg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E" +
+            "%3Crect x='1' y='1' width='62' height='62' rx='15' fill='%230b0d12' stroke='" + c + "' stroke-opacity='.35' stroke-width='2'/%3E" +
+            "%3Cpath d='M17 21 L29 32 L17 43' fill='none' stroke='" + c + "' stroke-width='6.5' stroke-linecap='round' stroke-linejoin='round'/%3E" +
+            "%3Cpath d='M35 46 L49 46' fill='none' stroke='" + c + "' stroke-width='6.5' stroke-linecap='round'/%3E%3C/svg%3E";
+        Array.prototype.forEach.call(links, function (l) {
+            if (l.getAttribute('href') !== svg) l.setAttribute('href', svg);
+        });
+    }
+
     /* ---------- 应用主题 ---------- */
     function varsOf(t) {
         return {
@@ -110,6 +124,7 @@
         root.setAttribute('data-theme', t.id);
         current = { id: t.id, name: t.name, primary: t.primary };
         colorsCache = { primary: t.primary, dark: t.dark, light: t.light, rgb: t.rgb };
+        paintIcon(t.primary);
         try {
             document.dispatchEvent(new CustomEvent('geekthemechange', { detail: colorsCache }));
         } catch (e) { /* 老浏览器忽略 */ }

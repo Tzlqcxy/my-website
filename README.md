@@ -23,6 +23,7 @@
 ├── assets/
 │   ├── theme.css # 全站设计令牌 + 换肤控件样式
 │   └── theme.js # 全站换肤实现（唯一一份）
+├── favicon.svg # 站点图标（终端提示符 >_，跟随主题变色）
 ├── avatar.jpg # 头像图片
 └── README.md # 项目说明文档
 ```
@@ -81,6 +82,8 @@ assets/theme.js    # 预设解析 · 应用 · 挂载控件 · 跨标签同步
 - **形态自适应**：宽容器渲染整条色板；窄容器只占一个圆钮，点开弹出色板；
   `≤600px` 自动切紧凑形态，避免把页头挤到换行
 - **关闭浮动钮**：`<html data-theme-ui="none">`（页面有槽位时本来也不会出现浮动钮）
+- **站点图标也跟着换肤**：`<link rel="icon" href="favicon.svg" data-theme-icon />`，
+  有 JS 时图标会变成当前主题色的内联 SVG（零额外请求），禁用 JS 时回退到静态 `favicon.svg`
 
 ---
 
