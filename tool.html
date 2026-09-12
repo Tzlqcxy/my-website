@@ -11,38 +11,10 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=JetBrains+Mono:wght@400;600&display=swap"
         rel="stylesheet" />
+    <link rel="stylesheet" href="assets/theme.css" />
+    <script src="assets/theme.js"></script>
     <style>
-        :root {
-            /* 默认绿色主题 */
-            --primary: #00e5b0;
-            --primary-dark: #00b894;
-            --primary-light: #55efc4;
-            --primary-glow: rgba(0, 255, 200, 0.25);
-            --primary-border: rgba(0, 255, 200, 0.12);
-            --primary-border-hover: rgba(0, 255, 200, 0.25);
-            --text-primary: #d6e0f0;
-            --text-accent: #b0f0e0;
-            --text-secondary: #6a8e8a;
-            --text-muted: #4a7a7a;
-            --bg-body: #0b0d12;
-            --bg-card: rgba(12, 16, 24, 0.78);
-            --bg-input: rgba(0, 0, 0, 0.3);
-            --bg-panel: rgba(0, 0, 0, 0.2);
-            --border-color: rgba(0, 255, 200, 0.08);
-        }
 
-        [data-theme="blue"] {
-            --primary: #3b6eff;
-            --primary-dark: #2952d0;
-            --primary-light: #7aa2ff;
-            --primary-glow: rgba(59, 110, 255, 0.25);
-            --primary-border: rgba(59, 110, 255, 0.12);
-            --primary-border-hover: rgba(59, 110, 255, 0.25);
-            --text-accent: #b0caf5;
-            --text-secondary: #6a7f9e;
-            --text-muted: #4a5f7a;
-            --border-color: rgba(59, 110, 255, 0.08);
-        }
 
         * {
             margin: 0;
@@ -113,42 +85,8 @@
         }
 
         .back-link:hover {
-            background: rgba(0, 255, 200, 0.06);
+            background: rgba(var(--primary-rgb), 0.06);
             border-color: var(--primary);
-        }
-
-        /* 换肤按钮 */
-        .theme-switcher {
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .theme-btn {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            border: 2px solid var(--primary-border);
-            cursor: pointer;
-            transition: 0.2s;
-            flex-shrink: 0;
-        }
-
-        .theme-btn:hover {
-            transform: scale(1.1);
-        }
-
-        .theme-btn.active {
-            border-color: var(--text-primary);
-            box-shadow: 0 0 20px var(--primary-glow);
-        }
-
-        .theme-label {
-            font-size: 0.65rem;
-            color: var(--text-secondary);
-            font-family: 'JetBrains Mono', monospace;
-            margin-left: 4px;
         }
 
         /* Tab 导航 */
@@ -176,12 +114,12 @@
 
         .tab-btn:hover {
             color: var(--text-accent);
-            background: rgba(0, 255, 200, 0.04);
+            background: rgba(var(--primary-rgb), 0.04);
         }
 
         .tab-btn.active {
             color: var(--text-accent);
-            background: rgba(0, 255, 200, 0.06);
+            background: rgba(var(--primary-rgb), 0.06);
             border: 1px solid var(--primary-border);
         }
 
@@ -283,7 +221,7 @@
         }
 
         .btn-secondary:hover {
-            background: rgba(0, 255, 200, 0.04);
+            background: rgba(var(--primary-rgb), 0.04);
             border-color: var(--primary);
         }
 
@@ -328,7 +266,7 @@
 
         .result-box .copy-btn:hover {
             color: var(--text-accent);
-            background: rgba(0, 255, 200, 0.04);
+            background: rgba(var(--primary-rgb), 0.04);
         }
 
         .result-box .empty {
@@ -433,7 +371,7 @@
         }
 
         .panel input[type="file"]::file-selector-button {
-            background: rgba(0, 255, 200, 0.06);
+            background: rgba(var(--primary-rgb), 0.06);
             border: 1px solid var(--primary-border);
             color: var(--text-accent);
             border-radius: 20px;
@@ -485,7 +423,7 @@
         .badge-pill.ok {
             color: var(--primary);
             border-color: var(--primary-border-hover);
-            background: rgba(0, 255, 200, 0.04);
+            background: rgba(var(--primary-rgb), 0.04);
         }
 
         .hint-line {
@@ -540,12 +478,7 @@
         <div class="header">
             <h1><i class="fas fa-terminal"></i> GeekTool</h1>
             <div style="display:flex;align-items:center;gap:0.8rem;">
-                <div class="theme-switcher">
-                    <button class="theme-btn active" data-theme="green" style="background:#00e5b0;"
-                        title="绿色主题"></button>
-                    <button class="theme-btn" data-theme="blue" style="background:#3b6eff;" title="蓝色主题"></button>
-                    <span class="theme-label" id="themeLabel">🌿 绿</span>
-                </div>
+        <div data-theme-switcher style="margin-bottom:1rem"></div>
                 <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> 返回</a>
             </div>
         </div>
@@ -754,31 +687,6 @@
 
     <script>
         (function () {
-            // ===== 换肤 =====
-            const themeBtns = document.querySelectorAll('.theme-btn');
-            const themeLabel = document.getElementById('themeLabel');
-            const html = document.documentElement;
-
-            function setTheme(theme) {
-                html.setAttribute('data-theme', theme);
-                themeBtns.forEach(btn => {
-                    btn.classList.toggle('active', btn.dataset.theme === theme);
-                });
-                const names = { green: '🌿 绿', blue: '💠 蓝' };
-                themeLabel.textContent = names[theme] || '🌿 绿';
-                localStorage.setItem('preferred_theme', theme);
-            }
-
-            // 恢复主题
-            const saved = localStorage.getItem('preferred_theme') || 'green';
-            setTheme(saved);
-
-            themeBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    setTheme(btn.dataset.theme);
-                });
-            });
-
             // ===== Tab 切换 =====
             const tabBtns = document.querySelectorAll('.tab-btn');
             const panels = {

@@ -11,23 +11,9 @@
     <link
         href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
         rel="stylesheet" />
+    <link rel="stylesheet" href="assets/theme.css" />
+    <script src="assets/theme.js"></script>
     <style>
-        :root {
-            --primary: #00e5b0;
-            --primary-dark: #00b894;
-            --primary-light: #55efc4;
-            --primary-glow: rgba(0, 255, 200, 0.25);
-            --primary-border: rgba(0, 255, 200, 0.12);
-            --primary-border-hover: rgba(0, 255, 200, 0.25);
-            --text-primary: #d6e0f0;
-            --text-accent: #b0f0e0;
-            --text-secondary: #6a8e8a;
-            --text-muted: #4a7a7a;
-            --bg-body: #0b0d12;
-            --bg-card: rgba(12, 16, 24, 0.78);
-            --bg-input: rgba(0, 0, 0, 0.3);
-            --border-color: rgba(0, 255, 200, 0.08);
-        }
 
         * {
             margin: 0;
@@ -344,6 +330,7 @@
             <div class="header-right">
                 <button class="refresh-btn" id="refreshBtn"><i class="fas fa-sync-alt"></i> 刷新</button>
                 <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> 返回</a>
+                <div data-theme-switcher></div>
             </div>
         </div>
 

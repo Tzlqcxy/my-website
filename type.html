@@ -11,38 +11,10 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+SC:wght@400;600&display=swap"
         rel="stylesheet" />
+    <link rel="stylesheet" href="assets/theme.css" />
+    <script src="assets/theme.js"></script>
     <style>
-        :root {
-            --primary: #00e5b0;
-            --primary-dark: #00b894;
-            --primary-light: #55efc4;
-            --primary-glow: rgba(0, 255, 200, 0.25);
-            --primary-border: rgba(0, 255, 200, 0.12);
-            --primary-border-hover: rgba(0, 255, 200, 0.25);
-            --text-primary: #d6e0f0;
-            --text-accent: #b0f0e0;
-            --text-secondary: #6a8e8a;
-            --text-muted: #4a7a7a;
-            --bg-body: #0b0d12;
-            --bg-card: rgba(12, 16, 24, 0.78);
-            --bg-input: rgba(0, 0, 0, 0.3);
-            --border-color: rgba(0, 255, 200, 0.08);
-            --correct-color: #51cf66;
-            --incorrect-color: #ff6b6b;
-        }
 
-        [data-theme="blue"] {
-            --primary: #3b6eff;
-            --primary-dark: #2952d0;
-            --primary-light: #7aa2ff;
-            --primary-glow: rgba(59, 110, 255, 0.25);
-            --primary-border: rgba(59, 110, 255, 0.12);
-            --primary-border-hover: rgba(59, 110, 255, 0.25);
-            --text-accent: #b0caf5;
-            --text-secondary: #6a7f9e;
-            --text-muted: #4a5f7a;
-            --border-color: rgba(59, 110, 255, 0.08);
-        }
 
         * {
             margin: 0;
@@ -120,40 +92,8 @@
         }
 
         .back-link:hover {
-            background: rgba(0, 255, 200, 0.06);
+            background: rgba(var(--primary-rgb), 0.06);
             border-color: var(--primary);
-        }
-
-        .theme-switcher {
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-        }
-
-        .theme-btn {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            border: 2px solid var(--primary-border);
-            cursor: pointer;
-            transition: 0.2s;
-            flex-shrink: 0;
-        }
-
-        .theme-btn:hover {
-            transform: scale(1.1);
-        }
-
-        .theme-btn.active {
-            border-color: var(--text-primary);
-            box-shadow: 0 0 20px var(--primary-glow);
-        }
-
-        .theme-label {
-            font-size: 0.65rem;
-            color: var(--text-secondary);
-            font-family: 'JetBrains Mono', monospace;
-            margin-left: 4px;
         }
 
         .mode-switcher {
@@ -361,7 +301,7 @@
         }
 
         .btn-secondary:hover {
-            background: rgba(0, 255, 200, 0.04);
+            background: rgba(var(--primary-rgb), 0.04);
             border-color: var(--primary);
         }
 
@@ -522,7 +462,7 @@
         }
 
         .result-card .btn-secondary:hover {
-            background: rgba(0, 255, 200, 0.04);
+            background: rgba(var(--primary-rgb), 0.04);
         }
 
         .result-card .btn-success {
@@ -664,13 +604,7 @@
         <div class="header">
             <h1><i class="fas fa-keyboard"></i> TypeRush</h1>
             <div class="header-right">
-                <div class="theme-switcher">
-                    <button class="theme-btn active" data-theme="green" style="background:#00e5b0;"
-                        onclick="setTheme('green')" title="绿色"></button>
-                    <button class="theme-btn" data-theme="blue" style="background:#3b6eff;" onclick="setTheme('blue')"
-                        title="蓝色"></button>
-                    <span class="theme-label" id="themeLabel">🌿 绿</span>
-                </div>
+        <div data-theme-switcher></div>
                 <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> 返回</a>
             </div>
         </div>
@@ -754,20 +688,6 @@
     </div>
 
     <script>
-        // ===== 换肤 =====
-        function setTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            document.querySelectorAll('.theme-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.theme === theme);
-            });
-            const names = { green: '🌿 绿', blue: '💠 蓝' };
-            const label = document.getElementById('themeLabel');
-            if (label) label.textContent = names[theme] || '🌿 绿';
-            localStorage.setItem('preferred_theme', theme);
-        }
-        const savedTheme = localStorage.getItem('preferred_theme') || 'green';
-        setTheme(savedTheme);
-
         // ===== 打字逻辑 =====
         (function () {
             // ---------- 词库 ----------

@@ -12,6 +12,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap"
         rel="stylesheet" />
+    <link rel="stylesheet" href="assets/theme.css" />
+    <script src="assets/theme.js"></script>
     <style>
         /* ---------- 全局重置 · 极客暗色 ---------- */
         * {
@@ -41,15 +43,15 @@
             -webkit-backdrop-filter: blur(12px) saturate(180%);
             border-radius: 3.2rem;
             padding: 2.4rem 2.4rem 2.0rem;
-            border: 1px solid rgba(0, 255, 200, 0.12);
-            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(0, 255, 200, 0.05) inset;
+            border: 1px solid rgba(var(--primary-rgb), 0.12);
+            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(var(--primary-rgb), 0.05) inset;
             transition: box-shadow 0.3s ease, border-color 0.2s;
             text-align: center;
         }
 
         .card:hover {
-            border-color: rgba(0, 255, 200, 0.25);
-            box-shadow: 0 40px 80px -24px #000000, 0 0 0 1px rgba(0, 255, 200, 0.08) inset;
+            border-color: rgba(var(--primary-rgb), 0.25);
+            box-shadow: 0 40px 80px -24px #000000, 0 0 0 1px rgba(var(--primary-rgb), 0.08) inset;
         }
 
         /* ----- 标题 & 导航 ----- */
@@ -65,7 +67,7 @@
         .game-title {
             font-size: 1.2rem;
             font-weight: 600;
-            color: #b0f0e0;
+            color: var(--text-accent);
             letter-spacing: 0.5px;
             display: flex;
             align-items: center;
@@ -73,7 +75,7 @@
         }
 
         .game-title i {
-            color: #00e5b0;
+            color: var(--primary);
             font-size: 1.4rem;
         }
 
@@ -82,16 +84,16 @@
             text-decoration: none;
             font-size: 0.75rem;
             letter-spacing: 1px;
-            border: 1px solid rgba(0, 255, 200, 0.08);
+            border: 1px solid rgba(var(--primary-rgb), 0.08);
             padding: 0.3rem 1rem;
             border-radius: 60px;
             transition: all 0.2s;
         }
 
         .back-link:hover {
-            border-color: #00e5b0;
-            color: #b0f0e0;
-            background: rgba(0, 255, 200, 0.04);
+            border-color: var(--primary);
+            color: var(--text-accent);
+            background: rgba(var(--primary-rgb), 0.04);
         }
 
         /* ----- 游戏区域 ----- */
@@ -107,7 +109,7 @@
             background: rgba(0, 0, 0, 0.35);
             border-radius: 1.6rem;
             padding: 0.5rem;
-            border: 1px solid rgba(0, 255, 200, 0.04);
+            border: 1px solid rgba(var(--primary-rgb), 0.04);
         }
 
         #gameCanvas {
@@ -115,7 +117,7 @@
             background: #0b111a;
             border-radius: 1.2rem;
             image-rendering: pixelated;
-            border: 1px solid rgba(0, 255, 200, 0.05);
+            border: 1px solid rgba(var(--primary-rgb), 0.05);
             width: 300px;
             height: 600px;
         }
@@ -133,7 +135,7 @@
             background: rgba(0, 0, 0, 0.25);
             border-radius: 1.2rem;
             padding: 0.8rem 1.2rem;
-            border: 1px solid rgba(0, 255, 200, 0.04);
+            border: 1px solid rgba(var(--primary-rgb), 0.04);
             text-align: left;
         }
 
@@ -141,7 +143,7 @@
             font-size: 0.55rem;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            color: #4a7a7a;
+            color: var(--text-muted);
             margin-bottom: 0.2rem;
         }
 
@@ -160,7 +162,7 @@
             background: rgba(0, 0, 0, 0.25);
             border-radius: 1.2rem;
             padding: 0.8rem;
-            border: 1px solid rgba(0, 255, 200, 0.04);
+            border: 1px solid rgba(var(--primary-rgb), 0.04);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -170,7 +172,7 @@
             font-size: 0.55rem;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            color: #4a7a7a;
+            color: var(--text-muted);
             margin-bottom: 0.4rem;
         }
 
@@ -181,7 +183,7 @@
             image-rendering: pixelated;
             width: 100px;
             height: 100px;
-            border: 1px solid rgba(0, 255, 200, 0.04);
+            border: 1px solid rgba(var(--primary-rgb), 0.04);
         }
 
         /* ----- 控制区 ----- */
@@ -201,7 +203,7 @@
 
         .ctrl-btn {
             background: rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(0, 255, 200, 0.08);
+            border: 1px solid rgba(var(--primary-rgb), 0.08);
             color: #b0d0e8;
             padding: 0.5rem 1.2rem;
             border-radius: 60px;
@@ -216,10 +218,10 @@
         }
 
         .ctrl-btn:hover {
-            border-color: #00e5b0;
+            border-color: var(--primary);
             color: #e0f5f0;
-            background: rgba(0, 255, 200, 0.04);
-            box-shadow: 0 0 30px rgba(0, 255, 200, 0.02);
+            background: rgba(var(--primary-rgb), 0.04);
+            box-shadow: 0 0 30px rgba(var(--primary-rgb), 0.02);
         }
 
         .ctrl-btn i {
@@ -227,12 +229,12 @@
         }
 
         .ctrl-btn.primary {
-            border-color: #00e5b0;
-            color: #b0f0e0;
+            border-color: var(--primary);
+            color: var(--text-accent);
         }
 
         .ctrl-btn.primary:hover {
-            background: #00e5b0;
+            background: var(--primary);
             color: #0b0f18;
         }
 
@@ -263,7 +265,7 @@
 
         .dpad-btn {
             background: rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(0, 255, 200, 0.06);
+            border: 1px solid rgba(var(--primary-rgb), 0.06);
             border-radius: 1rem;
             color: #b0d0e8;
             font-size: 1.1rem;
@@ -278,8 +280,8 @@
         }
 
         .dpad-btn:active {
-            background: rgba(0, 255, 200, 0.06);
-            border-color: #00e5b0;
+            background: rgba(var(--primary-rgb), 0.06);
+            border-color: var(--primary);
             transform: scale(0.92);
         }
 
@@ -301,7 +303,7 @@
             background: rgba(0, 0, 0, 0.3);
             padding: 0.1rem 0.6rem;
             border-radius: 6px;
-            border: 1px solid rgba(0, 255, 200, 0.06);
+            border: 1px solid rgba(var(--primary-rgb), 0.06);
             font-family: 'JetBrains Mono', monospace;
             color: #8aa8a0;
         }
@@ -315,7 +317,7 @@
             padding: 0.4rem 1.2rem;
             border-radius: 60px;
             margin-bottom: 1rem;
-            border: 1px solid rgba(0, 255, 200, 0.04);
+            border: 1px solid rgba(var(--primary-rgb), 0.04);
             font-size: 0.75rem;
             min-height: 2.4rem;
         }
@@ -325,7 +327,7 @@
         }
 
         .status-message .highlight {
-            color: #00e5b0;
+            color: var(--primary);
         }
 
         /* 装饰 */
@@ -337,7 +339,7 @@
             height: 100%;
             pointer-events: none;
             z-index: 9999;
-            background: repeating-linear-gradient(0deg, rgba(0, 255, 200, 0.01) 0px, rgba(0, 0, 0, 0.01) 2px, transparent 4px, transparent 6px);
+            background: repeating-linear-gradient(0deg, rgba(var(--primary-rgb), 0.01) 0px, rgba(0, 0, 0, 0.01) 2px, transparent 4px, transparent 6px);
             opacity: 0.15;
         }
 
@@ -345,10 +347,10 @@
             display: inline-block;
             width: 6px;
             height: 6px;
-            background: #00e5b0;
+            background: var(--primary);
             border-radius: 50%;
             margin-right: 6px;
-            box-shadow: 0 0 16px #00e5b0;
+            box-shadow: 0 0 16px var(--primary);
             animation: pulse-dot 1.8s infinite;
         }
 
@@ -456,6 +458,7 @@
                 <i class="fas fa-cubes"></i> 俄罗斯方块 · <span style="color:#d6e8f0; font-weight:400;">cxy</span>
             </div>
             <a href="index.html" class="back-link" id="backLink"><i class="fas fa-arrow-left"></i> 返回</a>
+            <div data-theme-switcher="compact"></div>
         </div>
 
         <!-- 状态 -->
@@ -519,6 +522,12 @@
     </main>
 
     <script>
+        // 主题色：由 assets/theme.js 维护当前值，换肤后 canvas 也跟着变色
+        function TC() {
+            return (window.GeekTheme && GeekTheme.colors()) ||
+                { primary: '#00e5b0', dark: '#00b894', light: '#55efc4', rgb: '0, 255, 200' };
+        }
+
         (function () {
             // ============================================================
             // 俄罗斯方块核心逻辑
@@ -535,7 +544,7 @@
 
             // ----- 方块定义 -----
             const SHAPES = {
-                I: { blocks: [[1, 1, 1, 1]], color: '#00e5b0' },
+                I: { blocks: [[1, 1, 1, 1]], color: TC().primary },
                 O: { blocks: [[1, 1], [1, 1]], color: '#ffd866' },
                 T: { blocks: [[0, 1, 0], [1, 1, 1]], color: '#b084e8' },
                 S: { blocks: [[0, 1, 1], [1, 1, 0]], color: '#58d0b0' },
@@ -756,7 +765,7 @@
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
                 // 绘制网格
-                ctx.strokeStyle = 'rgba(0, 255, 200, 0.02)';
+                ctx.strokeStyle = `rgba(${TC().rgb}, 0.02)`;
                 ctx.lineWidth = 0.5;
                 for (let i = 0; i <= COLS; i++) {
                     ctx.beginPath();
@@ -777,7 +786,7 @@
                         if (board[r][c] !== 0) {
                             const x = c * BLOCK_SIZE;
                             const y = r * BLOCK_SIZE;
-                            ctx.shadowColor = 'rgba(0, 255, 200, 0.05)';
+                            ctx.shadowColor = `rgba(${TC().rgb}, 0.05)`;
                             ctx.shadowBlur = 6;
                             ctx.fillStyle = board[r][c];
                             ctx.beginPath();
@@ -802,7 +811,7 @@
                             if (blocks[r][c]) {
                                 const boardX = (x + c) * BLOCK_SIZE;
                                 const boardY = (y + r) * BLOCK_SIZE;
-                                ctx.shadowColor = 'rgba(0, 255, 200, 0.15)';
+                                ctx.shadowColor = `rgba(${TC().rgb}, 0.15)`;
                                 ctx.shadowBlur = 10;
                                 ctx.fillStyle = color;
                                 ctx.beginPath();
@@ -849,7 +858,7 @@
                             const x = offsetX + c * size;
                             const y = offsetY + r * size;
                             previewCtx.fillStyle = color;
-                            previewCtx.shadowColor = 'rgba(0, 255, 200, 0.1)';
+                            previewCtx.shadowColor = `rgba(${TC().rgb}, 0.1)`;
                             previewCtx.shadowBlur = 8;
                             previewCtx.beginPath();
                             previewCtx.roundRect(x + 1, y + 1, size - 2, size - 2, 3);

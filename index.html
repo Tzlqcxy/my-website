@@ -11,25 +11,9 @@
   <link
     href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
     rel="stylesheet" />
+  <link rel="stylesheet" href="assets/theme.css" />
+  <script src="assets/theme.js"></script>
   <style>
-    :root {
-      /* 主色 - 由 JS 控制 */
-      --primary: #00e5b0;
-      --primary-dark: #00b894;
-      --primary-light: #55efc4;
-      --primary-glow: rgba(0, 255, 200, 0.25);
-      --primary-border: rgba(0, 255, 200, 0.12);
-      --primary-border-hover: rgba(0, 255, 200, 0.25);
-      /* 固定色 */
-      --text-primary: #d6e0f0;
-      --text-accent: #b0f0e0;
-      --text-secondary: #6a8e8a;
-      --text-muted: #4a7a7a;
-      --bg-body: #0b0d12;
-      --bg-card: rgba(12, 16, 24, 0.78);
-      --bg-input: rgba(0, 0, 0, 0.3);
-      --border-color: rgba(0, 255, 200, 0.08);
-    }
 
     * {
       margin: 0;
@@ -130,7 +114,7 @@
       letter-spacing: 1.5px;
       text-transform: uppercase;
       color: var(--text-accent);
-      background: rgba(0, 255, 200, 0.04);
+      background: rgba(var(--primary-rgb), 0.04);
       padding: 0.35rem 1.2rem;
       border-radius: 40px;
       border: 1px solid var(--primary-border);
@@ -177,68 +161,6 @@
       color: #0b0f18;
       transform: translateY(-4px) scale(1.02);
       box-shadow: 0 0 30px var(--primary-glow);
-    }
-
-    /* 换肤 + 调色盘 */
-    .theme-switcher {
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-      margin-top: 1.2rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .theme-btn {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      border: 2px solid var(--primary-border);
-      cursor: pointer;
-      transition: 0.2s;
-      flex-shrink: 0;
-    }
-
-    .theme-btn:hover {
-      transform: scale(1.15);
-    }
-
-    .theme-btn.active {
-      border-color: var(--text-primary);
-      box-shadow: 0 0 20px var(--primary-glow);
-      transform: scale(1.1);
-    }
-
-    .theme-label {
-      font-size: 0.65rem;
-      color: var(--text-secondary);
-      font-family: 'JetBrains Mono', monospace;
-      margin-left: 4px;
-    }
-
-    #customColorPicker {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      border: 2px solid var(--primary-border);
-      cursor: pointer;
-      background: transparent;
-      padding: 0;
-      flex-shrink: 0;
-      transition: 0.2s;
-    }
-
-    #customColorPicker:hover {
-      transform: scale(1.15);
-    }
-
-    #customColorPicker::-webkit-color-swatch-wrapper {
-      padding: 2px;
-    }
-
-    #customColorPicker::-webkit-color-swatch {
-      border-radius: 50%;
-      border: none;
     }
 
     .profile-content {
@@ -316,7 +238,7 @@
 
     .skill-tag {
       font-family: 'JetBrains Mono', monospace;
-      background: rgba(0, 255, 200, 0.02);
+      background: rgba(var(--primary-rgb), 0.02);
       padding: 0.25rem 1rem;
       border-radius: 30px;
       font-size: 0.75rem;
@@ -328,7 +250,7 @@
 
     .skill-tag:hover {
       border-color: var(--primary);
-      background: rgba(0, 255, 200, 0.04);
+      background: rgba(var(--primary-rgb), 0.04);
       color: var(--text-accent);
     }
 
@@ -361,7 +283,7 @@
     .work-item:hover {
       transform: translateY(-6px);
       border-color: var(--primary);
-      background: rgba(0, 255, 200, 0.02);
+      background: rgba(var(--primary-rgb), 0.02);
       box-shadow: 0 0 40px var(--primary-glow);
     }
 
@@ -390,7 +312,7 @@
 
     .work-item.game-entry {
       border-color: var(--primary-border);
-      background: rgba(0, 255, 200, 0.01);
+      background: rgba(var(--primary-rgb), 0.01);
     }
 
     .work-item.game-entry i {
@@ -400,7 +322,7 @@
 
     .work-item.game-entry:hover {
       border-color: var(--primary);
-      background: rgba(0, 255, 200, 0.03);
+      background: rgba(var(--primary-rgb), 0.03);
     }
 
     /* ===== 打字排名 ===== */
@@ -439,7 +361,7 @@
 
     .podium-first {
       border-color: var(--primary);
-      background: rgba(0, 255, 200, 0.04);
+      background: rgba(var(--primary-rgb), 0.04);
       padding: 0.6rem 1.5rem;
       transform: scale(1.05);
     }
@@ -496,7 +418,7 @@
     }
 
     .rank-row:hover {
-      background: rgba(0, 255, 200, 0.02);
+      background: rgba(var(--primary-rgb), 0.02);
     }
 
     .rank-row .rank-num {
@@ -524,7 +446,7 @@
     }
 
     .rank-row.me {
-      background: rgba(0, 255, 200, 0.04);
+      background: rgba(var(--primary-rgb), 0.04);
       border-left: 2px solid var(--primary);
     }
 
@@ -663,7 +585,7 @@
     }
 
     .message-item:hover {
-      background: rgba(0, 255, 200, 0.01);
+      background: rgba(var(--primary-rgb), 0.01);
     }
 
     .message-body {
@@ -804,7 +726,7 @@
       height: 100%;
       pointer-events: none;
       z-index: 9999;
-      background: repeating-linear-gradient(0deg, rgba(0, 255, 200, 0.01) 0px, rgba(0, 0, 0, 0.01) 2px, transparent 4px,
+      background: repeating-linear-gradient(0deg, rgba(var(--primary-rgb), 0.01) 0px, rgba(0, 0, 0, 0.01) 2px, transparent 4px,
           transparent 6px);
       opacity: 0.15;
     }
@@ -913,20 +835,6 @@
       .message-delete {
         align-self: flex-end;
       }
-
-      .theme-switcher {
-        gap: 0.3rem;
-      }
-
-      .theme-btn {
-        width: 24px;
-        height: 24px;
-      }
-
-      #customColorPicker {
-        width: 26px;
-        height: 26px;
-      }
     }
   </style>
 </head>
@@ -952,16 +860,7 @@
           </a>
         </div>
         <!-- 换肤 + 调色盘 -->
-        <div class="theme-switcher">
-          <button class="theme-btn active" data-theme="green" style="background:#00e5b0;" title="绿色"></button>
-          <button class="theme-btn" data-theme="blue" style="background:#3b6eff;" title="蓝色"></button>
-          <button class="theme-btn" data-theme="purple" style="background:#a855f7;" title="紫色"></button>
-          <button class="theme-btn" data-theme="orange" style="background:#f97316;" title="橙色"></button>
-          <button class="theme-btn" data-theme="pink" style="background:#ec4899;" title="粉色"></button>
-          <button class="theme-btn" data-theme="cyan" style="background:#06b6d4;" title="青色"></button>
-          <input type="color" id="customColorPicker" value="#00e5b0" title="自定义颜色" />
-          <span class="theme-label" id="themeLabel">🌿 绿</span>
-        </div>
+        <div data-theme-switcher style="margin-top:1.2rem"></div>
       </aside>
       <!-- 右侧 -->
       <section class="profile-content">
@@ -1098,132 +997,7 @@
   </main>
 
   <script>
-    // ===== 换肤 + 调色盘 =====
-    (function () {
-      const themeBtns = document.querySelectorAll('.theme-btn');
-      const themeLabel = document.getElementById('themeLabel');
-      const colorPicker = document.getElementById('customColorPicker');
-      const html = document.documentElement;
-
-      const themes = {
-        green: { primary: '#00e5b0', dark: '#00b894', light: '#55efc4', name: '🌿 绿' },
-        blue: { primary: '#3b6eff', dark: '#2952d0', light: '#7aa2ff', name: '💠 蓝' },
-        purple: { primary: '#a855f7', dark: '#7c3aed', light: '#c084fc', name: '🟣 紫' },
-        orange: { primary: '#f97316', dark: '#ea580c', light: '#fb923c', name: '🟠 橙' },
-        pink: { primary: '#ec4899', dark: '#db2777', light: '#f472b6', name: '🩷 粉' },
-        cyan: { primary: '#06b6d4', dark: '#0891b2', light: '#22d3ee', name: '🩵 青' },
-      };
-
-      function hexToRgb(hex) {
-        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        return result ? {
-          r: parseInt(result[1], 16),
-          g: parseInt(result[2], 16),
-          b: parseInt(result[3], 16)
-        } : { r: 0, g: 229, b: 176 };
-      }
-
-      function rgbToRgba(r, g, b, alpha) {
-        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-      }
-
-      function setTheme(theme, customColor) {
-        let colors;
-        if (customColor) {
-          const rgb = hexToRgb(customColor);
-          colors = {
-            primary: customColor,
-            dark: customColor,
-            light: customColor,
-            glow: rgbToRgba(rgb.r, rgb.g, rgb.b, 0.25),
-            border: rgbToRgba(rgb.r, rgb.g, rgb.b, 0.12),
-            borderHover: rgbToRgba(rgb.r, rgb.g, rgb.b, 0.25),
-            name: '🎨 自定义'
-          };
-          localStorage.setItem('custom_theme_color', customColor);
-          localStorage.setItem('preferred_theme', 'custom');
-        } else if (themes[theme]) {
-          const t = themes[theme];
-          const rgb = hexToRgb(t.primary);
-          colors = {
-            primary: t.primary,
-            dark: t.dark,
-            light: t.light,
-            glow: rgbToRgba(rgb.r, rgb.g, rgb.b, 0.25),
-            border: rgbToRgba(rgb.r, rgb.g, rgb.b, 0.12),
-            borderHover: rgbToRgba(rgb.r, rgb.g, rgb.b, 0.25),
-            name: t.name
-          };
-          localStorage.setItem('preferred_theme', theme);
-          localStorage.removeItem('custom_theme_color');
-        } else {
-          return;
-        }
-
-        html.style.setProperty('--primary', colors.primary);
-        html.style.setProperty('--primary-dark', colors.dark);
-        html.style.setProperty('--primary-light', colors.light);
-        html.style.setProperty('--primary-glow', colors.glow);
-        html.style.setProperty('--primary-border', colors.border);
-        html.style.setProperty('--primary-border-hover', colors.borderHover);
-
-        themeBtns.forEach(btn => {
-          const isActive = btn.dataset.theme === theme ||
-            (theme === 'custom' && btn.dataset.theme === 'custom');
-          btn.classList.toggle('active', isActive);
-        });
-
-        if (themeLabel) themeLabel.textContent = colors.name;
-        if (colorPicker) colorPicker.value = colors.primary;
-
-        localStorage.setItem('current_primary_color', colors.primary);
-        localStorage.setItem('current_theme_name', colors.name);
-      }
-
-      // 恢复主题
-      const savedTheme = localStorage.getItem('preferred_theme') || 'green';
-      const customColor = localStorage.getItem('custom_theme_color');
-      const savedPrimary = localStorage.getItem('current_primary_color');
-
-      if (savedTheme === 'custom' && customColor) {
-        setTheme('custom', customColor);
-      } else if (savedPrimary && !themes[savedTheme]) {
-        setTheme('custom', savedPrimary);
-      } else {
-        setTheme(savedTheme);
-      }
-
-      themeBtns.forEach(btn => {
-        btn.addEventListener('click', function () {
-          setTheme(this.dataset.theme);
-        });
-      });
-
-      if (colorPicker) {
-        colorPicker.addEventListener('input', function () {
-          setTheme('custom', this.value);
-        });
-      }
-
-      window.addEventListener('storage', function (e) {
-        if (e.key === 'current_primary_color' || e.key === 'preferred_theme' || e.key ===
-          'custom_theme_color') {
-          const newTheme = localStorage.getItem('preferred_theme') || 'green';
-          const newCustom = localStorage.getItem('custom_theme_color');
-          const newPrimary = localStorage.getItem('current_primary_color');
-          if (newTheme === 'custom' && newCustom) {
-            setTheme('custom', newCustom);
-          } else if (newPrimary) {
-            setTheme(newTheme, newPrimary);
-          } else {
-            setTheme(newTheme);
-          }
-        }
-      });
-
-      window.setTheme = setTheme;
-    })();
-
+    
     // ===== 每日名言 =====
     (function () {
       const quotes = [

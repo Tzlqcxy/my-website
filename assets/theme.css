@@ -1,0 +1,271 @@
+/* ============================================================
+   GeekTool 站点 · 全局设计令牌 + 换肤控件样式
+   由 assets/theme.js 在 <head> 里同步应用主题（避免闪烁）
+   页面自己的 <style> 可以覆盖这里的令牌；主题色一律用 var() 引用
+   ============================================================ */
+
+:root {
+    /* 主色族（由 theme.js 按预设/自定义色覆盖） */
+    --primary: #00e5b0;
+    --primary-dark: #00b894;
+    --primary-light: #55efc4;
+    --primary-rgb: 0, 255, 200;
+    /* 半透明主色请用 rgba(var(--primary-rgb), .04)，这样自定义颜色也能跟随 */
+    --primary-glow: rgba(0, 255, 200, 0.25);
+    --primary-border: rgba(0, 255, 200, 0.12);
+    --primary-border-hover: rgba(0, 255, 200, 0.25);
+    --border-color: rgba(0, 255, 200, 0.08);
+
+    /* 文本色族（accent/secondary/muted 随主色微调） */
+    --text-primary: #d6e0f0;
+    --text-accent: #b0f0e0;
+    --text-secondary: #6a8e8a;
+    --text-muted: #4a7a7a;
+
+    /* 背景（与主题无关，固定） */
+    --bg-body: #0b0d12;
+    --bg-card: rgba(12, 16, 24, 0.78);
+    --bg-input: rgba(0, 0, 0, 0.3);
+    --bg-panel: rgba(0, 0, 0, 0.2);
+
+    /* 语义色（与主题无关） */
+    --correct-color: #51cf66;
+    --incorrect-color: #ff6b6b;
+    --warn-color: #ffb86b;
+    --danger-color: #ff6b6b;
+}
+
+/* 槽位统一为 flex 容器：否则内部的 inline-flex 会产生行盒下降沿空隙（+4px），把页面顶下去 */
+[data-theme-switcher] {
+    display: flex;
+    align-items: center;
+}
+
+/* ---------- 换肤控件（内联槽位 / 右下角浮动两种形态） ---------- */
+.gt-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.gt-dot {
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    background: var(--gt-dot-color, var(--primary));
+    cursor: pointer;
+    transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+    flex-shrink: 0;
+}
+
+.gt-dot:hover {
+    transform: scale(1.15);
+}
+
+.gt-dot[aria-pressed="true"] {
+    border-color: var(--text-primary);
+    box-shadow: 0 0 18px var(--primary-glow);
+    transform: scale(1.1);
+}
+
+.gt-picker-wrap {
+    position: relative;
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid var(--border-color);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: transform 0.18s;
+    background: conic-gradient(#ff6b6b, #fcc419, #51cf66, #06b6d4, #3b6eff, #a855f7, #ec4899, #ff6b6b);
+}
+
+.gt-picker-wrap:hover {
+    transform: scale(1.12);
+}
+
+.gt-picker {
+    position: absolute;
+    inset: -6px;
+    width: calc(100% + 12px);
+    height: calc(100% + 12px);
+    border: none;
+    padding: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.gt-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+    margin-left: 2px;
+    white-space: nowrap;
+}
+
+/* 右下角浮动形态：默认收成一个圆钮，点开才展开色板 */
+.gt-dock {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 9997;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-direction: row-reverse;
+}
+
+.gt-dock .gt-switch {
+    display: none;
+    padding: 8px 10px;
+    border-radius: 40px;
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--primary-border);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+}
+
+.gt-dock.open .gt-switch {
+    display: inline-flex;
+    animation: gt-pop 0.18s ease;
+}
+
+@keyframes gt-pop {
+    from {
+        opacity: 0;
+        transform: translateX(8px) scale(0.94);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.gt-fab {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 1px solid var(--primary-border-hover);
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 18px var(--primary-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.18s, box-shadow 0.18s;
+}
+
+.gt-fab:hover {
+    transform: scale(1.08);
+}
+
+.gt-fab span {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: linear-gradient(140deg, var(--primary-light), var(--primary));
+    box-shadow: 0 0 12px var(--primary-glow);
+}
+
+@media (max-width: 480px) {
+    .gt-dock {
+        right: 10px;
+        bottom: 10px;
+    }
+
+    .gt-dot {
+        width: 22px;
+        height: 22px;
+    }
+
+    .gt-dock .gt-switch {
+        padding: 6px 8px;
+        gap: 4px;
+    }
+
+    .gt-pop .gt-fab {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+/* 紧凑形态：窄容器里只占一个圆钮，点开在下方弹出色板 */
+.gt-pop {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* 宽容器里的「狝屏备用」紧凑形态，默认不显示 */
+.gt-pop-alt {
+    display: none;
+}
+
+/* 紧凑钮必须小于头部原有高度（实测 23~26px），否则会把头部撑高 */
+.gt-pop .gt-fab {
+    width: 22px;
+    height: 22px;
+}
+
+.gt-pop .gt-fab span {
+    width: 10px;
+    height: 10px;
+}
+
+.gt-pop .gt-switch {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    z-index: 9997;
+    padding: 8px 10px;
+    border-radius: 40px;
+    background: var(--bg-body);
+    border: 1px solid var(--primary-border-hover);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.75), 0 0 18px var(--primary-glow);
+}
+
+.gt-pop.open .gt-switch {
+    display: inline-flex;
+    animation: gt-pop-in 0.16s ease;
+}
+
+@keyframes gt-pop-in {
+    from {
+        opacity: 0;
+        transform: translateY(-4px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (max-width: 600px) {
+
+    /* 窄屏：宽容器里的整条色板换成紧凑形态，避免头部换行被撜高 */
+    .gt-slot-full > .gt-switch {
+        display: none;
+    }
+
+    .gt-slot-full > .gt-pop-alt {
+        display: inline-flex;
+    }
+}
+
+@media print {
+    .gt-dock {
+        display: none;
+    }
+}

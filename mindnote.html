@@ -11,23 +11,9 @@
     <link
         href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
         rel="stylesheet" />
+    <link rel="stylesheet" href="assets/theme.css" />
+    <script src="assets/theme.js"></script>
     <style>
-        :root {
-            --primary: #00e5b0;
-            --primary-dark: #00b894;
-            --primary-light: #55efc4;
-            --primary-glow: rgba(0, 255, 200, 0.25);
-            --primary-border: rgba(0, 255, 200, 0.12);
-            --primary-border-hover: rgba(0, 255, 200, 0.25);
-            --text-primary: #d6e0f0;
-            --text-accent: #b0f0e0;
-            --text-secondary: #6a8e8a;
-            --text-muted: #4a7a7a;
-            --bg-body: #0b0d12;
-            --bg-card: rgba(12, 16, 24, 0.78);
-            --bg-input: rgba(0, 0, 0, 0.3);
-            --border-color: rgba(0, 255, 200, 0.08);
-        }
 
         * {
             margin: 0;
@@ -237,7 +223,7 @@
             font-size: 0.6rem;
             padding: 0.15rem 0.8rem;
             border-radius: 30px;
-            background: rgba(0, 255, 200, 0.06);
+            background: rgba(var(--primary-rgb), 0.06);
             border: 1px solid var(--border-color);
             color: var(--text-muted);
             font-family: 'JetBrains Mono', monospace;
@@ -598,7 +584,7 @@
         .reader-content code {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.82em;
-            background: rgba(0, 255, 200, 0.06);
+            background: rgba(var(--primary-rgb), 0.06);
             border: 1px solid var(--border-color);
             border-radius: 6px;
             padding: 0.05rem 0.35rem;
@@ -633,7 +619,7 @@
         }
 
         .reader-content th {
-            background: rgba(0, 255, 200, 0.04);
+            background: rgba(var(--primary-rgb), 0.04);
             color: var(--text-accent);
         }
 
@@ -765,6 +751,7 @@
         <div class="header">
             <h1><i class="fas fa-pen-fancy"></i> MindNote</h1>
             <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> 返回</a>
+            <div data-theme-switcher></div>
         </div>
 
         <!-- 工具栏 -->
@@ -825,6 +812,12 @@
     </div>
 
     <script>
+        // 主题色：由 assets/theme.js 维护当前值，换肤后 canvas 也跟着变色
+        function TC() {
+            return (window.GeekTheme && GeekTheme.colors()) ||
+                { primary: '#00e5b0', dark: '#00b894', light: '#55efc4', rgb: '0, 255, 200' };
+        }
+
         // ===== MindNote · 真实网页接入 =====
         (function () {
             'use strict';
@@ -1336,7 +1329,7 @@
                 readerFavicon.onerror = function () {
                     readerFavicon.onerror = null;
                     readerFavicon.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
-                        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#0f1a22"/><text x="12" y="17" font-size="13" text-anchor="middle" fill="#00e5b0" font-family="monospace">' +
+                        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#0f1a22"/><text x="12" y="17" font-size="13" text-anchor="middle" fill="' + TC().primary + '" font-family="monospace">' +
                         domain.charAt(0).toUpperCase() + '</text></svg>');
                 };
             }
