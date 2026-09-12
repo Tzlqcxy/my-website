@@ -401,6 +401,112 @@
             cursor: pointer;
         }
 
+        /* ===== 哈希 / RSA 面板 ===== */
+        .panel select {
+            padding: 0.65rem 1rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            outline: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .panel select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        .panel input[type="file"] {
+            width: 100%;
+            padding: 0.6rem 1rem;
+            border-radius: 16px;
+            border: 1px dashed var(--primary-border-hover);
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            cursor: pointer;
+        }
+
+        .panel input[type="file"]::file-selector-button {
+            background: rgba(0, 255, 200, 0.06);
+            border: 1px solid var(--primary-border);
+            color: var(--text-accent);
+            border-radius: 20px;
+            padding: 0.3rem 0.9rem;
+            margin-right: 0.7rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        .panel textarea.pem {
+            min-height: 92px;
+            font-size: 0.68rem;
+            line-height: 1.5;
+        }
+
+        .key-box {
+            margin-top: 0.7rem;
+            padding: 0.7rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            background: var(--bg-panel);
+        }
+
+        .key-box[open] {
+            padding-bottom: 1rem;
+        }
+
+        .key-box summary {
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .key-box summary:hover {
+            color: var(--text-accent);
+        }
+
+        .badge-pill {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+
+        .badge-pill.ok {
+            color: var(--primary);
+            border-color: var(--primary-border-hover);
+            background: rgba(0, 255, 200, 0.04);
+        }
+
+        .hint-line {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-top: 0.5rem;
+            word-break: break-word;
+        }
+
+        .btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .result-box {
+            white-space: pre-wrap;
+        }
+
         @media (max-width: 480px) {
             .glass-card {
                 padding: 1.5rem 1rem;
@@ -452,6 +558,8 @@
             <button class="tab-btn" data-tab="uuid"><i class="fas fa-hashtag"></i> UUID</button>
             <button class="tab-btn" data-tab="json"><i class="fas fa-brackets-curly"></i> JSON</button>
             <button class="tab-btn" data-tab="password"><i class="fas fa-key"></i> 密码</button>
+            <button class="tab-btn" data-tab="hash"><i class="fas fa-fingerprint"></i> 哈希</button>
+            <button class="tab-btn" data-tab="rsa"><i class="fas fa-user-secret"></i> RSA</button>
         </div>
 
         <!-- ========== 面板1: 时间戳 ========== -->
@@ -554,6 +662,94 @@
             </div>
         </div>
 
+        <!-- ========== 面板7: SHA 哈希 ========== -->
+        <div id="panel-hash" class="panel">
+            <label><i class="fas fa-fingerprint"></i> SHA 哈希 (文本)</label>
+            <textarea id="hashInput" placeholder="输入要计算哈希的文本..."></textarea>
+            <div class="inline-group" style="margin-top:0.5rem;">
+                <select id="hashAlgo" style="flex:1;min-width:120px;">
+                    <option value="SHA-256" selected>SHA-256</option>
+                    <option value="SHA-1">SHA-1</option>
+                    <option value="SHA-384">SHA-384</option>
+                    <option value="SHA-512">SHA-512</option>
+                </select>
+                <select id="hashFormat" style="flex:1;min-width:120px;">
+                    <option value="hex" selected>小写 hex</option>
+                    <option value="HEX">大写 HEX</option>
+                    <option value="base64">Base64</option>
+                </select>
+            </div>
+            <input type="text" id="hashExpect" placeholder="预期哈希（可选，填入后自动校验）" style="margin-top:0.5rem;" />
+            <div class="tool-row">
+                <button class="btn btn-primary" id="hashCalc"><i class="fas fa-calculator"></i> 计算哈希</button>
+                <button class="btn btn-secondary" id="hashClear"><i class="fas fa-eraser"></i> 清空</button>
+            </div>
+            <div class="result-box" id="hashResult">
+                <span class="empty">结果将显示在这里</span>
+            </div>
+
+            <label style="margin-top:1rem;"><i class="fas fa-file"></i> SHA 哈希 (文件)</label>
+            <input type="file" id="hashFile" />
+            <div class="hint-line">文件只在浏览器本地读取，不会上传。SHA-1/384/512 依赖 WebCrypto（需 HTTPS 或 localhost），SHA-256 额外内置纯 JS 实现。</div>
+            <div class="result-box" id="hashFileResult">
+                <span class="empty">选择文件后自动计算</span>
+            </div>
+        </div>
+
+        <!-- ========== 面板8: RSA ========== -->
+        <div id="panel-rsa" class="panel">
+            <label><i class="fas fa-user-secret"></i> RSA 密钥对</label>
+            <div class="inline-group">
+                <select id="rsaBits" style="width:130px;flex:0 0 auto;">
+                    <option value="2048" selected>RSA-2048</option>
+                    <option value="3072">RSA-3072</option>
+                    <option value="4096">RSA-4096</option>
+                </select>
+                <button class="btn btn-primary" id="rsaGen"><i class="fas fa-key"></i> 生成密钥对</button>
+                <button class="btn btn-secondary" id="rsaImport"><i class="fas fa-upload"></i> 导入 PEM</button>
+                <button class="btn btn-secondary" id="rsaDownload"><i class="fas fa-download"></i> 下载 PEM</button>
+                <button class="btn btn-secondary" id="rsaClearKeys"><i class="fas fa-trash"></i> 清空</button>
+            </div>
+            <div style="margin-top:0.7rem;">
+                <span class="badge-pill" id="rsaBadge">未生成密钥</span>
+                <div class="hint-line">RSA-OAEP(SHA-256) 加密 / RSA-PSS(SHA-256) 签名 · 密钥只保存在本机 localStorage，不上传任何服务器</div>
+            </div>
+            <details class="key-box">
+                <summary><i class="fas fa-file-shield"></i> 公钥 / 私钥 PEM（可粘贴外部密钥后点“导入 PEM”）</summary>
+                <label style="margin-top:0.7rem;">公钥 SPKI</label>
+                <textarea id="rsaPubKey" class="pem" placeholder="-----BEGIN PUBLIC KEY-----"></textarea>
+                <label>私钥 PKCS#8</label>
+                <textarea id="rsaPrivKey" class="pem" placeholder="-----BEGIN PRIVATE KEY-----"></textarea>
+                <div class="tool-row">
+                    <button class="btn btn-secondary" id="rsaCopyPub"><i class="fas fa-copy"></i> 复制公钥</button>
+                    <button class="btn btn-secondary" id="rsaCopyPriv"><i class="fas fa-copy"></i> 复制私钥</button>
+                </div>
+            </details>
+
+            <label style="margin-top:1rem;"><i class="fas fa-lock"></i> 加密 / 解密</label>
+            <textarea id="rsaInput" placeholder="要加密的明文，或要解密的 Base64 密文..."></textarea>
+            <div class="tool-row">
+                <button class="btn btn-primary" id="rsaEncrypt"><i class="fas fa-lock"></i> 公钥加密</button>
+                <button class="btn btn-secondary" id="rsaDecryptBtn"><i class="fas fa-unlock"></i> 私钥解密</button>
+                <button class="btn btn-secondary" id="rsaSwap"><i class="fas fa-arrow-up"></i> 结果回填</button>
+            </div>
+            <div class="result-box" id="rsaResult">
+                <span class="empty">结果将显示在这里</span>
+            </div>
+            <div class="hint-line">超过 RSA 单块上限（2048 位约 190 字节）的文本会自动改用 AES-GCM + RSA 包装密钥的混合加密，密文以 HYB1: 开头。</div>
+
+            <label style="margin-top:1rem;"><i class="fas fa-pen-nib"></i> 签名 / 验签</label>
+            <textarea id="rsaSignInput" placeholder="要签名或验签的原文..."></textarea>
+            <input type="text" id="rsaSigInput" placeholder="签名 (Base64)：签名后自动填入，验签时把签名粘进来" style="margin-top:0.5rem;" />
+            <div class="tool-row">
+                <button class="btn btn-primary" id="rsaSign"><i class="fas fa-pen-nib"></i> 私钥签名</button>
+                <button class="btn btn-secondary" id="rsaVerify"><i class="fas fa-check-circle"></i> 公钥验签</button>
+            </div>
+            <div class="result-box" id="rsaSignResult">
+                <span class="empty">结果将显示在这里</span>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -592,6 +788,8 @@
                 uuid: document.getElementById('panel-uuid'),
                 json: document.getElementById('panel-json'),
                 password: document.getElementById('panel-password'),
+                hash: document.getElementById('panel-hash'),
+                rsa: document.getElementById('panel-rsa'),
             };
 
             tabBtns.forEach(btn => {
@@ -623,12 +821,18 @@
                 });
             }
 
+            function escHtml(s) {
+                return String(s)
+                    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+            }
+
             function setResult(el, text, isError = false) {
                 if (isError) {
-                    el.innerHTML = `<span style="color:#ff6b6b;"><i class="fas fa-exclamation-circle"></i> ${text}</span>`;
+                    el.innerHTML = `<span style="color:#ff6b6b;"><i class="fas fa-exclamation-circle"></i> ${escHtml(text)}</span>`;
                     return;
                 }
-                el.innerHTML = `<span>${text}</span><button class="copy-btn" onclick="this.closest('.result-box').__copy()"><i class="fas fa-copy"></i></button>`;
+                el.innerHTML = `<span>${escHtml(text)}</span><button class="copy-btn" onclick="this.closest('.result-box').__copy()"><i class="fas fa-copy"></i></button>`;
                 el.__copy = () => copyText(text, el);
             }
 
@@ -901,6 +1105,550 @@
                     updateStrength(pw);
                 }
             }, 300);
+
+            // ===== 通用: 字节 ↔ Base64 / Hex =====
+            const hasSubtle = !!(window.crypto && window.crypto.subtle);
+
+            function bytesToBase64(bytes) {
+                let bin = '';
+                const CHUNK = 0x8000;
+                for (let i = 0; i < bytes.length; i += CHUNK) {
+                    bin += String.fromCharCode.apply(null, bytes.subarray(i, i + CHUNK));
+                }
+                return btoa(bin);
+            }
+
+            function base64ToBytes(b64) {
+                const bin = atob(String(b64).replace(/\s+/g, ''));
+                const out = new Uint8Array(bin.length);
+                for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+                return out;
+            }
+
+            function hexFromBytes(bytes, upper) {
+                let s = '';
+                for (let i = 0; i < bytes.length; i++) {
+                    s += (bytes[i] < 16 ? '0' : '') + bytes[i].toString(16);
+                }
+                return upper ? s.toUpperCase() : s;
+            }
+
+            function formatBytes(n) {
+                if (n < 1024) return n + ' B';
+                if (n < 1048576) return (n / 1024).toFixed(1) + ' KB';
+                return (n / 1048576).toFixed(2) + ' MB';
+            }
+
+            function flashBtn(btn, label) {
+                const orig = btn.innerHTML;
+                btn.innerHTML = label;
+                setTimeout(() => { btn.innerHTML = orig; }, 1400);
+            }
+
+            function appendInfo(box, text) {
+                const info = document.createElement('span');
+                info.className = 'hint-line';
+                info.style.flexBasis = '100%';
+                info.textContent = text;
+                box.appendChild(info);
+            }
+
+            async function withBusy(btn, busyLabel, fn) {
+                const orig = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + busyLabel;
+                try {
+                    return await fn();
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = orig;
+                }
+            }
+
+            // ===== 7. SHA 哈希 =====
+            const hashInput = document.getElementById('hashInput');
+            const hashAlgo = document.getElementById('hashAlgo');
+            const hashFormat = document.getElementById('hashFormat');
+            const hashExpect = document.getElementById('hashExpect');
+            const hashCalc = document.getElementById('hashCalc');
+            const hashClear = document.getElementById('hashClear');
+            const hashResult = document.getElementById('hashResult');
+            const hashFile = document.getElementById('hashFile');
+            const hashFileResult = document.getElementById('hashFileResult');
+
+            // 纯 JS SHA-256（WebCrypto 不可用时的兜底，例如 http 局域网访问）
+            function sha256Bytes(bytes) {
+                const K = new Uint32Array([
+                    0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+                    0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+                    0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+                    0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+                    0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+                    0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+                    0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+                    0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
+                ]);
+                const H = new Uint32Array([0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+                    0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19]);
+                const len = bytes.length;
+                const total = (((len + 8) >> 6) + 1) << 6;
+                const msg = new Uint8Array(total);
+                msg.set(bytes);
+                msg[len] = 0x80;
+                const dv = new DataView(msg.buffer);
+                dv.setUint32(total - 8, Math.floor(len / 536870912));
+                dv.setUint32(total - 4, (len * 8) >>> 0);
+                const w = new Uint32Array(64);
+                const rotr = (x, n) => (x >>> n) | (x << (32 - n));
+
+                for (let off = 0; off < total; off += 64) {
+                    for (let t = 0; t < 16; t++) w[t] = dv.getUint32(off + t * 4);
+                    for (let t = 16; t < 64; t++) {
+                        const x = w[t - 15], y = w[t - 2];
+                        const s0 = rotr(x, 7) ^ rotr(x, 18) ^ (x >>> 3);
+                        const s1 = rotr(y, 17) ^ rotr(y, 19) ^ (y >>> 10);
+                        w[t] = (w[t - 16] + s0 + w[t - 7] + s1) >>> 0;
+                    }
+                    let a = H[0], b = H[1], c = H[2], d = H[3], e = H[4], f = H[5], g = H[6], h = H[7];
+                    for (let t = 0; t < 64; t++) {
+                        const S1 = rotr(e, 6) ^ rotr(e, 11) ^ rotr(e, 25);
+                        const ch = (e & f) ^ (~e & g);
+                        const t1 = (h + S1 + ch + K[t] + w[t]) >>> 0;
+                        const S0 = rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22);
+                        const maj = (a & b) ^ (a & c) ^ (b & c);
+                        const t2 = (S0 + maj) >>> 0;
+                        h = g; g = f; f = e; e = (d + t1) >>> 0;
+                        d = c; c = b; b = a; a = (t1 + t2) >>> 0;
+                    }
+                    H[0] = (H[0] + a) >>> 0; H[1] = (H[1] + b) >>> 0;
+                    H[2] = (H[2] + c) >>> 0; H[3] = (H[3] + d) >>> 0;
+                    H[4] = (H[4] + e) >>> 0; H[5] = (H[5] + f) >>> 0;
+                    H[6] = (H[6] + g) >>> 0; H[7] = (H[7] + h) >>> 0;
+                }
+
+                const out = new Uint8Array(32);
+                const odv = new DataView(out.buffer);
+                for (let i = 0; i < 8; i++) odv.setUint32(i * 4, H[i]);
+                return out;
+            }
+
+            async function digestBytes(algo, bytes) {
+                if (hasSubtle) {
+                    return new Uint8Array(await crypto.subtle.digest(algo, bytes));
+                }
+                if (algo === 'SHA-256') return sha256Bytes(bytes);
+                throw new Error('当前环境不支持 ' + algo + '，请用 HTTPS / localhost 打开页面');
+            }
+
+            function hashToString(bytes) {
+                const fmt = hashFormat.value;
+                if (fmt === 'base64') return bytesToBase64(bytes);
+                return hexFromBytes(bytes, fmt === 'HEX');
+            }
+
+            async function runHash(bytes, box, meta) {
+                const algo = hashAlgo.value;
+                const t0 = performance.now();
+                const out = await digestBytes(algo, bytes);
+                setResult(box, hashToString(out));
+                let info = algo + ' · ' + formatBytes(bytes.length) + ' · ' + (performance.now() - t0).toFixed(1) + ' ms';
+                const expect = hashExpect.value.trim().replace(/\s+/g, '').toLowerCase();
+                if (expect) {
+                    const hex = hexFromBytes(out, false);
+                    const b64 = bytesToBase64(out).toLowerCase();
+                    info += (expect === hex || expect === b64) ? ' · ✅ 与预期哈希一致' : ' · ❌ 与预期哈希不一致';
+                }
+                if (meta) info = meta + ' · ' + info;
+                appendInfo(box, info);
+            }
+
+            hashCalc.addEventListener('click', async () => {
+                if (!hashInput.value) {
+                    setResult(hashResult, '请输入要哈希的文本', true);
+                    return;
+                }
+                try {
+                    await runHash(new TextEncoder().encode(hashInput.value), hashResult);
+                } catch (e) {
+                    setResult(hashResult, e.message, true);
+                }
+            });
+
+            hashClear.addEventListener('click', () => {
+                hashInput.value = '';
+                hashExpect.value = '';
+                hashFile.value = '';
+                setResult(hashResult, '已清空');
+                setResult(hashFileResult, '选择文件后自动计算');
+            });
+
+            hashFile.addEventListener('change', async () => {
+                const file = hashFile.files && hashFile.files[0];
+                if (!file) return;
+                setResult(hashFileResult, '读取中…');
+                try {
+                    const buf = new Uint8Array(await file.arrayBuffer());
+                    await runHash(buf, hashFileResult, file.name);
+                } catch (e) {
+                    setResult(hashFileResult, e.message, true);
+                } finally {
+                    hashFile.value = ''; // 清空后重复选同一个文件也能触发 change
+                }
+            });
+
+            if (!hasSubtle) {
+                appendInfo(hashResult, '⚠️ 未检测到 WebCrypto：SHA-256 走内置纯 JS 实现，SHA-1/384/512 不可用');
+            }
+
+            // ===== 8. RSA 加解密 / 签名 =====
+            const LS_RSA = 'geektool_rsa_keys';
+            const RSA_HASH = 'SHA-256';
+            let rsaLastResult = '';
+
+            const rsaBits = document.getElementById('rsaBits');
+            const rsaGen = document.getElementById('rsaGen');
+            const rsaImport = document.getElementById('rsaImport');
+            const rsaDownload = document.getElementById('rsaDownload');
+            const rsaClearKeys = document.getElementById('rsaClearKeys');
+            const rsaBadge = document.getElementById('rsaBadge');
+            const rsaPubKey = document.getElementById('rsaPubKey');
+            const rsaPrivKey = document.getElementById('rsaPrivKey');
+            const rsaCopyPub = document.getElementById('rsaCopyPub');
+            const rsaCopyPriv = document.getElementById('rsaCopyPriv');
+            const rsaInput = document.getElementById('rsaInput');
+            const rsaEncrypt = document.getElementById('rsaEncrypt');
+            const rsaDecryptBtn = document.getElementById('rsaDecryptBtn');
+            const rsaSwap = document.getElementById('rsaSwap');
+            const rsaResult = document.getElementById('rsaResult');
+            const rsaSignInput = document.getElementById('rsaSignInput');
+            const rsaSigInput = document.getElementById('rsaSigInput');
+            const rsaSign = document.getElementById('rsaSign');
+            const rsaVerify = document.getElementById('rsaVerify');
+            const rsaSignResult = document.getElementById('rsaSignResult');
+
+            function pemEncode(bytes, label) {
+                const b64 = bytesToBase64(bytes);
+                const lines = b64.match(/.{1,64}/g) || [];
+                return '-----BEGIN ' + label + '-----\n' + lines.join('\n') + '\n-----END ' + label + '-----';
+            }
+
+            function pemDecode(pem, type) {
+                const text = String(pem || '').trim();
+                if (!text) throw new Error('PEM 内容为空');
+                const m = text.match(/-----BEGIN ([A-Z0-9 ]+)-----/);
+                if (!m) throw new Error('不是有效的 PEM 格式');
+                const label = m[1].trim();
+                if (label !== type) {
+                    if (label === 'RSA PUBLIC KEY' || label === 'RSA PRIVATE KEY') {
+                        throw new Error('检测到 PKCS#1 密钥，WebCrypto 只支持 PKCS#8 / SPKI。转换：openssl pkcs8 -topk8 -nocrypt -in old.pem -out new.pem');
+                    }
+                    if (label === 'ENCRYPTED PRIVATE KEY') {
+                        throw new Error('私钥受密码保护，先解密：openssl pkcs8 -in enc.pem -out plain.pem');
+                    }
+                    throw new Error('需要 ' + type + '，但收到 ' + label);
+                }
+                const body = text.replace(/-----[^-]+-----/g, '').replace(/\s+/g, '');
+                if (!body) throw new Error('PEM 内容为空');
+                try {
+                    return base64ToBytes(body);
+                } catch (e) {
+                    throw new Error('PEM 里的 Base64 解析失败');
+                }
+            }
+
+            async function importRsaPublic(pem, algo) {
+                const der = pemDecode(pem, 'PUBLIC KEY');
+                return crypto.subtle.importKey('spki', der, { name: algo, hash: RSA_HASH }, true,
+                    algo === 'RSA-OAEP' ? ['encrypt'] : ['verify']);
+            }
+
+            async function importRsaPrivate(pem, algo) {
+                const der = pemDecode(pem, 'PRIVATE KEY');
+                return crypto.subtle.importKey('pkcs8', der, { name: algo, hash: RSA_HASH }, true,
+                    algo === 'RSA-OAEP' ? ['decrypt'] : ['sign']);
+            }
+
+            // 签名用的密钥导入：RSA-PSS 优先，失败则退回 RSASSA-PKCS1-v1_5
+            let rsaSignAlgo = 'RSA-PSS';
+
+            async function importSignKey(pem, usage) {
+                const verifyMode = usage === 'verify';
+                try {
+                    rsaSignAlgo = 'RSA-PSS';
+                    return verifyMode ? await importRsaPublic(pem, 'RSA-PSS') : await importRsaPrivate(pem, 'RSA-PSS');
+                } catch (e) {
+                    rsaSignAlgo = 'RSASSA-PKCS1-v1_5';
+                    return verifyMode
+                        ? await crypto.subtle.importKey('spki', pemDecode(pem, 'PUBLIC KEY'),
+                            { name: 'RSASSA-PKCS1-v1_5', hash: RSA_HASH }, true, ['verify'])
+                        : await crypto.subtle.importKey('pkcs8', pemDecode(pem, 'PRIVATE KEY'),
+                            { name: 'RSASSA-PKCS1-v1_5', hash: RSA_HASH }, true, ['sign']);
+                }
+            }
+
+            function signParams(algo) {
+                return algo === 'RSA-PSS'
+                    ? { name: 'RSA-PSS', saltLength: 32 }
+                    : { name: 'RSASSA-PKCS1-v1_5' };
+            }
+
+            function setRsaBadge(text, ok) {
+                rsaBadge.textContent = text;
+                rsaBadge.classList.toggle('ok', !!ok);
+            }
+
+            async function refreshRsaBadge() {
+                const pub = rsaPubKey.value.trim();
+                const priv = rsaPrivKey.value.trim();
+                if (!pub && !priv) {
+                    setRsaBadge('未生成密钥', false);
+                    return;
+                }
+                if (!hasSubtle) {
+                    setRsaBadge('当前环境不支持 WebCrypto（需 HTTPS / localhost）', false);
+                    return;
+                }
+                try {
+                    const key = pub
+                        ? await importRsaPublic(pub, 'RSA-OAEP')
+                        : await importRsaPrivate(priv, 'RSA-OAEP');
+                    setRsaBadge('RSA-' + key.algorithm.modulusLength + (priv ? ' · 含私钥' : ' · 仅公钥'), true);
+                } catch (e) {
+                    setRsaBadge('密钥无效：' + e.message, false);
+                }
+            }
+
+            function saveRsaKeys() {
+                try {
+                    localStorage.setItem(LS_RSA, JSON.stringify({
+                        pub: rsaPubKey.value,
+                        priv: rsaPrivKey.value,
+                        bits: rsaBits.value
+                    }));
+                } catch (e) { /* 忽略存储失败 */ }
+            }
+
+            function downloadText(filename, text) {
+                const blob = new Blob([text], { type: 'application/x-pem-file' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                setTimeout(() => URL.revokeObjectURL(url), 1500);
+            }
+
+            rsaGen.addEventListener('click', () => {
+                if (!hasSubtle) {
+                    setResult(rsaResult, '当前环境不支持 WebCrypto，请用 HTTPS / localhost 打开', true);
+                    return;
+                }
+                withBusy(rsaGen, '生成中…', async () => {
+                    const bits = parseInt(rsaBits.value, 10);
+                    const pair = await crypto.subtle.generateKey({
+                        name: 'RSA-OAEP',
+                        modulusLength: bits,
+                        publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+                        hash: RSA_HASH
+                    }, true, ['encrypt', 'decrypt']);
+
+                    const spki = new Uint8Array(await crypto.subtle.exportKey('spki', pair.publicKey));
+                    const pkcs8 = new Uint8Array(await crypto.subtle.exportKey('pkcs8', pair.privateKey));
+                    rsaPubKey.value = pemEncode(spki, 'PUBLIC KEY');
+                    rsaPrivKey.value = pemEncode(pkcs8, 'PRIVATE KEY');
+                    saveRsaKeys();
+                    setRsaBadge('RSA-' + bits + ' 已生成', true);
+                    setResult(rsaResult, '密钥对已就地生成（' + bits + ' 位），已存入本机 localStorage');
+                }).catch(e => setResult(rsaResult, '生成失败：' + e.message, true));
+            });
+
+            rsaImport.addEventListener('click', () => withBusy(rsaImport, '导入中…', async () => {
+                const pub = rsaPubKey.value.trim();
+                const priv = rsaPrivKey.value.trim();
+                if (!pub && !priv) {
+                    setResult(rsaResult, '请先把 PEM 粘进上面的公钥 / 私钥框', true);
+                    return;
+                }
+                if (pub) await importRsaPublic(pub, 'RSA-OAEP');
+                if (priv) await importRsaPrivate(priv, 'RSA-OAEP');
+                saveRsaKeys();
+                await refreshRsaBadge();
+                setResult(rsaResult, '密钥导入成功，已保存在本机');
+            }).catch(e => setResult(rsaResult, '导入失败：' + e.message, true)));
+
+            rsaDownload.addEventListener('click', () => {
+                const pub = rsaPubKey.value.trim();
+                const priv = rsaPrivKey.value.trim();
+                if (!pub && !priv) {
+                    setResult(rsaResult, '还没有密钥可以下载', true);
+                    return;
+                }
+                if (pub) downloadText('rsa-public.pem', pub);
+                if (priv) downloadText('rsa-private.pem', priv);
+                flashBtn(rsaDownload, '<i class="fas fa-check"></i> 已下载');
+            });
+
+            rsaClearKeys.addEventListener('click', () => {
+                if (!confirm('清除本机的 RSA 密钥？已加密的数据将无法再解密。')) return;
+                rsaPubKey.value = '';
+                rsaPrivKey.value = '';
+                try { localStorage.removeItem(LS_RSA); } catch (e) { }
+                setRsaBadge('未生成密钥', false);
+                setResult(rsaResult, '密钥已清除');
+            });
+
+            rsaCopyPub.addEventListener('click', () => {
+                if (!rsaPubKey.value.trim()) { flashBtn(rsaCopyPub, '<i class="fas fa-ban"></i> 公钥为空'); return; }
+                copyText(rsaPubKey.value, rsaCopyPub);
+            });
+
+            rsaCopyPriv.addEventListener('click', () => {
+                if (!rsaPrivKey.value.trim()) { flashBtn(rsaCopyPriv, '<i class="fas fa-ban"></i> 私钥为空'); return; }
+                copyText(rsaPrivKey.value, rsaCopyPriv);
+            });
+
+            rsaEncrypt.addEventListener('click', () => withBusy(rsaEncrypt, '加密中…', async () => {
+                if (!rsaInput.value) {
+                    setResult(rsaResult, '请输入要加密的明文', true);
+                    return;
+                }
+                if (!rsaPubKey.value.trim()) {
+                    setResult(rsaResult, '还没有公钥：请先点「生成密钥对」，或把公钥 PEM 粘进上面的框里', true);
+                    return;
+                }
+                const pubKey = await importRsaPublic(rsaPubKey.value, 'RSA-OAEP');
+                const data = new TextEncoder().encode(rsaInput.value);
+                const maxLen = pubKey.algorithm.modulusLength / 8 - 2 * 32 - 2;
+                let payload, hybrid = false;
+
+                if (data.length <= maxLen) {
+                    const ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'RSA-OAEP' }, pubKey, data));
+                    payload = bytesToBase64(ct);
+                } else {
+                    hybrid = true;
+                    const aes = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt', 'decrypt']);
+                    const iv = crypto.getRandomValues(new Uint8Array(12));
+                    const ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, aes, data));
+                    const rawAes = new Uint8Array(await crypto.subtle.exportKey('raw', aes));
+                    const wrapped = new Uint8Array(await crypto.subtle.encrypt({ name: 'RSA-OAEP' }, pubKey, rawAes));
+                    payload = 'HYB1:' + bytesToBase64(wrapped) + ':' + bytesToBase64(iv) + ':' + bytesToBase64(ct);
+                }
+
+                rsaLastResult = payload;
+                setResult(rsaResult, payload);
+                appendInfo(rsaResult, 'RSA-OAEP(' + RSA_HASH + ') · ' + pubKey.algorithm.modulusLength + ' 位' +
+                    (hybrid
+                        ? ' · 明文 ' + data.length + ' 字节 > 单块上限 ' + maxLen + '，已改用 AES-GCM 混合加密'
+                        : ' · 单块加密'));
+            }).catch(e => setResult(rsaResult, '加密失败：' + e.message, true)));
+
+            rsaDecryptBtn.addEventListener('click', () => withBusy(rsaDecryptBtn, '解密中…', async () => {
+                const raw = rsaInput.value.trim();
+                if (!raw) {
+                    setResult(rsaResult, '请输入要解密的 Base64 密文', true);
+                    return;
+                }
+                if (!rsaPrivKey.value.trim()) {
+                    setResult(rsaResult, '还没有私钥：解密需要私钥 PEM，请先点「生成密钥对」或导入你的私钥', true);
+                    return;
+                }
+                const privKey = await importRsaPrivate(rsaPrivKey.value, 'RSA-OAEP');
+                let plain;
+
+                if (raw.indexOf('HYB1:') === 0) {
+                    const parts = raw.split(':');
+                    if (parts.length !== 4) throw new Error('混合密文格式不正确');
+                    const rawAes = await crypto.subtle.decrypt({ name: 'RSA-OAEP' }, privKey, base64ToBytes(parts[1]));
+                    const aes = await crypto.subtle.importKey('raw', rawAes, { name: 'AES-GCM' }, false, ['decrypt']);
+                    plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: base64ToBytes(parts[2]) }, aes, base64ToBytes(parts[3]));
+                } else {
+                    plain = await crypto.subtle.decrypt({ name: 'RSA-OAEP' }, privKey, base64ToBytes(raw));
+                }
+
+                const text = new TextDecoder().decode(plain);
+                rsaLastResult = text;
+                setResult(rsaResult, text);
+            }).catch(e => setResult(rsaResult, '解密失败：' + e.message, true)));
+
+            rsaSwap.addEventListener('click', () => {
+                if (!rsaLastResult) {
+                    setResult(rsaResult, '还没有结果可以回填', true);
+                    return;
+                }
+                rsaInput.value = rsaLastResult;
+            });
+
+            rsaSign.addEventListener('click', () => withBusy(rsaSign, '签名中…', async () => {
+                if (!rsaSignInput.value) {
+                    setResult(rsaSignResult, '请输入要签名的原文', true);
+                    return;
+                }
+                if (!rsaPrivKey.value.trim()) {
+                    setResult(rsaSignResult, '还没有私钥：签名需要私钥 PEM，请先点「生成密钥对」或导入你的私钥', true);
+                    return;
+                }
+                const key = await importSignKey(rsaPrivKey.value, 'sign');
+                const algo = rsaSignAlgo;
+                const sig = new Uint8Array(await crypto.subtle.sign(
+                    signParams(algo), key, new TextEncoder().encode(rsaSignInput.value)));
+                const b64 = bytesToBase64(sig);
+                rsaSigInput.value = b64;
+                rsaLastResult = b64;
+                setResult(rsaSignResult, b64);
+                appendInfo(rsaSignResult, algo + '(' + RSA_HASH + (algo === 'RSA-PSS' ? ', salt=32' : '') +
+                    ') · 签名 ' + sig.length + ' 字节');
+            }).catch(e => setResult(rsaSignResult, '签名失败：' + e.message, true)));
+
+            rsaVerify.addEventListener('click', () => withBusy(rsaVerify, '验签中…', async () => {
+                const sigB64 = rsaSigInput.value.trim();
+                if (!rsaSignInput.value) {
+                    setResult(rsaSignResult, '请输入原文', true);
+                    return;
+                }
+                if (!sigB64) {
+                    setResult(rsaSignResult, '请把签名（Base64）填进签名输入框', true);
+                    return;
+                }
+                if (!rsaPubKey.value.trim()) {
+                    setResult(rsaSignResult, '还没有公钥：验签需要公钥 PEM', true);
+                    return;
+                }
+                const key = await importSignKey(rsaPubKey.value, 'verify');
+                const ok = await crypto.subtle.verify(
+                    signParams(rsaSignAlgo), key, base64ToBytes(sigB64),
+                    new TextEncoder().encode(rsaSignInput.value));
+                if (ok) {
+                    setResult(rsaSignResult, '✅ 签名有效：原文与公钥匹配（' + rsaSignAlgo + '）');
+                } else {
+                    setResult(rsaSignResult, '❌ 签名无效：原文被改动，或不是这把私钥签的', true);
+                }
+            }).catch(e => setResult(rsaSignResult, '验签失败：' + e.message, true)));
+
+            [rsaPubKey, rsaPrivKey].forEach(area => {
+                area.addEventListener('blur', () => {
+                    saveRsaKeys();
+                    refreshRsaBadge();
+                });
+            });
+
+            // 恢复上次的密钥
+            (function restoreRsaKeys() {
+                let saved = null;
+                try { saved = JSON.parse(localStorage.getItem(LS_RSA) || 'null'); } catch (e) { saved = null; }
+                if (!saved) return;
+                rsaPubKey.value = saved.pub || '';
+                rsaPrivKey.value = saved.priv || '';
+                if (saved.bits) rsaBits.value = String(saved.bits);
+                refreshRsaBadge();
+            })();
+
+            if (!hasSubtle) {
+                setRsaBadge('当前环境不支持 WebCrypto（需 HTTPS / localhost）', false);
+                [rsaGen, rsaImport, rsaDownload, rsaEncrypt, rsaDecryptBtn, rsaSign, rsaVerify]
+                    .forEach(b => { b.disabled = true; });
+            }
 
         })();
     </script>

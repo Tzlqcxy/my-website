@@ -89,12 +89,100 @@
             color: var(--text-accent);
         }
 
+        /* 工具栏 */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-top: 1.8rem;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 40px;
+            padding: 0.45rem 1.1rem;
+            flex: 1;
+            min-width: 200px;
+            transition: 0.2s;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        .search-box i {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            width: 100%;
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .btn-add {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--text-accent);
+            padding: 0.5rem 1.4rem;
+            border-radius: 40px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.25s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-add:hover {
+            background: var(--primary);
+            color: #0b0f18;
+            box-shadow: 0 0 30px var(--primary-glow);
+        }
+
+        .btn-add:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        .toolbar-status {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+        }
+
+        .hint {
+            margin-top: 1rem;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1.8;
+            border-left: 2px solid var(--primary-border);
+            padding-left: 0.8rem;
+        }
+
         /* 知识库网格 */
         .note-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
             gap: 1.5rem;
-            margin-top: 2rem;
+            margin-top: 1.6rem;
         }
 
         .note-card {
@@ -104,9 +192,9 @@
             padding: 1.5rem;
             transition: 0.3s;
             cursor: pointer;
-            text-decoration: none;
             color: inherit;
             display: block;
+            position: relative;
         }
 
         .note-card:hover {
@@ -126,6 +214,8 @@
             font-weight: 600;
             color: var(--text-accent);
             margin-bottom: 0.3rem;
+            padding-right: 1.4rem;
+            word-break: break-word;
         }
 
         .note-card p {
@@ -134,9 +224,16 @@
             line-height: 1.5;
         }
 
+        .card-foot {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.6rem;
+            margin-top: 0.7rem;
+        }
+
         .note-card .tag {
             display: inline-block;
-            margin-top: 0.6rem;
             font-size: 0.6rem;
             padding: 0.15rem 0.8rem;
             border-radius: 30px;
@@ -146,11 +243,51 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
+        .note-card .src {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 55%;
+        }
+
+        .note-card .src.cached {
+            color: var(--primary);
+        }
+
+        .card-del {
+            position: absolute;
+            top: 0.9rem;
+            right: 0.9rem;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: 0.2s;
+        }
+
+        .note-card:hover .card-del {
+            opacity: 1;
+        }
+
+        .card-del:hover {
+            color: #ff6b6b;
+            border-color: rgba(255, 107, 107, 0.4);
+        }
+
         /* 空状态 */
         .empty-state {
             text-align: center;
             padding: 4rem 2rem;
             color: var(--text-muted);
+            grid-column: 1/-1;
         }
 
         .empty-state i {
@@ -162,6 +299,433 @@
 
         .empty-state p {
             font-size: 0.9rem;
+        }
+
+        /* 弹窗 */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(6, 8, 12, 0.78);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.6rem;
+            z-index: 100;
+        }
+
+        .overlay.show {
+            display: flex;
+        }
+
+        .dialog {
+            width: 100%;
+            max-width: 460px;
+            background: var(--bg-card);
+            border: 1px solid var(--primary-border);
+            border-radius: 1.6rem;
+            padding: 1.6rem;
+            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.8);
+        }
+
+        .dialog h3 {
+            font-size: 1rem;
+            color: var(--text-accent);
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .dialog h3 i {
+            color: var(--primary);
+        }
+
+        .dialog p {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .dialog label {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            margin: 0.8rem 0 0.3rem;
+        }
+
+        .dialog input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            padding: 0.55rem 1.1rem;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            outline: none;
+        }
+
+        .dialog input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        .dialog-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.6rem;
+            margin-top: 1.3rem;
+        }
+
+        .ghost-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.45rem 1.2rem;
+            border-radius: 30px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .ghost-btn:hover {
+            color: var(--text-accent);
+            border-color: var(--primary);
+        }
+
+        /* 阅读器 */
+        .reader-overlay {
+            padding: 0;
+        }
+
+        .reader {
+            width: 100%;
+            height: 100%;
+            background: #0b0d12;
+            background-image: radial-gradient(circle at 10% 20%, #13171f 0%, #080a0e 90%);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .reader-head {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            padding: 0.9rem 1.4rem;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(10, 14, 20, 0.9);
+            backdrop-filter: blur(10px);
+            flex-wrap: wrap;
+        }
+
+        .reader-favicon {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            background: var(--bg-input);
+            flex-shrink: 0;
+        }
+
+        .reader-titles {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .reader-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .reader-url {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .reader-url:hover {
+            color: var(--primary);
+        }
+
+        .reader-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .reader-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            padding: 0.15rem 0.7rem;
+            white-space: nowrap;
+        }
+
+        .reader-badge.live {
+            color: var(--primary);
+            border-color: var(--primary-border-hover);
+        }
+
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.75rem;
+        }
+
+        .icon-btn:hover {
+            border-color: var(--primary);
+            color: var(--text-accent);
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        .reader-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem 1.6rem 4rem;
+            width: 100%;
+            max-width: 820px;
+            margin: 0 auto;
+            font-size: 0.92rem;
+            line-height: 1.85;
+            color: var(--text-primary);
+            scrollbar-width: thin;
+            scrollbar-color: #1a3340 transparent;
+        }
+
+        .reader-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .reader-content::-webkit-scrollbar-thumb {
+            background: #1a3340;
+            border-radius: 12px;
+        }
+
+        .reader-content h1 {
+            font-size: 1.5rem;
+            margin: 1.4rem 0 0.8rem;
+            color: var(--text-accent);
+        }
+
+        .reader-content h2 {
+            font-size: 1.22rem;
+            margin: 1.6rem 0 0.6rem;
+            padding-bottom: 0.35rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-accent);
+        }
+
+        .reader-content h3 {
+            font-size: 1.05rem;
+            margin: 1.2rem 0 0.5rem;
+            color: var(--text-accent);
+        }
+
+        .reader-content h4,
+        .reader-content h5,
+        .reader-content h6 {
+            font-size: 0.95rem;
+            margin: 1rem 0 0.4rem;
+            color: var(--text-secondary);
+        }
+
+        .reader-content p {
+            margin: 0.75rem 0;
+            word-break: break-word;
+        }
+
+        .reader-content a {
+            color: var(--primary);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--primary-border-hover);
+        }
+
+        .reader-content a:hover {
+            border-bottom-style: solid;
+        }
+
+        .reader-content ul,
+        .reader-content ol {
+            margin: 0.6rem 0 0.6rem 1.4rem;
+        }
+
+        .reader-content li {
+            margin: 0.3rem 0;
+        }
+
+        .reader-content blockquote {
+            margin: 0.9rem 0;
+            padding: 0.6rem 1rem;
+            border-left: 3px solid var(--primary);
+            background: var(--bg-input);
+            border-radius: 0.6rem;
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+        }
+
+        .reader-content pre {
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid var(--border-color);
+            border-radius: 0.9rem;
+            padding: 0.9rem 1.1rem;
+            overflow-x: auto;
+            margin: 0.9rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            line-height: 1.6;
+        }
+
+        .reader-content code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82em;
+            background: rgba(0, 255, 200, 0.06);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.05rem 0.35rem;
+        }
+
+        .reader-content pre code {
+            background: transparent;
+            border: none;
+            padding: 0;
+            font-size: inherit;
+        }
+
+        .reader-content img {
+            max-width: 100%;
+            border-radius: 1rem;
+            margin: 0.9rem 0;
+            display: block;
+        }
+
+        .reader-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1rem 0;
+            font-size: 0.8rem;
+        }
+
+        .reader-content th,
+        .reader-content td {
+            border: 1px solid var(--border-color);
+            padding: 0.4rem 0.7rem;
+            text-align: left;
+        }
+
+        .reader-content th {
+            background: rgba(0, 255, 200, 0.04);
+            color: var(--text-accent);
+        }
+
+        .reader-content hr {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 1.4rem 0;
+        }
+
+        .reader-loading {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            align-items: center;
+            justify-content: center;
+            padding: 4.5rem 0;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        .reader-loading i {
+            font-size: 1.6rem;
+            color: var(--primary);
+        }
+
+        .reader-loading small {
+            color: var(--text-muted);
+            font-size: 0.65rem;
+            line-height: 1.8;
+        }
+
+        .reader-fallback {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 1.4rem;
+            padding: 1.4rem 1.6rem;
+            margin-top: 1rem;
+        }
+
+        .reader-fallback h3 {
+            font-size: 1rem;
+            color: var(--text-accent);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .reader-fallback h3 i {
+            color: #ffb86b;
+        }
+
+        .reader-fallback p {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .reader-fallback ul {
+            margin: 0.8rem 0 0 1.2rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .reader-fallback li {
+            margin: 0.25rem 0;
+            word-break: break-all;
+        }
+
+        .btn-open-page {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.1rem;
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--text-accent);
+            padding: 0.45rem 1.4rem;
+            border-radius: 40px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            text-decoration: none;
+            transition: 0.25s;
+        }
+
+        .btn-open-page:hover {
+            background: var(--primary);
+            color: #0b0f18;
+            box-shadow: 0 0 30px var(--primary-glow);
         }
 
         @media (max-width: 600px) {
@@ -176,6 +740,20 @@
             .note-grid {
                 grid-template-columns: 1fr;
             }
+
+            .reader-content {
+                padding: 1.2rem 1rem 3rem;
+                font-size: 0.86rem;
+            }
+
+            .reader-head {
+                padding: 0.7rem 0.9rem;
+                gap: 0.6rem;
+            }
+
+            .dialog {
+                padding: 1.2rem;
+            }
         }
     </style>
 </head>
@@ -189,73 +767,791 @@
             <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> 返回</a>
         </div>
 
+        <!-- 工具栏 -->
+        <div class="toolbar">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="搜索笔记 / 标签 / 域名…" />
+            </div>
+            <button class="btn-add" id="addWebBtn"><i class="fas fa-link"></i> 接入网页</button>
+            <span class="toolbar-status" id="statusText"></span>
+        </div>
+        <div class="hint">
+            ▸ 点击卡片 → 实时抓取真实网页正文并离线缓存，阅读器内可直接跳原文<br />
+            ▸ 抓取链路：站内代理（若已部署）→ AllOrigins → Jina Reader → corsproxy，全部失败会自动回退为摘要 + 原文外链<br />
+            ▸ 全部走前端公开通道，不需要改动任何后端代码
+        </div>
+
         <!-- 笔记列表 -->
-        <div class="note-grid" id="noteGrid">
-            <!-- 由 JS 动态生成 -->
+        <div class="note-grid" id="noteGrid"></div>
+    </div>
+
+    <!-- 接入网页弹窗 -->
+    <div class="overlay" id="addOverlay">
+        <div class="dialog">
+            <h3><i class="fas fa-satellite-dish"></i> 接入真实网页</h3>
+            <p>粘贴任意网页地址，MindNote 会抓取正文并缓存进知识库。</p>
+            <label for="urlInput">网页地址</label>
+            <input type="text" id="urlInput" placeholder="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript" />
+            <label for="tagInput">标签（可选）</label>
+            <input type="text" id="tagInput" placeholder="前端 / 后端 / 灵感…" maxlength="12" />
+            <div class="dialog-actions">
+                <button class="ghost-btn" id="cancelAddBtn" type="button">取消</button>
+                <button class="btn-add" id="confirmAddBtn" type="button"><i class="fas fa-cloud-arrow-down"></i>
+                    抓取并收藏</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 阅读器 -->
+    <div class="overlay reader-overlay" id="readerOverlay">
+        <div class="reader">
+            <div class="reader-head">
+                <img class="reader-favicon" id="readerFavicon" alt="" />
+                <div class="reader-titles">
+                    <div class="reader-title" id="readerTitle">载入中…</div>
+                    <a class="reader-url" id="readerUrl" href="#" target="_blank" rel="noopener"></a>
+                </div>
+                <div class="reader-actions">
+                    <span class="reader-badge" id="readerBadge"></span>
+                    <button class="icon-btn" id="refreshBtn" title="重新抓取"><i class="fas fa-rotate"></i></button>
+                    <button class="icon-btn" id="openBtn" title="在新标签页打开原文"><i
+                            class="fas fa-arrow-up-right-from-square"></i></button>
+                    <button class="icon-btn" id="closeReaderBtn" title="关闭 (Esc)"><i class="fas fa-xmark"></i></button>
+                </div>
+            </div>
+            <div class="reader-content" id="readerContent"></div>
         </div>
     </div>
 
     <script>
-        // ===== 笔记数据 =====
-        const notes = [
-            {
-                icon: 'fa-code',
-                title: 'TypeScript 进阶',
-                desc: '泛型、装饰器、类型推断与高级类型技巧',
-                tag: '前端'
-            },
-            {
-                icon: 'fa-database',
-                title: 'D1 数据库笔记',
-                desc: 'Cloudflare D1 的使用、迁移与最佳实践',
-                tag: '后端'
-            },
-            {
-                icon: 'fa-cloud',
-                title: 'Cloudflare 全家桶',
-                desc: 'Pages, Workers, D1, R2 的整合与部署',
-                tag: '运维'
-            },
-            {
-                icon: 'fa-terminal',
-                title: 'Linux 常用命令',
-                desc: '系统管理、网络调试、性能监控命令速查',
-                tag: '系统'
-            },
-            {
-                icon: 'fa-palette',
-                title: '设计系统笔记',
-                desc: '色彩、排版、组件化与设计规范',
-                tag: '设计'
-            },
-            {
-                icon: 'fa-robot',
-                title: 'AI 开发实践',
-                desc: 'Prompt 工程、RAG、Agent 与工具调用',
-                tag: 'AI'
+        // ===== MindNote · 真实网页接入 =====
+        (function () {
+            'use strict';
+
+            const API_BASE = 'https://api.eggfish.dpdns.org/api'; // 站内 Worker（可选代理：/proxy?url=）
+            const LS_NOTES = 'mindnote_user_notes';
+            const LS_CACHE = 'mindnote_page_cache';
+            const MAX_CACHE = 20;
+            const MAX_CHARS = 220000;
+            const FETCH_TIMEOUT = 15000;
+
+            // ===== 内置笔记（指向真实网页）=====
+            const BUILTIN_NOTES = [
+                {
+                    id: 'b1', icon: 'fa-code', title: 'TypeScript 泛型手册',
+                    desc: '泛型、约束、条件类型与工具类型的官方讲解',
+                    tag: '前端', url: 'https://www.typescriptlang.org/docs/handbook/2/generics.html'
+                },
+                {
+                    id: 'b2', icon: 'fa-database', title: 'Cloudflare D1 文档',
+                    desc: 'D1 数据库的建表、查询、迁移与最佳实践',
+                    tag: '后端', url: 'https://developers.cloudflare.com/d1/'
+                },
+                {
+                    id: 'b3', icon: 'fa-cloud', title: 'Cloudflare Workers',
+                    desc: 'Workers 运行时、路由与 Pages Functions 整合',
+                    tag: '运维', url: 'https://developers.cloudflare.com/workers/'
+                },
+                {
+                    id: 'b4', icon: 'fa-terminal', title: 'Bash 命令速查',
+                    desc: 'Linux 常用命令、参数与示例的完整索引',
+                    tag: '系统', url: 'https://ss64.com/bash/'
+                },
+                {
+                    id: 'b5', icon: 'fa-palette', title: '设计系统 101',
+                    desc: 'Nielsen Norman Group 关于设计系统的入门文章',
+                    tag: '设计', url: 'https://www.nngroup.com/articles/design-systems-101/'
+                },
+                {
+                    id: 'b6', icon: 'fa-robot', title: '提示工程指南',
+                    desc: 'Prompt 工程、RAG、Agent 与工具调用的中文指南',
+                    tag: 'AI', url: 'https://www.promptingguide.ai/zh'
+                }
+            ];
+
+            // ===== 状态 =====
+            let userNotes = readJSON(LS_NOTES, []);
+            let cache = readJSON(LS_CACHE, {});
+            let currentNote = null;
+            let filterText = '';
+
+            // ===== DOM =====
+            const grid = document.getElementById('noteGrid');
+            const statusText = document.getElementById('statusText');
+            const searchInput = document.getElementById('searchInput');
+            const addOverlay = document.getElementById('addOverlay');
+            const urlInput = document.getElementById('urlInput');
+            const tagInput = document.getElementById('tagInput');
+            const addWebBtn = document.getElementById('addWebBtn');
+            const confirmAddBtn = document.getElementById('confirmAddBtn');
+            const cancelAddBtn = document.getElementById('cancelAddBtn');
+            const readerOverlay = document.getElementById('readerOverlay');
+            const readerContent = document.getElementById('readerContent');
+            const readerTitle = document.getElementById('readerTitle');
+            const readerUrl = document.getElementById('readerUrl');
+            const readerFavicon = document.getElementById('readerFavicon');
+            const readerBadge = document.getElementById('readerBadge');
+
+            // ===== 工具函数 =====
+            function readJSON(key, fallback) {
+                try {
+                    const raw = localStorage.getItem(key);
+                    if (!raw) return fallback;
+                    const val = JSON.parse(raw);
+                    return val === null || val === undefined ? fallback : val;
+                } catch (_) {
+                    return fallback;
+                }
             }
-        ];
 
-        // ===== 渲染笔记 =====
-        const grid = document.getElementById('noteGrid');
+            function writeJSON(key, val) {
+                try {
+                    localStorage.setItem(key, JSON.stringify(val));
+                    return true;
+                } catch (_) {
+                    return false;
+                }
+            }
 
-        if (notes.length === 0) {
-            grid.innerHTML = `
-            <div class="empty-state" style="grid-column:1/-1;">
-                <i class="fas fa-book-open"></i>
-                <p>知识库还在建设中，<br />稍后回来看看 👀</p>
-            </div>
-        `;
-        } else {
-            grid.innerHTML = notes.map(note => `
-            <a href="#" class="note-card" onclick="alert('📝 ${note.title}\\n\\n${note.desc}\\n\\n🏷️ ${note.tag}'); return false;">
-                <div class="icon"><i class="fas ${note.icon}"></i></div>
-                <h3>${note.title}</h3>
-                <p>${note.desc}</p>
-                <span class="tag">#${note.tag}</span>
-            </a>
-        `).join('');
-        }
+            function escapeHtml(unsafe) {
+                if (!unsafe) return '';
+                return String(unsafe)
+                    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+            }
+
+            function domainOf(url) {
+                try { return new URL(url).hostname.replace(/^www\./, ''); }
+                catch (_) { return url; }
+            }
+
+            function abs(url, base) {
+                try { return new URL(url, base).href; } catch (_) { return ''; }
+            }
+
+            function fetchTimeout(url, ms) {
+                const ctrl = new AbortController();
+                const timer = setTimeout(function () { ctrl.abort(); }, ms);
+                return fetch(url, { signal: ctrl.signal, redirect: 'follow' }).then(function (res) {
+                    clearTimeout(timer);
+                    return res;
+                }, function (err) {
+                    clearTimeout(timer);
+                    throw new Error(err && err.name === 'AbortError' ? '请求超时' : (err.message || '网络错误'));
+                });
+            }
+
+            // ===== 缓存读写 =====
+            function saveCache() {
+                const keys = Object.keys(cache).sort(function (a, b) {
+                    return (cache[b].fetchedAt || 0) - (cache[a].fetchedAt || 0);
+                });
+                keys.slice(MAX_CACHE).forEach(function (k) { delete cache[k]; });
+                if (!writeJSON(LS_CACHE, cache)) {
+                    // 空间不足：丢掉一半旧缓存再试
+                    keys.slice(Math.ceil(keys.length / 2)).forEach(function (k) { delete cache[k]; });
+                    writeJSON(LS_CACHE, cache);
+                }
+            }
+
+            function trimHtml(html) {
+                if (!html) return '';
+                if (html.length <= MAX_CHARS) return html;
+                return html.slice(0, MAX_CHARS) + '<p>…（内容过长，已截断，可在原文查看完整版）</p>';
+            }
+
+            // ===== 网页抓取：多级代理 + 正文提取 =====
+            function buildAttempts(target) {
+                const enc = encodeURIComponent(target);
+                // 顺序按国内网络实测：AllOrigins 可用，Jina 超时，corsproxy 需要 API key
+                return [
+                    { label: '站内代理', url: API_BASE + '/proxy?url=' + enc, kind: 'auto', timeout: 8000 },
+                    { label: 'AllOrigins', url: 'https://api.allorigins.win/raw?url=' + enc, kind: 'html', timeout: 18000 },
+                    { label: 'Jina Reader', url: 'https://r.jina.ai/' + target, kind: 'md', timeout: 8000 },
+                    { label: 'corsproxy', url: 'https://corsproxy.io/?url=' + enc, kind: 'html', timeout: 8000 }
+                ];
+            }
+
+            async function fetchReadable(target) {
+                const errors = [];
+                const attempts = buildAttempts(target);
+
+                for (let i = 0; i < attempts.length; i++) {
+                    const attempt = attempts[i];
+                    try {
+                        reportProgress(attempt.label, i, attempts.length);
+                        const res = await fetchTimeout(attempt.url, attempt.timeout || FETCH_TIMEOUT);
+                        if (!res.ok) {
+                            errors.push(attempt.label + ' → HTTP ' + res.status);
+                            continue;
+                        }
+
+                        const ctype = (res.headers.get('content-type') || '').toLowerCase();
+                        let body = await res.text();
+
+                        // 站内代理可能返回 JSON 包装
+                        if (ctype.indexOf('json') > -1 || /^\s*[{[]/.test(body)) {
+                            let data = null;
+                            try { data = JSON.parse(body); } catch (_) { }
+                            if (data && typeof data === 'object') {
+                                const inner = data.html || data.content || data.text || data.body || data.markdown;
+                                if (!inner) {
+                                    errors.push(attempt.label + ' → ' + (data.error || data.message || '无正文'));
+                                    continue;
+                                }
+                                const packed = pack(inner, data.title, data.format || attempt.kind, target, attempt.label);
+                                if (packed) return packed;
+                                errors.push(attempt.label + ' → 正文为空');
+                                continue;
+                            }
+                        }
+
+                        if (!body || body.trim().length < 100) {
+                            errors.push(attempt.label + ' → 正文过短');
+                            continue;
+                        }
+
+                        const packed = pack(body, null, attempt.kind, target, attempt.label);
+                        if (packed) return packed;
+                        errors.push(attempt.label + ' → 正文为空');
+                    } catch (err) {
+                        errors.push(attempt.label + ' → ' + (err.message || '未知错误'));
+                    }
+                }
+
+                const e = new Error('所有抓取通道均失败');
+                e.details = errors;
+                throw e;
+            }
+
+            function pack(body, title, kind, target, label) {
+                const looksHtml = /<\/?(p|div|article|section|body|html|h1|ul)\b/i.test(body);
+
+                if (kind === 'md' || (!looksHtml && /(^|\n)\s{0,3}#{1,6}\s/.test(body))) {
+                    let md = body.replace(/^\uFEFF/, '');
+                    const titleMatch = md.match(/^Title:\s*(.+)$/m);
+                    const mdTitle = (title || (titleMatch ? titleMatch[1].trim() : '')).trim();
+                    const marker = md.indexOf('Markdown Content:');
+                    if (marker > -1) md = md.slice(marker + 'Markdown Content:'.length);
+                    const html = mdToHtml(md);
+                    if (html.replace(/<[^>]+>/g, '').trim().length < 40) return null;
+                    return { title: mdTitle || extractMdTitle(md), html: trimHtml(html), source: label };
+                }
+
+                const parsed = sanitizeHtml(body, target);
+                if (!parsed.html.replace(/<[^>]+>/g, '').trim()) return null;
+                return {
+                    title: (title || parsed.title || domainOf(target)).trim(),
+                    html: trimHtml(parsed.html),
+                    source: label
+                };
+            }
+
+            function extractMdTitle(md) {
+                const m = md.match(/^\s{0,3}#{1,3}\s+(.+)$/m);
+                return m ? m[1].trim() : '';
+            }
+
+            // ----- HTML 清理（保留语义结构、去脚本）-----
+            const ALLOWED_TAGS = new Set(['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'UL', 'OL', 'LI',
+                'PRE', 'CODE', 'BLOCKQUOTE', 'A', 'IMG', 'STRONG', 'EM', 'B', 'I', 'BR', 'HR',
+                'TABLE', 'THEAD', 'TBODY', 'TR', 'TD', 'TH', 'FIGURE', 'FIGCAPTION', 'DIV', 'SPAN',
+                'SECTION', 'ARTICLE', 'DL', 'DT', 'DD']);
+
+            function sanitizeHtml(raw, baseUrl) {
+                const doc = new DOMParser().parseFromString(raw, 'text/html');
+                const ogTitle = doc.querySelector('meta[property="og:title"]');
+                const title = ((ogTitle && ogTitle.getAttribute('content')) || doc.title || '').trim();
+
+                doc.querySelectorAll('script,style,noscript,svg,iframe,form,nav,footer,header,aside,button,select,input,textarea,link,meta,video,audio,canvas')
+                    .forEach(function (n) { n.remove(); });
+
+                const root = doc.querySelector('article') ||
+                    doc.querySelector('main') ||
+                    doc.querySelector('[class*="markdown"], [class*="article"], [id*="content"], [class*="content"]') ||
+                    doc.body;
+
+                const out = document.createElement('div');
+                if (root) copyNodes(root, out, baseUrl);
+                return { title: title, html: out.innerHTML };
+            }
+
+            function copyNodes(src, dst, baseUrl) {
+                Array.prototype.forEach.call(src.childNodes, function (child) {
+                    if (child.nodeType === 3) {
+                        const text = child.textContent.replace(/\s+/g, ' ');
+                        if (text.trim()) dst.appendChild(document.createTextNode(text));
+                        return;
+                    }
+                    if (child.nodeType !== 1) return;
+
+                    const tag = child.tagName;
+
+                    if (tag === 'BR') { dst.appendChild(document.createElement('br')); return; }
+
+                    if (tag === 'IMG') {
+                        const raw = child.getAttribute('src') || child.getAttribute('data-src') || child.getAttribute('data-original') || '';
+                        const src = abs(raw, baseUrl);
+                        if (!src || src.indexOf('http') !== 0) return;
+                        const img = document.createElement('img');
+                        img.src = src;
+                        img.alt = child.getAttribute('alt') || '';
+                        img.loading = 'lazy';
+                        dst.appendChild(img);
+                        return;
+                    }
+
+                    if (tag === 'A') {
+                        const href = abs(child.getAttribute('href') || '', baseUrl);
+                        const text = child.textContent.replace(/\s+/g, ' ').trim();
+                        if (!text) return;
+                        const a = document.createElement('a');
+                        a.textContent = text;
+                        if (href && href.indexOf('http') === 0) {
+                            a.href = href;
+                            a.target = '_blank';
+                            a.rel = 'noopener';
+                        }
+                        dst.appendChild(a);
+                        return;
+                    }
+
+                    if (tag === 'PRE' || tag === 'CODE') {
+                        const el = document.createElement(tag === 'PRE' ? 'pre' : 'code');
+                        el.textContent = child.textContent.replace(/\n{3,}/g, '\n\n');
+                        if (el.textContent.trim()) dst.appendChild(el);
+                        return;
+                    }
+
+                    if (ALLOWED_TAGS.has(tag)) {
+                        const el = document.createElement(tag.toLowerCase());
+                        copyNodes(child, el, baseUrl);
+                        if (el.textContent.trim() || el.querySelector('img')) dst.appendChild(el);
+                        return;
+                    }
+
+                    copyNodes(child, dst, baseUrl); // 未知标签：只保留内容
+                });
+            }
+
+            // ----- 轻量 Markdown → HTML（用于 Jina Reader 输出）-----
+            function mdToHtml(md) {
+                md = md.replace(/\r/g, '').replace(/^---\n[\s\S]*?\n---\n/, '');
+                const lines = md.split('\n');
+                const out = [];
+                let listType = null;
+
+                function closeList() {
+                    if (listType) { out.push('</' + listType + '>'); listType = null; }
+                }
+
+                for (let i = 0; i < lines.length; i++) {
+                    let line = lines[i];
+
+                    // 代码块
+                    if (/^\s*```/.test(line)) {
+                        const lang = line.trim().replace(/^```/, '').trim();
+                        const buf = [];
+                        i++;
+                        while (i < lines.length && !/^\s*```/.test(lines[i])) { buf.push(lines[i]); i++; }
+                        closeList();
+                        out.push('<pre><code' + (lang ? ' data-lang="' + escapeHtml(lang) + '"' : '') + '>' +
+                            escapeHtml(buf.join('\n')) + '</code></pre>');
+                        continue;
+                    }
+
+                    if (!line.trim()) { closeList(); continue; }
+
+                    // 标题
+                    const h = line.match(/^\s{0,3}(#{1,6})\s+(.*)$/);
+                    if (h) {
+                        closeList();
+                        const level = h[1].length;
+                        out.push('<h' + level + '>' + inlineMd(h[2].replace(/\s+#+\s*$/, '')) + '</h' + level + '>');
+                        continue;
+                    }
+
+                    // 分割线
+                    if (/^\s{0,3}(-{3,}|\*{3,}|_{3,})\s*$/.test(line)) { closeList(); out.push('<hr>'); continue; }
+
+                    // 引用
+                    if (/^\s{0,3}>\s?/.test(line)) {
+                        const buf = [];
+                        while (i < lines.length && /^\s{0,3}>\s?/.test(lines[i])) {
+                            buf.push(lines[i].replace(/^\s{0,3}>\s?/, ''));
+                            i++;
+                        }
+                        i--;
+                        closeList();
+                        out.push('<blockquote>' + inlineMd(buf.join(' ')) + '</blockquote>');
+                        continue;
+                    }
+
+                    // 列表
+                    const li = line.match(/^(\s*)([-*+]|\d+[.)])\s+(.*)$/);
+                    if (li) {
+                        const type = /^\d/.test(li[2]) ? 'ol' : 'ul';
+                        if (listType !== type) { closeList(); out.push('<' + type + '>'); listType = type; }
+                        out.push('<li>' + inlineMd(li[3]) + '</li>');
+                        continue;
+                    }
+                    closeList();
+
+                    // 表格
+                    if (/^\s*\|.*\|\s*$/.test(line) && i + 1 < lines.length && /^\s*\|[\s:|-]+\|\s*$/.test(lines[i + 1])) {
+                        const cells = function (row) {
+                            return row.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map(function (c) { return c.trim(); });
+                        };
+                        let html = '<table><thead><tr>' + cells(line).map(function (c) { return '<th>' + inlineMd(c) + '</th>'; }).join('') + '</tr></thead><tbody>';
+                        i += 2;
+                        while (i < lines.length && /^\s*\|.*\|\s*$/.test(lines[i])) {
+                            html += '<tr>' + cells(lines[i]).map(function (c) { return '<td>' + inlineMd(c) + '</td>'; }).join('') + '</tr>';
+                            i++;
+                        }
+                        i--;
+                        out.push(html + '</tbody></table>');
+                        continue;
+                    }
+
+                    // 段落（合并连续行）
+                    const para = [line.trim()];
+                    while (i + 1 < lines.length && lines[i + 1].trim() &&
+                        !/^\s*(#{1,6}\s|```|>|[-*+]\s|\d+[.)]\s|\|)/.test(lines[i + 1]) &&
+                        !/^\s{0,3}(-{3,}|\*{3,}|_{3,})\s*$/.test(lines[i + 1])) {
+                        para.push(lines[i + 1].trim());
+                        i++;
+                    }
+                    out.push('<p>' + inlineMd(para.join(' ')) + '</p>');
+                }
+
+                closeList();
+                return out.join('\n');
+            }
+
+            function inlineMd(text) {
+                const codes = [];
+                let s = escapeHtml(text);
+
+                s = s.replace(/`([^`]+)`/g, function (m, c) {
+                    codes.push(c);
+                    return '\u0000' + (codes.length - 1) + '\u0000';
+                });
+                s = s.replace(/!\[([^\]]*)\]\(([^)\s]+)[^)]*\)/g, function (m, alt, src) {
+                    return /^https?:/.test(src) ? '<img src="' + src + '" alt="' + alt + '" loading="lazy">' : alt;
+                });
+                s = s.replace(/\[([^\]]+)\]\(([^)\s]+)[^)]*\)/g, function (m, t, href) {
+                    return /^https?:/.test(href)
+                        ? '<a href="' + href + '" target="_blank" rel="noopener">' + t + '</a>'
+                        : t;
+                });
+                s = s.replace(/&lt;(https?:\/\/[^\s&]+)&gt;/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+                s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+                s = s.replace(/(^|[\s(])\*([^*\n]+)\*/g, '$1<em>$2</em>');
+                s = s.replace(/~~([^~]+)~~/g, '<del>$1</del>');
+                s = s.replace(/\u0000(\d+)\u0000/g, function (m, idx) { return '<code>' + codes[Number(idx)] + '</code>'; });
+                // 中文软换行产生的空格去掉
+                s = s.replace(/([\u4e00-\u9fff])\s+(?=[\u4e00-\u9fff])/g, '$1');
+                return s;
+            }
+
+            // ===== 网格渲染 =====
+            function allNotes() {
+                return userNotes.concat(BUILTIN_NOTES);
+            }
+
+            function visibleNotes() {
+                const q = filterText.trim().toLowerCase();
+                const list = allNotes();
+                if (!q) return list;
+                return list.filter(function (n) {
+                    return [n.title, n.desc, n.tag, n.url].join(' ').toLowerCase().indexOf(q) > -1;
+                });
+            }
+
+            function renderGrid() {
+                const list = visibleNotes();
+                const cachedCount = Object.keys(cache).length;
+                statusText.textContent = list.length + ' 条 · 已缓存 ' + cachedCount;
+
+                if (!list.length) {
+                    grid.innerHTML = '<div class="empty-state"><i class="fas fa-book-open"></i><p>' +
+                        (filterText ? '没有匹配的笔记 🔍' : '知识库还在建设中，<br />稍后回来看看 👀') + '</p></div>';
+                    return;
+                }
+
+                grid.innerHTML = list.map(function (note, idx) {
+                    const cached = !!cache[note.url];
+                    const domain = domainOf(note.url);
+                    return '<div class="note-card" data-idx="' + idx + '">' +
+                        (note.custom ? '<button class="card-del" data-del="' + escapeHtml(note.id) + '" title="从知识库移除"><i class="fas fa-xmark"></i></button>' : '') +
+                        '<div class="icon"><i class="fas ' + (note.icon || 'fa-globe') + '"></i></div>' +
+                        '<h3>' + escapeHtml(note.title) + '</h3>' +
+                        '<p>' + escapeHtml(note.desc || '') + '</p>' +
+                        '<div class="card-foot">' +
+                        '<span class="tag">#' + escapeHtml(note.tag || '网页') + '</span>' +
+                        '<span class="src' + (cached ? ' cached' : '') + '">' +
+                        (cached ? '<i class="fas fa-database"></i> ' : '') + escapeHtml(domain) +
+                        '</span></div></div>';
+                }).join('');
+
+                Array.prototype.forEach.call(grid.querySelectorAll('.note-card'), function (card) {
+                    card.addEventListener('click', function () {
+                        const note = list[Number(card.getAttribute('data-idx'))];
+                        if (note) openNote(note);
+                    });
+                });
+
+                Array.prototype.forEach.call(grid.querySelectorAll('.card-del'), function (btn) {
+                    btn.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                        const id = btn.getAttribute('data-del');
+                        const note = userNotes.filter(function (n) { return n.id === id; })[0];
+                        if (!note) return;
+                        if (!confirm('从知识库移除「' + note.title + '」？')) return;
+                        userNotes = userNotes.filter(function (n) { return n.id !== id; });
+                        writeJSON(LS_NOTES, userNotes);
+                        renderGrid();
+                    });
+                });
+            }
+
+            // ===== 阅读器 =====
+            function showOverlay(el) { el.classList.add('show'); }
+            function hideOverlay(el) { el.classList.remove('show'); }
+
+            function reportProgress(label, index, total) {
+                if (!currentNote) return;
+                readerContent.innerHTML = '<div class="reader-loading"><i class="fas fa-spinner fa-spin"></i>' +
+                    '<div>正在抓取真实网页…（' + escapeHtml(label) + '）</div>' +
+                    '<small>通道 ' + (index + 1) + '/' + total + ' · ' + escapeHtml(domainOf(currentNote.url)) + '</small></div>';
+            }
+
+            function setReaderHead(note) {
+                readerTitle.textContent = note.title;
+                readerUrl.textContent = note.url;
+                readerUrl.href = note.url;
+                const domain = domainOf(note.url);
+                readerFavicon.src = 'https://icons.duckduckgo.com/ip3/' + domain + '.ico';
+                readerFavicon.onerror = function () {
+                    readerFavicon.onerror = null;
+                    readerFavicon.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
+                        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#0f1a22"/><text x="12" y="17" font-size="13" text-anchor="middle" fill="#00e5b0" font-family="monospace">' +
+                        domain.charAt(0).toUpperCase() + '</text></svg>');
+                };
+            }
+
+            function setBadge(text, live) {
+                readerBadge.textContent = text || '';
+                readerBadge.classList.toggle('live', !!live);
+            }
+
+            function paintContent(title, html) {
+                if (title) readerTitle.textContent = title;
+                readerContent.innerHTML = html;
+                readerContent.scrollTop = 0;
+            }
+
+            async function openNote(note) {
+                currentNote = note;
+                setReaderHead(note);
+                showOverlay(readerOverlay);
+                readerContent.innerHTML = '';
+
+                const hit = cache[note.url];
+                if (hit && hit.html) {
+                    paintContent(hit.title || note.title, hit.html);
+                    setBadge('缓存 · ' + timeAgo(hit.fetchedAt), false);
+                    return;
+                }
+                await loadNote(note, true);
+            }
+
+            async function loadNote(note, allowCache) {
+                if (allowCache) {
+                    const hit = cache[note.url];
+                    if (hit && hit.html) {
+                        paintContent(hit.title || note.title, hit.html);
+                        setBadge('缓存 · ' + timeAgo(hit.fetchedAt), false);
+                        return;
+                    }
+                }
+
+                setBadge('抓取中…', false);
+                reportProgress('站内代理', 0, 4);
+
+                try {
+                    const result = await fetchReadable(note.url);
+                    if (currentNote !== note) return;
+
+                    cache[note.url] = {
+                        title: result.title || note.title,
+                        html: result.html,
+                        source: result.source,
+                        fetchedAt: Date.now()
+                    };
+                    saveCache();
+
+                    paintContent(cache[note.url].title, cache[note.url].html);
+                    setBadge('实时 · ' + result.source, true);
+                    renderGrid();
+                } catch (err) {
+                    if (currentNote !== note) return;
+                    setBadge('抓取失败', false);
+                    const details = (err.details || [err.message]).map(function (d) {
+                        return '<li>' + escapeHtml(d) + '</li>';
+                    }).join('');
+                    readerContent.innerHTML =
+                        '<div class="reader-fallback">' +
+                        '<h3><i class="fas fa-triangle-exclamation"></i> 未能抓取这个网页</h3>' +
+                        '<p>' + escapeHtml(note.desc || '该网页暂时无法通过代理读取（可能是跨域限制、网络不可达或需要登录）。') + '</p>' +
+                        '<ul>' + details + '</ul>' +
+                        '<a class="btn-open-page" href="' + escapeHtml(note.url) + '" target="_blank" rel="noopener">' +
+                        '<i class="fas fa-arrow-up-right-from-square"></i> 在新标签页打开原文</a>' +
+                        '</div>';
+                }
+            }
+
+            function timeAgo(ts) {
+                if (!ts) return '未知时间';
+                const diff = Date.now() - ts;
+                const min = Math.floor(diff / 60000);
+                if (min < 1) return '刚刚';
+                if (min < 60) return min + ' 分钟前';
+                const hour = Math.floor(min / 60);
+                if (hour < 24) return hour + ' 小时前';
+                return Math.floor(hour / 24) + ' 天前';
+            }
+
+            // ===== 接入网页 =====
+            function normalizeUrl(input) {
+                let url = (input || '').trim();
+                if (!url) return '';
+                if (!/^https?:\/\//i.test(url)) url = 'https://' + url.replace(/^\/+/, '');
+                try { new URL(url); return url; } catch (_) { return ''; }
+            }
+
+            async function addWebNote() {
+                const url = normalizeUrl(urlInput.value);
+                if (!url) { alert('请填写有效的网页地址 ✦'); return; }
+                if (allNotes().some(function (n) { return n.url === url; })) {
+                    const exists = allNotes().filter(function (n) { return n.url === url; })[0];
+                    hideOverlay(addOverlay);
+                    openNote(exists);
+                    return;
+                }
+
+                const tag = tagInput.value.trim() || '网页';
+                confirmAddBtn.disabled = true;
+                confirmAddBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 抓取中…';
+
+                try {
+                    const result = await fetchReadable(url);
+                    cache[url] = {
+                        title: result.title || domainOf(url),
+                        html: result.html,
+                        source: result.source,
+                        fetchedAt: Date.now()
+                    };
+                    saveCache();
+
+                    const note = {
+                        id: 'u' + Date.now(),
+                        custom: true,
+                        icon: 'fa-globe',
+                        title: cache[url].title,
+                        desc: '来自 ' + domainOf(url) + ' 的真实网页 · ' + result.source,
+                        tag: tag,
+                        url: url
+                    };
+                    userNotes.unshift(note);
+                    writeJSON(LS_NOTES, userNotes);
+
+                    hideOverlay(addOverlay);
+                    renderGrid();
+                    openNote(note);
+                } catch (err) {
+                    const details = (err.details || [err.message]).join('\n· ');
+                    if (confirm('抓取失败：\n· ' + details + '\n\n仍然把这个网址加入知识库吗？（之后可在阅读器里重试）')) {
+                        userNotes.unshift({
+                            id: 'u' + Date.now(),
+                            custom: true,
+                            icon: 'fa-globe',
+                            title: domainOf(url),
+                            desc: '未能抓取正文，点击可在阅读器里重试',
+                            tag: tag,
+                            url: url
+                        });
+                        writeJSON(LS_NOTES, userNotes);
+                        hideOverlay(addOverlay);
+                        renderGrid();
+                    }
+                } finally {
+                    confirmAddBtn.disabled = false;
+                    confirmAddBtn.innerHTML = '<i class="fas fa-cloud-arrow-down"></i> 抓取并收藏';
+                }
+            }
+
+            // ===== 事件绑定 =====
+            searchInput.addEventListener('input', function () {
+                filterText = searchInput.value;
+                renderGrid();
+            });
+
+            addWebBtn.addEventListener('click', function () {
+                urlInput.value = '';
+                tagInput.value = '';
+                showOverlay(addOverlay);
+                setTimeout(function () { urlInput.focus(); }, 50);
+            });
+
+            urlInput.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') { e.preventDefault(); addWebNote(); }
+            });
+
+            confirmAddBtn.addEventListener('click', addWebNote);
+            cancelAddBtn.addEventListener('click', function () { hideOverlay(addOverlay); });
+
+            addOverlay.addEventListener('click', function (e) {
+                if (e.target === addOverlay) hideOverlay(addOverlay);
+            });
+
+            document.getElementById('closeReaderBtn').addEventListener('click', function () {
+                hideOverlay(readerOverlay);
+                currentNote = null;
+            });
+
+            document.getElementById('openBtn').addEventListener('click', function () {
+                if (currentNote) window.open(currentNote.url, '_blank', 'noopener');
+            });
+
+            document.getElementById('refreshBtn').addEventListener('click', function () {
+                if (!currentNote) return;
+                delete cache[currentNote.url];
+                saveCache();
+                loadNote(currentNote, false);
+            });
+
+            readerOverlay.addEventListener('click', function (e) {
+                if (e.target === readerOverlay) {
+                    hideOverlay(readerOverlay);
+                    currentNote = null;
+                }
+            });
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key !== 'Escape') return;
+                if (readerOverlay.classList.contains('show')) {
+                    hideOverlay(readerOverlay);
+                    currentNote = null;
+                } else if (addOverlay.classList.contains('show')) {
+                    hideOverlay(addOverlay);
+                }
+            });
+
+            // ===== 初始化 =====
+            renderGrid();
+        })();
     </script>
 
 </body>
