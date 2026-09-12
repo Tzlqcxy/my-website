@@ -91,7 +91,8 @@
         var links = document.querySelectorAll('link[data-theme-icon]');
         if (!links.length) return;
         var c = encodeURIComponent(color);
-        var svg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E" +
+        // 显式写 width/height：部分浏览器（如 Safari）对没有固有尺寸的 SVG 图标会不渲染
+        var svg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' width='64' height='64'%3E" +
             "%3Crect x='1' y='1' width='62' height='62' rx='15' fill='%230b0d12' stroke='" + c + "' stroke-opacity='.35' stroke-width='2'/%3E" +
             "%3Cpath d='M17 21 L29 32 L17 43' fill='none' stroke='" + c + "' stroke-width='6.5' stroke-linecap='round' stroke-linejoin='round'/%3E" +
             "%3Cpath d='M35 46 L49 46' fill='none' stroke='" + c + "' stroke-width='6.5' stroke-linecap='round'/%3E%3C/svg%3E";
