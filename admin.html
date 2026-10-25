@@ -452,6 +452,7 @@
                         <option value="flappy">Flappy</option>
                         <option value="snake">贪吃蛇</option>
                         <option value="tetris">俄罗斯方块</option>
+                        <option value="aim">瞄准训练</option>
                     </select>
                     <button class="icon-btn" id="refreshBtn" title="刷新"><i class="fas fa-rotate"></i></button>
                     <button class="icon-btn" id="logoutBtn" title="退出登录"><i class="fas fa-right-from-bracket"></i>
@@ -469,7 +470,7 @@
             'use strict';
             // ?api=http://127.0.0.1:8787/api 可指向本地调试
             const API = new URLSearchParams(location.search).get('api') || 'https://api.eggfish.dpdns.org/api';
-            const GAME_NAMES = { fish: '大鱼吃小鱼', flappy: 'Flappy', snake: '贪吃蛇', tetris: '俄罗斯方块' };
+            const GAME_NAMES = { fish: '大鱼吃小鱼', flappy: 'Flappy', snake: '贪吃蛇', tetris: '俄罗斯方块', aim: '瞄准训练' };
             const $ = (id) => document.getElementById(id);
             const tokenKey = 'admin_token';
 

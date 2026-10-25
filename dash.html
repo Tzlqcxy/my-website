@@ -168,7 +168,7 @@
         /* ===== 游戏战绩 ===== */
         .champs-row {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 0.8rem;
             margin-bottom: 0.9rem;
         }
@@ -369,7 +369,6 @@
             .champs-row {
                 grid-template-columns: repeat(2, 1fr);
             }
-
             .duo-grid {
                 grid-template-columns: 1fr;
             }
@@ -452,6 +451,7 @@
                 { id: 'flappy', name: 'Flappy', icon: 'fa-crow' },
                 { id: 'snake', name: '贪吃蛇', icon: 'fa-gamepad' },
                 { id: 'tetris', name: '俄罗斯方块', icon: 'fa-cubes' },
+                { id: 'aim', name: '瞄准训练', icon: 'fa-bullseye' },
             ];
             let curGame = 'fish';
 
