@@ -23,6 +23,7 @@
 ├── dash.html       # Insight Dash · 站点数据（访问量/趋势/游戏战绩/打字榜）
 ├── artisan.html    # Artisan Shop · 创作者小店
 ├── saturn.html     # 粒子土星 · Three.js 沉浸式粒子行星（鼠标/触屏/手势）
+├── planet.html     # 星际漫游 · Three.js 太阳系（程序化贴图/点击聚焦/主题联动）
 ├── admin.html      # 后台管理 · 密钥登录（战绩/排名/留言 查改删）
 ├── assets/
 │   ├── theme.css   # 全站设计令牌 + 换肤控件 + 液态玻璃 + 战绩面板样式
