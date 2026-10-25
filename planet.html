@@ -612,7 +612,8 @@
             cvs.addEventListener('pointerdown', e => { dragging = true; px = downX = e.clientX; py = downY = e.clientY; });
             window.addEventListener('pointermove', e => {
                 if (!dragging) return;
-                theta -= (e.clientX - px) * 0.005;
+                // 拖右 → 相机绕行方向使场景跟随光标（抓球体手感）
+                theta += (e.clientX - px) * 0.005;
                 phi -= (e.clientY - py) * 0.005;
                 px = e.clientX; py = e.clientY;
                 clampView();
