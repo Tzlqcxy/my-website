@@ -33,7 +33,6 @@
     var lastTheme = PRESETS[0];   // 最近一次完整应用的主题对象，切模式时重算变量用
     var mode = 'dark';            // 'dark' | 'light'
     var switches = [];   // 已挂载的色板，用于同步选中态
-    var lgPending = null;   // 液态玻璃鼠标高光的 rAF 节流句柄
     var lgOn = true;        // 液态玻璃总开关
 
     /* ---------- 颜色工具 ---------- */
@@ -412,20 +411,8 @@
     applyMode(resolveMode(), false);
     applyTheme(resolveSaved(), false);
 
-    // 1.5) 液态玻璃：按记忆/页面声明初始化 + 鼠标高光跟随（关闭时零开销）
+    // 1.5) 液态玻璃：按记忆/页面声明初始化（光斑背景 + 卡片玻璃在 theme.css）
     applyLg(resolveLg(), false);
-    document.addEventListener('pointermove', function (e) {
-        if (!lgOn || lgPending || !e.target || !e.target.closest) return;
-        lgPending = requestAnimationFrame(function () {
-            lgPending = null;
-            var el = e.target.closest('.card, .glass-card');
-            if (!el) return;
-            var r = el.getBoundingClientRect();
-            if (!r.width || !r.height) return;
-            el.style.setProperty('--lg-mx', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%');
-            el.style.setProperty('--lg-my', ((e.clientY - r.top) / r.height * 100).toFixed(1) + '%');
-        });
-    }, { passive: true });
 
     // 2) 解析完 DOM 再挂控件
     if (document.readyState === 'loading') {

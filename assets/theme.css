@@ -407,28 +407,62 @@ html[data-mode="light"] .gt-pop .gt-switch {
 
 /* ============================================================
    液态玻璃（Liquid Glass）：theme.js 在 <html> 上写 data-lg="on"
-   作用于各页面的主卡片（.card / .glass-card）：
-   - ::before 顶部/底部缘光 + 跟随鼠标的镜面高光（--lg-mx/--lg-my）
-   - ::after 悬停时缓慢扫过的液态光泽
-   覆盖的属性只有 backdrop-filter / position，其余用伪元素叠加，
-   不与页面自己的卡片样式打架
+   配方参考 blog.eggfish.dpdns.org：
+   1) body 底层放缓慢漂移的彩色光斑（玻璃要有东西可透）
+   2) 卡片：半透明底 + 大半径 blur + 白色半透明描边（暗 white/14）
+   3) ::before 顶部高光 + 跟随鼠标的镜面高光（--lg-mx/--lg-my）
+   4) ::after 缓慢扫过的液态光泽
    ============================================================ */
+
+/* --- 1) 彩色光斑背景（主题色 + 靛蓝/品红补色，随 46s 缓慢漂移） --- */
+html[data-lg="on"] body {
+    background-image:
+        radial-gradient(circle at 18% 22%, rgba(var(--primary-rgb), 0.22), transparent 42%),
+        radial-gradient(circle at 82% 10%, rgba(99, 102, 241, 0.18), transparent 46%),
+        radial-gradient(circle at 55% 94%, rgba(236, 72, 153, 0.12), transparent 50%),
+        radial-gradient(circle at 10% 20%, #13171f 0%, #080a0e 90%);
+    background-size: 90% 90%, 100% 100%, 115% 115%, 100% 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    animation: lg-blobs 46s ease-in-out infinite alternate;
+}
+
+@keyframes lg-blobs {
+    from {
+        background-position: 0% 0%, 0% 0%, 0% 0%, 0 0;
+    }
+
+    to {
+        background-position: 14% 18%, -16% 12%, 9% -14%, 0 0;
+    }
+}
+
+/* 白天：淡彩光斑打在浅底上（sky/琥珀，对应博客的 sky-300→yellow-200） */
+html[data-lg="on"][data-mode="light"] body {
+    background-image:
+        radial-gradient(circle at 18% 22%, rgba(var(--primary-rgb), 0.26), transparent 42%),
+        radial-gradient(circle at 82% 10%, rgba(56, 189, 248, 0.25), transparent 46%),
+        radial-gradient(circle at 55% 94%, rgba(251, 191, 36, 0.20), transparent 50%),
+        radial-gradient(circle at 10% 20%, #f6f9fc 0%, #dfe6ef 90%);
+}
+
+/* --- 2) 卡片玻璃：底更透、blur 更大，白描边走 ::before 内阴影 --- */
 html[data-lg="on"] .card,
 html[data-lg="on"] .glass-card {
-    --lg-spec: rgba(255, 255, 255, 0.10);
-    --lg-sheen: rgba(255, 255, 255, 0.09);
     position: relative;
-    backdrop-filter: blur(18px) saturate(190%);
-    -webkit-backdrop-filter: blur(18px) saturate(190%);
+    background: rgba(15, 21, 32, 0.52);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    box-shadow: 0 24px 60px -18px rgba(0, 0, 0, 0.6);
 }
 
-/* 白天模式卡片底接近白色，白色高光不可见，换冷色镜面 */
 html[data-lg="on"][data-mode="light"] .card,
 html[data-lg="on"][data-mode="light"] .glass-card {
-    --lg-spec: rgba(140, 175, 215, 0.20);
-    --lg-sheen: rgba(140, 175, 215, 0.22);
+    background: rgba(255, 255, 255, 0.46);
+    box-shadow: 0 24px 60px -22px rgba(79, 70, 229, 0.28);
 }
 
+/* --- 3) 缘光层：白描边 + 顶部高光（鼠标镜面/流光扫描已移除） --- */
 html[data-lg="on"] .card::before,
 html[data-lg="on"] .glass-card::before {
     content: "";
@@ -436,51 +470,21 @@ html[data-lg="on"] .glass-card::before {
     inset: 0;
     border-radius: inherit;
     pointer-events: none;
-    background:
-        radial-gradient(460px circle at var(--lg-mx, 50%) var(--lg-my, -20%),
-            var(--lg-spec), transparent 62%),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 24%),
-        linear-gradient(0deg, rgba(255, 255, 255, 0.05), transparent 14%);
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+        inset 0 1.5px 0 rgba(255, 255, 255, 0.26);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.09), transparent 16%);
 }
 
-html[data-lg="on"] .card::after,
-html[data-lg="on"] .glass-card::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    pointer-events: none;
-    background: linear-gradient(115deg,
-        transparent 34%,
-        var(--lg-sheen) 46%,
-        rgba(255, 255, 255, 0.02) 52%,
-        transparent 64%);
-    background-size: 280% 100%;
-    background-position: 160% 0;
-    animation: lg-sheen 9s ease-in-out infinite;
-    opacity: 0.45;
-    transition: opacity 0.45s;
-}
-
-html[data-lg="on"] .card:hover::after,
-html[data-lg="on"] .glass-card:hover::after {
-    opacity: 1;
-}
-
-@keyframes lg-sheen {
-    0% {
-        background-position: 160% 0;
-    }
-
-    60%,
-    100% {
-        background-position: -160% 0;
-    }
+html[data-lg="on"][data-mode="light"] .card::before,
+html[data-lg="on"][data-mode="light"] .glass-card::before {
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.7),
+        inset 0 1.5px 0 rgba(255, 255, 255, 0.95);
 }
 
 @media (prefers-reduced-motion: reduce) {
-    html[data-lg="on"] .card::after,
-    html[data-lg="on"] .glass-card::after {
+    html[data-lg="on"] body {
         animation: none;
     }
 }
