@@ -14,4 +14,5 @@ window.GEEK_PLAYLIST = [
     { title: 'Cat', artist: '音乐库', src: 'music/cat.ogg' },
     { title: 'Track 5', artist: '音乐库', src: 'music/5.ogg' },
     { title: 'Track 13', artist: '音乐库', src: 'music/13.ogg' },
+    { title: 'lava_chicken', artist: '音乐库', src: 'music/lava_chicken.ogg' },
 ];
