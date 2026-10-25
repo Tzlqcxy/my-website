@@ -456,4 +456,12 @@
         pscript.src = 'assets/player.js';
         document.head.appendChild(pscript);
     }
+
+    // 5) 访问量统计：页面加载时上报一次（Insight Dash 展示用，失败静默）
+    try {
+        var statBase = (window.GameScoresAPI
+            || new URLSearchParams(location.search).get('gsapi')
+            || 'https://api.eggfish.dpdns.org') + '/api';
+        fetch(statBase + '/stats/visit', { method: 'POST', keepalive: true }).catch(function () { });
+    } catch (e) { /* 离线忽略 */ }
 })();

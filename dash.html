@@ -4,18 +4,16 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Insight Dash · 数据仪表盘</title>
+    <title>Insight Dash · 站点数据</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap"
         rel="stylesheet" />
     <link rel="stylesheet" href="assets/theme.css" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" data-theme-icon />
     <script src="assets/theme.js"></script>
     <style>
-
         * {
             margin: 0;
             padding: 0;
@@ -23,31 +21,39 @@
         }
 
         body {
-            font-family: 'Inter', 'JetBrains Mono', monospace;
+            font-family: 'JetBrains Mono', monospace;
             background: var(--bg-body);
             background-image: radial-gradient(circle at 10% 20%, #13171f 0%, #080a0e 90%);
             min-height: 100vh;
-            padding: 2rem;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 1.5rem;
             color: var(--text-primary);
         }
 
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
+        .glass-card {
+            max-width: 980px;
+            width: 100%;
+            background: var(--bg-card);
+            backdrop-filter: blur(12px) saturate(180%);
+            border-radius: 2rem;
+            padding: 1.6rem 1.8rem 1.8rem;
+            border: 1px solid var(--primary-border);
+            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.8), 0 0 0 1px var(--primary-border) inset;
         }
 
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 1rem 0 2rem;
-            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1.2rem;
+            gap: 0.6rem;
             flex-wrap: wrap;
-            gap: 1rem;
         }
 
         .header h1 {
-            font-size: 1.8rem;
+            font-size: 1.15rem;
             font-weight: 600;
             background: linear-gradient(135deg, var(--text-primary), var(--primary-light));
             -webkit-background-clip: text;
@@ -57,44 +63,24 @@
 
         .header h1 i {
             color: var(--primary);
-            margin-right: 10px;
+            margin-right: 8px;
         }
 
         .header-right {
             display: flex;
             align-items: center;
-            gap: 1rem;
-        }
-
-        .refresh-btn {
-            background: var(--bg-input);
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            padding: 0.4rem 1rem;
-            border-radius: 30px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .refresh-btn:hover {
-            border-color: var(--primary);
-            color: var(--text-accent);
-        }
-
-        .refresh-btn i {
-            margin-right: 4px;
+            gap: 0.6rem;
         }
 
         .back-link {
             color: var(--text-secondary);
             text-decoration: none;
-            font-size: 0.85rem;
-            padding: 0.3rem 1.2rem;
+            font-size: 0.75rem;
+            padding: 0.2rem 1rem;
             border: 1px solid var(--primary-border);
             border-radius: 30px;
             transition: 0.2s;
+            white-space: nowrap;
         }
 
         .back-link:hover {
@@ -102,162 +88,251 @@
             color: var(--text-accent);
         }
 
-        /* ===== 统计卡片 ===== */
-        .stats-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .stat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 1.4rem;
-            padding: 1.2rem 1.5rem;
-            text-align: center;
-            transition: 0.3s;
-        }
-
-        .stat-card:hover {
-            border-color: var(--primary);
-            box-shadow: 0 0 30px var(--primary-glow);
-        }
-
-        .stat-card .number {
-            font-size: 2.4rem;
-            font-weight: 700;
-            font-family: 'JetBrains Mono', monospace;
-            color: var(--primary-light);
-        }
-
-        .stat-card .label {
-            font-size: 0.65rem;
-            color: var(--text-secondary);
+        .section-label {
+            font-size: 0.68rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 0.2rem;
-        }
-
-        .stat-card .icon {
-            font-size: 1.4rem;
-            color: var(--primary);
-            margin-bottom: 0.2rem;
-        }
-
-        /* ===== 图表区 ===== */
-        .charts-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-
-        .chart-box {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 1.4rem;
-            padding: 1.5rem;
-        }
-
-        .chart-box .title {
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             color: var(--text-secondary);
-            margin-bottom: 1rem;
+            margin: 1.4rem 0 0.7rem;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        .chart-box .title i {
+        .section-label i {
             color: var(--primary);
         }
 
-        /* 排行榜（简化版） */
-        .rank-list {
+        /* ===== 访问量统计卡 ===== */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.8rem;
+        }
+
+        .stat-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 1.2rem;
+            padding: 0.9rem 1rem;
+            transition: 0.2s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .stat-card .icon {
+            font-size: 0.95rem;
+            color: var(--primary);
+            text-shadow: 0 0 14px var(--primary-glow);
+            margin-bottom: 0.35rem;
+        }
+
+        .stat-card .number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.1;
+        }
+
+        .stat-card .label {
+            font-size: 0.62rem;
+            color: var(--text-muted);
+            margin-top: 0.2rem;
+            letter-spacing: 1px;
+        }
+
+        /* ===== 趋势图 ===== */
+        .chart-box {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 1.2rem;
+            padding: 1rem 1rem 0.6rem;
+        }
+
+        #trendChart {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .chart-note {
+            text-align: center;
+            font-size: 0.62rem;
+            color: var(--text-muted);
+            padding: 0.6rem 0 0.2rem;
+        }
+
+        /* ===== 游戏战绩 ===== */
+        .champs-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.8rem;
+            margin-bottom: 0.9rem;
+        }
+
+        .champ-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 1.2rem;
+            padding: 0.8rem 1rem;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .champ-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .champ-card .g-icon {
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .champ-card .g-name {
+            font-size: 0.68rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.3rem;
+        }
+
+        .champ-card .c-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-accent);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .champ-card .c-score {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .champ-card .c-empty {
+            font-size: 0.66rem;
+            color: var(--text-muted);
+            padding: 0.35rem 0;
+        }
+
+        .game-tabs {
             display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.6rem;
+        }
+
+        .game-tab {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.72rem;
+            font-family: inherit;
+            transition: 0.2s;
+        }
+
+        .game-tab:hover {
+            color: var(--text-accent);
+        }
+
+        .game-tab.active {
+            color: var(--text-accent);
+            background: rgba(var(--primary-rgb), 0.06);
+            border: 1px solid var(--primary-border);
         }
 
         .rank-item {
             display: flex;
             align-items: center;
-            gap: 0.8rem;
-            padding: 0.3rem 0.6rem;
-            border-radius: 0.6rem;
-            background: var(--bg-input);
-            border: 1px solid var(--border-color);
-            transition: 0.2s;
-        }
-
-        .rank-item:hover {
-            border-color: var(--primary);
+            gap: 0.7rem;
+            padding: 0.3rem 0.5rem;
+            font-size: 0.72rem;
         }
 
         .rank-item .pos {
-            width: 24px;
-            font-size: 0.65rem;
             color: var(--text-muted);
-            font-family: 'JetBrains Mono', monospace;
-            text-align: center;
+            width: 2.2em;
+            flex-shrink: 0;
         }
 
         .rank-item .name {
-            flex: 1;
-            font-size: 0.8rem;
             color: var(--text-accent);
+            width: 7.5em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
-        .rank-item .wpm {
-            font-size: 0.75rem;
-            font-weight: 600;
+        .rank-item .detail {
+            color: var(--text-muted);
+            font-size: 0.6rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .rank-item .val {
             color: var(--primary);
-            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            margin-left: auto;
+            flex-shrink: 0;
         }
 
         .rank-item .bar {
-            width: 60px;
+            flex: 1;
+            min-width: 40px;
             height: 4px;
-            background: var(--border-color);
             border-radius: 4px;
+            background: rgba(var(--primary-rgb), 0.08);
             overflow: hidden;
         }
 
         .rank-item .bar .fill {
             height: 100%;
-            background: var(--primary);
             border-radius: 4px;
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+            box-shadow: 0 0 8px var(--primary-glow);
         }
 
-        /* ===== 留言动态 ===== */
-        .message-feed {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            max-height: 280px;
-            overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: var(--primary) transparent;
+        /* ===== 双栏 ===== */
+        .duo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
         }
 
-        .message-feed::-webkit-scrollbar {
-            width: 3px;
-        }
-
-        .message-feed::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 10px;
+        .panel {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 1.2rem;
+            padding: 0.8rem 0.9rem;
+            min-height: 120px;
         }
 
         .feed-item {
-            padding: 0.4rem 0.6rem;
-            border-radius: 0.6rem;
-            background: var(--bg-input);
-            border-left: 2px solid var(--primary);
-            font-size: 0.8rem;
+            padding: 0.35rem 0.2rem;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.7rem;
+        }
+
+        .feed-item:last-child {
+            border-bottom: none;
+        }
+
+        .feed-item .meta {
+            display: flex;
+            gap: 0.6rem;
+            align-items: baseline;
+            margin-bottom: 0.15rem;
         }
 
         .feed-item .author {
@@ -266,219 +341,295 @@
         }
 
         .feed-item .time {
-            font-size: 0.55rem;
             color: var(--text-muted);
-            font-family: 'JetBrains Mono', monospace;
-            margin-left: 6px;
+            font-size: 0.55rem;
         }
 
         .feed-item .text {
             color: var(--text-secondary);
-            font-size: 0.75rem;
-            margin-top: 0.1rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .empty-state {
+            padding: 1.4rem;
             text-align: center;
-            padding: 2rem 1rem;
             color: var(--text-muted);
-            font-size: 0.8rem;
+            font-size: 0.72rem;
         }
 
-        /* ===== 响应式 ===== */
-        @media (max-width: 768px) {
-            body {
-                padding: 1rem;
+        @media (max-width: 720px) {
+            .glass-card {
+                padding: 1.1rem 1rem;
+                border-radius: 1.4rem;
             }
 
-            .header h1 {
-                font-size: 1.3rem;
-            }
-
-            .charts-row {
-                grid-template-columns: 1fr;
-            }
-
-            .stat-card .number {
-                font-size: 1.8rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .stats-row {
+            .stats-row,
+            .champs-row {
                 grid-template-columns: repeat(2, 1fr);
             }
 
-            .header {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 0.5rem;
-            }
-
-            .header-right {
-                justify-content: space-between;
+            .duo-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 
 <body>
-
-    <div class="container">
-        <!-- 头部 -->
+    <div class="glass-card">
         <div class="header">
-            <h1><i class="fas fa-chart-line"></i> Insight Dash</h1>
+            <h1><i class="fas fa-chart-line"></i> Insight Dash · 站点数据</h1>
             <div class="header-right">
-                <button class="refresh-btn" id="refreshBtn"><i class="fas fa-sync-alt"></i> 刷新</button>
+                <div data-theme-switcher="compact"></div>
                 <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> 返回</a>
-                <div data-theme-switcher></div>
             </div>
         </div>
 
-        <!-- 统计卡片 -->
-        <div class="stats-row" id="statsRow">
+        <!-- 访问量 -->
+        <div class="stats-row">
             <div class="stat-card">
-                <div class="icon"><i class="fas fa-users"></i></div>
-                <div class="number" id="totalPlayers">--</div>
-                <div class="label">总玩家</div>
+                <div class="icon"><i class="fas fa-eye"></i></div>
+                <div class="number" id="totalVisits">-</div>
+                <div class="label">总访问量</div>
             </div>
             <div class="stat-card">
-                <div class="icon"><i class="fas fa-trophy"></i></div>
-                <div class="number" id="topWpm">--</div>
-                <div class="label">最高 WPM</div>
+                <div class="icon"><i class="fas fa-calendar-day"></i></div>
+                <div class="number" id="todayVisits">-</div>
+                <div class="label">今日访问</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon"><i class="fas fa-user-group"></i></div>
+                <div class="number" id="onlineNow">-</div>
+                <div class="label">在线人数 · 5 分钟内</div>
             </div>
             <div class="stat-card">
                 <div class="icon"><i class="fas fa-comment-dots"></i></div>
-                <div class="number" id="totalMessages">--</div>
+                <div class="number" id="totalMessages">-</div>
                 <div class="label">留言总数</div>
-            </div>
-            <div class="stat-card">
-                <div class="icon"><i class="fas fa-clock"></i></div>
-                <div class="number" id="avgWpm">--</div>
-                <div class="label">平均 WPM</div>
             </div>
         </div>
 
-        <!-- 图表 -->
-        <div class="charts-row">
-            <!-- 排名 -->
-            <div class="chart-box">
-                <div class="title"><i class="fas fa-list"></i> 打字排名 TOP 10</div>
-                <div class="rank-list" id="rankList">
-                    <div class="empty-state">⏳ 加载中...</div>
+        <!-- 趋势 -->
+        <div class="section-label"><i class="fas fa-wave-square"></i> 近 7 日访问趋势</div>
+        <div class="chart-box">
+            <svg id="trendChart" viewBox="0 0 660 200" role="img" aria-label="访问趋势图"></svg>
+            <div class="chart-note" id="chartNote">⏳ 加载中…</div>
+        </div>
+
+        <!-- 游戏战绩 -->
+        <div class="section-label"><i class="fas fa-trophy"></i> 游戏战绩 · 云端榜</div>
+        <div class="champs-row" id="champsRow"></div>
+        <div class="game-tabs" id="gameTabs"></div>
+        <div class="panel" id="gameRankPanel">
+            <div class="empty-state">⏳ 加载中…</div>
+        </div>
+
+        <!-- 双栏：打字榜 + 留言 -->
+        <div class="duo-grid" style="margin-top:0.8rem">
+            <div>
+                <div class="section-label" style="margin-top:0.4rem"><i class="fas fa-keyboard"></i> 打字榜 Top10</div>
+                <div class="panel" id="rankPanel">
+                    <div class="empty-state">⏳ 加载中…</div>
                 </div>
             </div>
-
-            <!-- 留言动态 -->
-            <div class="chart-box">
-                <div class="title"><i class="fas fa-rss"></i> 最新留言</div>
-                <div class="message-feed" id="messageFeed">
-                    <div class="empty-state">⏳ 加载中...</div>
+            <div>
+                <div class="section-label" style="margin-top:0.4rem"><i class="fas fa-comment-dots"></i> 最新留言</div>
+                <div class="panel" id="feedPanel">
+                    <div class="empty-state">⏳ 加载中…</div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        const API_BASE = 'https://api.eggfish.dpdns.org/api';
+        (() => {
+            'use strict';
+            const API = (new URLSearchParams(location.search).get('gsapi') || 'https://api.eggfish.dpdns.org') + '/api';
+            const GAMES = [
+                { id: 'fish', name: '大鱼吃小鱼', icon: 'fa-fish' },
+                { id: 'flappy', name: 'Flappy', icon: 'fa-crow' },
+                { id: 'snake', name: '贪吃蛇', icon: 'fa-gamepad' },
+                { id: 'tetris', name: '俄罗斯方块', icon: 'fa-cubes' },
+            ];
+            let curGame = 'fish';
 
-        // ===== 加载数据 =====
-        async function loadDashboard() {
-            try {
-                // 并行请求
-                const [rankingsRes, messagesRes] = await Promise.all([
-                    fetch(`${API_BASE}/rankings?limit=10`),
-                    fetch(`${API_BASE}/messages`)
-                ]);
+            const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => (
+                { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]));
+            const fmtTime = ts => {
+                if (!ts) return '';
+                const d = new Date(ts), p = n => String(n).padStart(2, '0');
+                return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+            };
 
-                const rankings = rankingsRes.ok ? await rankingsRes.json() : [];
-                const messages = messagesRes.ok ? await messagesRes.json() : [];
-
-                // ===== 更新统计 =====
-                const totalPlayers = rankings.length;
-                const topWpm = rankings.length > 0 ? rankings[0].wpm : 0;
-                const totalMessages = messages.length;
-                const avgWpm = rankings.length > 0
-                    ? Math.round(rankings.reduce((sum, r) => sum + r.wpm, 0) / rankings.length)
-                    : 0;
-
-                document.getElementById('totalPlayers').textContent = totalPlayers;
-                document.getElementById('topWpm').textContent = topWpm;
-                document.getElementById('totalMessages').textContent = totalMessages;
-                document.getElementById('avgWpm').textContent = avgWpm;
-
-                // ===== 更新排名列表 =====
-                const rankList = document.getElementById('rankList');
-                if (rankings.length === 0) {
-                    rankList.innerHTML = `<div class="empty-state">🏁 暂无数据，快去打字测试！</div>`;
-                } else {
-                    const maxWpm = rankings[0].wpm || 1;
-                    rankList.innerHTML = rankings.map((item, index) => `
-                    <div class="rank-item">
-                        <span class="pos">#${index + 1}</span>
-                        <span class="name">${escapeHtml(item.player_name)}</span>
-                        <span class="wpm">${item.wpm}</span>
-                        <div class="bar">
-                            <div class="fill" style="width: ${(item.wpm / maxWpm) * 100}%;"></div>
-                        </div>
-                    </div>
-                `).join('');
+            /* ---------- 访问量 ---------- */
+            async function loadVisits() {
+                try {
+                    const r = await fetch(API + '/stats/visits');
+                    if (!r.ok) throw 0;
+                    const s = await r.json();
+                    document.getElementById('totalVisits').textContent = s.total;
+                    document.getElementById('todayVisits').textContent = s.today;
+                    document.getElementById('onlineNow').textContent = s.online;
+                } catch (e) {
+                    ['totalVisits', 'todayVisits', 'onlineNow'].forEach(id => document.getElementById(id).textContent = '–');
                 }
-
-                // ===== 更新留言动态 =====
-                const feed = document.getElementById('messageFeed');
-                if (messages.length === 0) {
-                    feed.innerHTML = `<div class="empty-state">💬 暂无留言</div>`;
-                } else {
-                    const sorted = [...messages].sort((a, b) => (b.created_at || b.time || 0) - (a.created_at || a.time || 0));
-                    feed.innerHTML = sorted.slice(0, 10).map(msg => `
-                    <div class="feed-item">
-                        <div>
-                            <span class="author">${escapeHtml(msg.name || '匿名')}</span>
-                            <span class="time">${formatTime(msg.created_at || msg.time)}</span>
-                        </div>
-                        <div class="text">${escapeHtml(msg.text || '…')}</div>
-                    </div>
-                `).join('');
-                }
-
-            } catch (error) {
-                console.warn('加载仪表盘数据失败:', error);
-                document.querySelectorAll('.empty-state').forEach(el => {
-                    el.textContent = '⚠️ 加载失败，请刷新';
-                });
             }
-        }
 
-        // ===== 辅助函数 =====
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-        }
+            /* ---------- 趋势图（纯 SVG，主题色渐变面积） ---------- */
+            async function loadTrend() {
+                const note = document.getElementById('chartNote');
+                try {
+                    const r = await fetch(API + '/stats/history?days=7');
+                    if (!r.ok) throw 0;
+                    const rows = await r.json();
+                    const total = rows.reduce((s, r2) => s + r2.visits, 0);
+                    if (!total) {
+                        note.textContent = '🌱 访问统计已上线，数据积累中——过几天回来看趋势';
+                    } else {
+                        note.textContent = `7 日合计 ${total} 次访问 · 悬停圆点看每日数值`;
+                    }
+                    drawTrend(rows);
+                } catch (e) {
+                    note.textContent = '⚠️ 趋势加载失败，请刷新';
+                }
+            }
 
-        function formatTime(timestamp) {
-            if (!timestamp) return '';
-            const d = new Date(timestamp);
-            const pad = (n) => String(n).padStart(2, '0');
-            return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
-        }
+            function drawTrend(rows) {
+                const W = 660, H = 200, px = 42, py = 26;
+                const n = rows.length;
+                const max = Math.max(...rows.map(r => r.visits), 1);
+                const niceMax = Math.max(4, Math.ceil(max / 4) * 4);
+                const X = i => px + i * (W - 2 * px) / Math.max(n - 1, 1);
+                const Y = v => H - py - (v / niceMax) * (H - 2 * py);
+                const pts = rows.map((r, i) => [X(i), Y(r.visits)]);
+                const line = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+                const area = line + ` L ${X(n - 1).toFixed(1)} ${H - py} L ${px} ${H - py} Z`;
 
-        // ===== 刷新按钮 =====
-        document.getElementById('refreshBtn').addEventListener('click', () => {
-            const btn = document.getElementById('refreshBtn');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 刷新中...';
-            btn.disabled = true;
-            loadDashboard().finally(() => {
-                btn.innerHTML = '<i class="fas fa-sync-alt"></i> 刷新';
-                btn.disabled = false;
+                let grid = '';
+                for (let g = 0; g <= 2; g++) {
+                    const v = niceMax * g / 2, y = Y(v);
+                    grid += `<line x1="${px}" y1="${y}" x2="${W - px / 2}" y2="${y}" stroke="rgba(var(--primary-rgb),0.10)" stroke-width="1"/>` +
+                        `<text x="${px - 6}" y="${y + 3}" text-anchor="end" font-size="9" fill="var(--text-muted)">${v}</text>`;
+                }
+                const dots = pts.map((p, i) => {
+                    const wd = ['日', '一', '二', '三', '四', '五', '六'][new Date(rows[i].date + 'T00:00:00').getDay()];
+                    const mmdd = rows[i].date.slice(5).replace('-', '/');
+                    return `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="4" fill="var(--primary)" stroke="var(--bg-body)" stroke-width="2" style="filter:drop-shadow(0 0 6px var(--primary-glow))"><title>${mmdd} 周${wd} · ${rows[i].visits} 次访问</title></circle>` +
+                        `<text x="${p[0].toFixed(1)}" y="${H - 8}" text-anchor="middle" font-size="9" fill="var(--text-muted)">${mmdd}</text>`;
+                }).join('');
+
+                document.getElementById('trendChart').innerHTML =
+                    `<defs><linearGradient id="lgArea" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="rgba(var(--primary-rgb),0.30)"/>
+                        <stop offset="1" stop-color="rgba(var(--primary-rgb),0.02)"/>
+                    </linearGradient></defs>` +
+                    grid +
+                    `<path d="${area}" fill="url(#lgArea)"/>` +
+                    `<path d="${line}" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" style="filter:drop-shadow(0 0 5px var(--primary-glow))"/>` +
+                    dots;
+            }
+
+            /* ---------- 游戏战绩 ---------- */
+            async function loadGames() {
+                try {
+                    const r = await fetch(API + '/game-scores/summary');
+                    const list = r.ok ? await r.json() : [];
+                    const byGame = {};
+                    list.forEach(g => byGame[g.game] = g);
+                    document.getElementById('champsRow').innerHTML = GAMES.map(g => {
+                        const c = byGame[g.id];
+                        return `<div class="champ-card">
+                            <div class="g-icon"><i class="fas ${g.icon}"></i></div>
+                            <div class="g-name">${g.name}</div>
+                            ${c && c.score ? `<div class="c-name">🏆 ${esc(c.player_name)}</div><div class="c-score">${esc(c.score)}</div>` : '<div class="c-empty">虚位以待</div>'}
+                        </div>`;
+                    }).join('');
+                } catch (e) {
+                    document.getElementById('champsRow').innerHTML = '<div class="empty-state">⚠️ 加载失败</div>';
+                }
+                loadGameRank();
+            }
+
+            async function loadGameRank() {
+                const panel = document.getElementById('gameRankPanel');
+                panel.innerHTML = '<div class="empty-state">⏳ 加载中…</div>';
+                try {
+                    const r = await fetch(API + `/game-scores?game=${curGame}&limit=5`);
+                    const rows = r.ok ? await r.json() : [];
+                    if (!rows.length) {
+                        panel.innerHTML = '<div class="empty-state">🏁 还没有上榜记录，去游戏中心开一局！</div>';
+                        return;
+                    }
+                    const max = rows[0].score || 1;
+                    panel.innerHTML = rows.map((r2, i) =>
+                        `<div class="rank-item">
+                            <span class="pos">${['🥇', '🥈', '🥉'][i] || '#' + (i + 1)}</span>
+                            <span class="name">${esc(r2.player_name)}</span>
+                            <span class="detail">${esc(r2.detail || '')}</span>
+                            <div class="bar"><div class="fill" style="width:${(r2.score / max) * 100}%"></div></div>
+                            <span class="val">${esc(r2.score)}</span>
+                        </div>`).join('');
+                } catch (e) {
+                    panel.innerHTML = '<div class="empty-state">⚠️ 加载失败，请刷新</div>';
+                }
+            }
+
+            /* ---------- 打字榜 + 留言 ---------- */
+            async function loadTypingAndMessages() {
+                try {
+                    const [rk, mg] = await Promise.all([
+                        fetch(API + '/rankings?limit=10').then(r => r.ok ? r.json() : Promise.reject()),
+                        fetch(API + '/messages').then(r => r.ok ? r.json() : Promise.reject())
+                    ]);
+                    document.getElementById('totalMessages').textContent = mg.length;
+
+                    const rp = document.getElementById('rankPanel');
+                    rp.innerHTML = rk.length ? rk.map((it, i) => {
+                        const max = rk[0].wpm || 1;
+                        return `<div class="rank-item">
+                            <span class="pos">${['🥇', '🥈', '🥉'][i] || '#' + (i + 1)}</span>
+                            <span class="name">${esc(it.player_name)}</span>
+                            <div class="bar"><div class="fill" style="width:${(it.wpm / max) * 100}%"></div></div>
+                            <span class="val">${esc(it.wpm)} WPM</span>
+                        </div>`;
+                    }).join('') : '<div class="empty-state">⏳ 暂无记录</div>';
+
+                    const fp = document.getElementById('feedPanel');
+                    const sorted = [...mg].sort((a, b) => (b.created_at || b.time || 0) - (a.created_at || a.time || 0)).slice(0, 6);
+                    fp.innerHTML = sorted.length ? sorted.map(m =>
+                        `<div class="feed-item">
+                            <div class="meta"><span class="author">${esc(m.name || '匿名')}</span><span class="time">${fmtTime(m.created_at || m.time)}</span></div>
+                            <div class="text">${esc(m.text || '…')}</div>
+                        </div>`).join('') : '<div class="empty-state">💬 暂无留言</div>';
+                } catch (e) {
+                    document.getElementById('rankPanel').innerHTML = '<div class="empty-state">⚠️ 加载失败</div>';
+                    document.getElementById('feedPanel').innerHTML = '<div class="empty-state">⚠️ 加载失败</div>';
+                }
+            }
+
+            /* ---------- 游戏标签切换 ---------- */
+            const tabsBox = document.getElementById('gameTabs');
+            tabsBox.innerHTML = GAMES.map(g =>
+                `<button class="game-tab${g.id === curGame ? ' active' : ''}" data-g="${g.id}">${g.name}</button>`).join('');
+            tabsBox.addEventListener('click', e => {
+                const b = e.target.closest('[data-g]');
+                if (!b) return;
+                curGame = b.dataset.g;
+                tabsBox.querySelectorAll('.game-tab').forEach(t => t.classList.toggle('active', t === b));
+                loadGameRank();
             });
-        });
 
-        // ===== 启动 =====
-        loadDashboard();
-
-        // 每 30 秒自动刷新
-        setInterval(loadDashboard, 30000);
+            function loadAll() {
+                loadVisits();
+                loadTrend();
+                loadGames();
+                loadTypingAndMessages();
+            }
+            loadAll();
+            window.addEventListener('pageshow', loadAll);
+        })();
     </script>
 
 </body>

@@ -20,7 +20,7 @@
 ├── type.html       # TypeRush · 打字速度测试（云端排名）
 ├── mindnote.html   # MindNote · 链接收藏（点卡片直达原站，不抓取、秒开）
 ├── tool.html       # GeekTool · 极客工具箱（含 SHA / RSA）
-├── dash.html       # Insight Dash · 数据仪表盘
+├── dash.html       # Insight Dash · 站点数据（访问量/趋势/游戏战绩/打字榜）
 ├── artisan.html    # Artisan Shop · 创作者小店
 ├── admin.html      # 后台管理 · 密钥登录（战绩/排名/留言 查改删）
 ├── assets/
@@ -51,6 +51,8 @@
 | **云端战绩** | 四款小游戏（fish/flappy/snake/tetris）游戏结束自动上报，每游戏同名只留最高分，游戏页内 Top10 面板 |
 | **后台管理** | `admin.html` 密钥登录：游戏战绩/打字排名 行内编辑 + 删除、留言管理、数据总览 |
 | **极客工具箱** | 时间戳、Base64、颜色、UUID、JSON、密码生成、SHA 哈希、RSA 加解密与签名 |
+| **Insight Dash** | 站点数据总览：总访问/今日/在线、近 7 日访问趋势（SVG 图）、四游戏云端榜首与 Top5、打字榜、留言动态 |
+| **访问统计** | theme.js 全站静默上报，后端按日累计（`/api/stats/*`） |
 | **MindNote** | 链接收藏库，点卡片直达原站（localStorage） |
 | **音乐播放器** | 左下角浮窗，进度/音量/三档循环/清单/MediaSession；清单见 `assets/playlist.js` |
 
