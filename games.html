@@ -244,6 +244,22 @@
                 padding: 1.2rem 0.6rem 1rem;
             }
         }
+
+        /* ===== 白天模式：悬停遮罩翻成浅色磨砂，白卡上不再突然变黑 ===== */
+        html[data-mode="light"] .game-card .g-play {
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+            color: #1d2733;
+        }
+
+        html[data-mode="light"] .game-card .g-play i {
+            color: var(--primary);
+        }
+
+        html[data-mode="light"] .game-card {
+            box-shadow: 0 4px 14px rgba(30, 50, 70, 0.1);
+        }
     </style>
 </head>
 

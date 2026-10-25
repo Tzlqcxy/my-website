@@ -65,6 +65,12 @@ html[data-mode="light"] textarea {
     border-color: rgba(16, 34, 52, 0.16) !important;
 }
 
+/* 各页面给黑夜模式手调的重黑投影，白天模式换轻盈的冷灰 */
+html[data-mode="light"] .card,
+html[data-mode="light"] .glass-card {
+    box-shadow: 0 24px 60px -24px rgba(30, 50, 70, 0.28), 0 0 0 1px rgba(30, 50, 70, 0.05);
+}
+
 html[data-mode="light"] input:not([type="color"]):not(.gt-picker)::placeholder,
 html[data-mode="light"] textarea::placeholder {
     color: var(--text-muted) !important;
@@ -604,4 +610,368 @@ html[data-lg="on"] .glass-card:hover::after {
     color: var(--text-muted);
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.68rem;
+}
+
+/* ============================================================
+   全站音乐播放器（assets/player.js，左下角浮窗）
+   ============================================================ */
+.gt-player {
+    position: fixed;
+    left: 16px;
+    bottom: 16px;
+    z-index: 9997;
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.gt-pfab {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 1px solid var(--primary-border-hover);
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 18px var(--primary-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.18s, box-shadow 0.18s;
+    flex-shrink: 0;
+    position: relative;
+    color: var(--primary);
+    font-size: 0.85rem;
+}
+
+.gt-pfab:hover {
+    transform: scale(1.08);
+}
+
+/* 播放中：音符换成跳动的均衡器 */
+.gt-pfab .gt-peq {
+    display: none;
+    align-items: flex-end;
+    gap: 2px;
+    height: 14px;
+}
+
+.gt-pfab .gt-peq i {
+    width: 3px;
+    background: var(--primary);
+    border-radius: 2px;
+    box-shadow: 0 0 8px var(--primary-glow);
+    animation: gt-eq 0.9s ease-in-out infinite;
+}
+
+.gt-pfab .gt-peq i:nth-child(2) {
+    animation-delay: 0.25s;
+}
+
+.gt-pfab .gt-peq i:nth-child(3) {
+    animation-delay: 0.5s;
+}
+
+.gt-pfab.playing .gt-pnote {
+    display: none;
+}
+
+.gt-pfab.playing .gt-peq {
+    display: flex;
+}
+
+@keyframes gt-eq {
+
+    0%,
+    100% {
+        height: 4px;
+    }
+
+    50% {
+        height: 14px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .gt-pfab .gt-peq i {
+        animation: none;
+        height: 9px;
+    }
+}
+
+.gt-pcard {
+    width: 280px;
+    background: var(--bg-card);
+    backdrop-filter: blur(14px) saturate(180%);
+    -webkit-backdrop-filter: blur(14px) saturate(180%);
+    border: 1px solid var(--primary-border);
+    border-radius: 1.2rem;
+    padding: 0.8rem 0.9rem 0.7rem;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--primary-border) inset;
+    color: var(--text-primary);
+}
+
+.gt-pcard[hidden] {
+    display: none;
+}
+
+.gt-player.open .gt-pcard {
+    display: block;
+    animation: gt-pop 0.18s ease;
+}
+
+.gt-player:not(.open) .gt-pcard {
+    display: none;
+}
+
+.gt-phead {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-width: 0;
+}
+
+.gt-pdisc {
+    font-size: 1.3rem;
+    color: var(--primary);
+    text-shadow: 0 0 14px var(--primary-glow);
+    flex-shrink: 0;
+}
+
+.gt-pmeta {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.gt-pname {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.gt-partist {
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.gt-pseek {
+    width: 100%;
+    margin: 0.7rem 0 0.15rem;
+    appearance: none;
+    -webkit-appearance: none;
+    height: 4px;
+    border-radius: 4px;
+    background: rgba(var(--primary-rgb), 0.15);
+    cursor: pointer;
+}
+
+.gt-pseek::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--primary);
+    box-shadow: 0 0 10px var(--primary-glow);
+}
+
+.gt-pseek::-moz-range-thumb {
+    width: 11px;
+    height: 11px;
+    border: none;
+    border-radius: 50%;
+    background: var(--primary);
+}
+
+.gt-ptimes {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.58rem;
+    color: var(--text-muted);
+}
+
+.gt-pctl {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.45rem;
+}
+
+.gt-pspace {
+    flex: 1;
+}
+
+.gt-pbtn {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 0.72rem;
+    cursor: pointer;
+    transition: 0.15s;
+    flex-shrink: 0;
+}
+
+.gt-pbtn:hover {
+    color: var(--text-accent);
+    border-color: var(--border-color);
+}
+
+.gt-pbtn i.on {
+    color: var(--primary);
+    text-shadow: 0 0 10px var(--primary-glow);
+}
+
+.gt-pplay {
+    width: 34px;
+    height: 34px;
+    font-size: 0.85rem;
+    border: 1px solid var(--primary-border);
+    color: var(--text-accent);
+}
+
+.gt-pplay:hover {
+    background: rgba(var(--primary-rgb), 0.06);
+}
+
+.gt-pvolicon {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    margin-right: 0.1rem;
+}
+
+.gt-pvol {
+    width: 58px;
+    appearance: none;
+    -webkit-appearance: none;
+    height: 4px;
+    border-radius: 4px;
+    background: rgba(var(--primary-rgb), 0.15);
+    cursor: pointer;
+}
+
+.gt-pvol::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--primary);
+}
+
+.gt-pvol::-moz-range-thumb {
+    width: 9px;
+    height: 9px;
+    border: none;
+    border-radius: 50%;
+    background: var(--primary);
+}
+
+.gt-plist {
+    margin-top: 0.6rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 0.4rem;
+    max-height: 180px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.gt-plist[hidden] {
+    display: none;
+}
+
+.gt-ptr {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.3rem 0.45rem;
+    border: none;
+    border-radius: 0.6rem;
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.68rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    text-align: left;
+    transition: 0.15s;
+}
+
+.gt-ptr:hover {
+    background: rgba(var(--primary-rgb), 0.04);
+    color: var(--text-primary);
+}
+
+.gt-ptr.cur {
+    background: rgba(var(--primary-rgb), 0.05);
+    color: var(--text-accent);
+}
+
+.gt-ptr-no {
+    width: 1.6em;
+    flex-shrink: 0;
+    text-align: center;
+    font-size: 0.6rem;
+    color: var(--text-muted);
+}
+
+.gt-ptr-t {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.gt-ptr-t small {
+    color: var(--warn-color);
+    font-size: 0.55rem;
+}
+
+.gt-ptr-a {
+    margin-left: auto;
+    font-size: 0.58rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 40%;
+}
+
+html[data-mode="light"] .gt-pfab,
+html[data-mode="light"] .gt-pcard {
+    box-shadow: 0 10px 30px rgba(30, 50, 70, 0.22);
+}
+
+@media (max-width: 480px) {
+    .gt-player {
+        left: 10px;
+        bottom: 10px;
+    }
+
+    .gt-pfab {
+        width: 34px;
+        height: 34px;
+    }
+
+    .gt-pcard {
+        width: min(260px, calc(100vw - 68px));
+    }
+}
+
+@media print {
+    .gt-player {
+        display: none;
+    }
 }

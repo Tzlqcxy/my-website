@@ -462,4 +462,11 @@
         mount: mount
     };
     window.setTheme = set;   // 兼容旧页面的调用
+
+    // 4) 全站音乐播放器（页面可写 <html data-player="off"> 关闭）
+    if (document.documentElement.getAttribute('data-player') !== 'off') {
+        var pscript = document.createElement('script');
+        pscript.src = 'assets/player.js';
+        document.head.appendChild(pscript);
+    }
 })();
