@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-player="off">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>后台管理 · 战绩与留言</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="assets/theme.css" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" data-theme-icon />
+    <script src="assets/theme.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-body);
+            background-image: radial-gradient(circle at 10% 20%, #13171f 0%, #080a0e 90%);
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .glass-card {
+            max-width: 900px;
+            width: 100%;
+            background: var(--bg-card);
+            backdrop-filter: blur(12px) saturate(180%);
+            border-radius: 2rem;
+            padding: 1.6rem 1.8rem;
+            border: 1px solid var(--primary-border);
+            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.8), 0 0 0 1px var(--primary-border) inset;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.2rem;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+
+        .header h1 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--text-primary), var(--primary-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .header h1 i {
+            color: var(--primary);
+            margin-right: 8px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .back-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.75rem;
+            padding: 0.2rem 1rem;
+            border: 1px solid var(--primary-border);
+            border-radius: 30px;
+            transition: 0.2s;
+        }
+
+        .back-link:hover {
+            border-color: var(--primary);
+            color: var(--text-accent);
+        }
+
+        /* ===== 登录 ===== */
+        .login-box {
+            max-width: 380px;
+            margin: 3rem auto;
+            text-align: center;
+        }
+
+        .login-box .lock {
+            font-size: 2.2rem;
+            color: var(--primary);
+            text-shadow: 0 0 24px var(--primary-glow);
+            margin-bottom: 0.8rem;
+        }
+
+        .login-box p {
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.2rem;
+            line-height: 1.7;
+        }
+
+        .login-row {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .login-row input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 40px;
+            padding: 0.55rem 1.2rem;
+            font-family: inherit;
+            font-size: 0.8rem;
+            color: var(--text-primary);
+            outline: none;
+            min-width: 0;
+        }
+
+        .login-row input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 16px var(--primary-glow);
+        }
+
+        .btn {
+            padding: 0.45rem 1.3rem;
+            border-radius: 30px;
+            border: 1px solid var(--primary);
+            background: transparent;
+            color: var(--text-accent);
+            font-family: inherit;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            background: var(--primary);
+            color: #0b0f18;
+            box-shadow: 0 0 24px var(--primary-glow);
+        }
+
+        .login-err {
+            margin-top: 0.8rem;
+            font-size: 0.7rem;
+            color: var(--danger-color);
+            min-height: 1em;
+        }
+
+        /* ===== 统计 ===== */
+        .stats-row {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.1rem;
+        }
+
+        .stat-chip {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.68rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+        }
+
+        .stat-chip b {
+            color: var(--primary);
+            font-size: 0.95rem;
+        }
+
+        /* ===== 标签页 ===== */
+        .tabs {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.7rem;
+            margin-bottom: 0.8rem;
+            align-items: center;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.35rem 1.1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-family: inherit;
+            transition: 0.2s;
+            font-weight: 500;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-accent);
+            background: rgba(var(--primary-rgb), 0.04);
+        }
+
+        .tab-btn.active {
+            color: var(--text-accent);
+            background: rgba(var(--primary-rgb), 0.06);
+            border: 1px solid var(--primary-border);
+        }
+
+        .tab-tools {
+            margin-left: auto;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        select.mini {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 0.68rem;
+            padding: 0.3rem 0.8rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .icon-btn:hover {
+            border-color: var(--primary);
+            color: var(--text-accent);
+        }
+
+        /* ===== 数据表 ===== */
+        .thead,
+        .row {
+            display: grid;
+            gap: 0.5rem;
+            align-items: center;
+            padding: 0.35rem 0.6rem;
+            font-size: 0.72rem;
+        }
+
+        .thead {
+            color: var(--text-muted);
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .row {
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.15s;
+        }
+
+        .row:hover {
+            background: rgba(var(--primary-rgb), 0.02);
+        }
+
+        .g-grid {
+            grid-template-columns: 2.4em 5.2em 1.2fr 3.6em 1fr 6.5em 5.6em;
+        }
+
+        .t-grid {
+            grid-template-columns: 2.4em 1.4fr 3.6em 4em 4.6em 5em 5.6em;
+        }
+
+        .m-grid {
+            grid-template-columns: 2.4em 1fr 2fr 8.5em 5.6em;
+        }
+
+        .row .num {
+            color: var(--text-muted);
+            font-size: 0.62rem;
+        }
+
+        .row .name {
+            color: var(--text-accent);
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .row .score {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .row .sub {
+            color: var(--text-muted);
+            font-size: 0.62rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .row .acts {
+            display: flex;
+            gap: 0.3rem;
+            justify-content: flex-end;
+        }
+
+        .row input {
+            width: 100%;
+            min-width: 0;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.2rem 0.45rem;
+            font-family: inherit;
+            font-size: 0.7rem;
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .row input:focus {
+            border-color: var(--primary);
+        }
+
+        .row input.short {
+            text-align: right;
+        }
+
+        .empty {
+            padding: 1.6rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.72rem;
+        }
+
+        /* ===== 反馈条 ===== */
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 26px;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--primary-border);
+            border-radius: 40px;
+            padding: 0.5rem 1.4rem;
+            font-size: 0.72rem;
+            color: var(--text-accent);
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.25s;
+            z-index: 9999;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%);
+        }
+
+        .toast.err {
+            color: var(--danger-color);
+            border-color: var(--danger-color);
+        }
+
+        @media (max-width: 720px) {
+            .glass-card {
+                padding: 1.1rem 0.9rem;
+                border-radius: 1.4rem;
+            }
+
+            .g-grid {
+                grid-template-columns: 2em 4.4em 1.2fr 3.2em 4.6em;
+            }
+
+            .g-grid .col-detail,
+            .g-grid .col-time {
+                display: none;
+            }
+
+            .t-grid {
+                grid-template-columns: 2em 1.2fr 3.4em 4em 4.8em;
+            }
+
+            .t-grid .col-acc,
+            .t-grid .col-mode {
+                display: none;
+            }
+
+            .m-grid {
+                grid-template-columns: 2em 1fr 2fr 4.8em;
+            }
+
+            .m-grid .col-mtime {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="glass-card">
+        <div class="header">
+            <h1><i class="fas fa-shield-halved"></i>后台管理 · 战绩与留言</h1>
+            <div class="header-right">
+                <div data-theme-switcher="compact"></div>
+                <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> 返回首页</a>
+            </div>
+        </div>
+
+        <!-- 登录 -->
+        <div class="login-box" id="loginBox" hidden>
+            <div class="lock"><i class="fas fa-key"></i></div>
+            <p>输入管理密钥进入后台<br />可管理游戏战绩、打字排名与留言板</p>
+            <div class="login-row">
+                <input type="password" id="tokenInput" placeholder="管理密钥" autocomplete="current-password" />
+                <button class="btn" id="loginBtn"><i class="fas fa-unlock"></i> 进入</button>
+            </div>
+            <div class="login-err" id="loginErr"></div>
+        </div>
+
+        <!-- 主界面 -->
+        <div id="panel" hidden>
+            <div class="stats-row" id="statsRow"></div>
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="games"><i class="fas fa-gamepad"></i> 游戏战绩</button>
+                <button class="tab-btn" data-tab="typing"><i class="fas fa-keyboard"></i> 打字排名</button>
+                <button class="tab-btn" data-tab="messages"><i class="fas fa-comment-dots"></i> 留言板</button>
+                <div class="tab-tools">
+                    <select class="mini" id="gameFilter">
+                        <option value="">全部游戏</option>
+                        <option value="fish">大鱼吃小鱼</option>
+                        <option value="flappy">Flappy</option>
+                        <option value="snake">贪吃蛇</option>
+                        <option value="tetris">俄罗斯方块</option>
+                    </select>
+                    <button class="icon-btn" id="refreshBtn" title="刷新"><i class="fas fa-rotate"></i></button>
+                    <button class="icon-btn" id="logoutBtn" title="退出登录"><i class="fas fa-right-from-bracket"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="tableBox"></div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        (() => {
+            'use strict';
+            // ?api=http://127.0.0.1:8787/api 可指向本地调试
+            const API = new URLSearchParams(location.search).get('api') || 'https://api.eggfish.dpdns.org/api';
+            const GAME_NAMES = { fish: '大鱼吃小鱼', flappy: 'Flappy', snake: '贪吃蛇', tetris: '俄罗斯方块' };
+            const $ = (id) => document.getElementById(id);
+            const tokenKey = 'admin_token';
+
+            let token = sessionStorage.getItem(tokenKey) || '';
+            let tab = 'games';
+            let editing = null;   // 当前编辑行 {kind, id}
+
+            function esc(s) {
+                return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
+                    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]
+                ));
+            }
+            function fmtTime(ts) {
+                if (!ts) return '';
+                const d = new Date(ts), p = n => String(n).padStart(2, '0');
+                return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+            }
+            let toastTimer;
+            function toast(msg, isErr) {
+                const t = $('toast');
+                t.textContent = msg;
+                t.className = 'toast show' + (isErr ? ' err' : '');
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => t.className = 'toast', 2200);
+            }
+
+            async function req(path, opts) {
+                const r = await fetch(API + path, {
+                    ...opts,
+                    headers: { 'Content-Type': 'application/json', 'X-Admin-Token': token, ...(opts?.headers || {}) },
+                });
+                if (r.status === 401) { logout(true); throw new Error('密钥失效'); }
+                return r;
+            }
+
+            /* ---------- 登录 ---------- */
+            async function tryLogin(tk) {
+                const r = await fetch(API + '/admin/stats', { headers: { 'X-Admin-Token': tk } });
+                if (!r.ok) return false;
+                token = tk;
+                sessionStorage.setItem(tokenKey, tk);
+                return true;
+            }
+            function logout(expired) {
+                token = '';
+                sessionStorage.removeItem(tokenKey);
+                $('panel').hidden = true;
+                $('loginBox').hidden = false;
+                if (expired) toast('密钥已失效，请重新登录', true);
+            }
+
+            /* ---------- 数据加载 ---------- */
+            async function loadStats() {
+                const r = await req('/admin/stats');
+                if (!r.ok) return;
+                const s = await r.json();
+                let html = `<span class="stat-chip">留言 <b>${s.messages}</b></span>` +
+                    `<span class="stat-chip">打字记录 <b>${s.type_rankings}</b></span>`;
+                (s.games || []).forEach(g => {
+                    html += `<span class="stat-chip">${esc(g.name)} <b>${g.n}</b></span>`;
+                });
+                $('statsRow').innerHTML = html;
+            }
+
+            async function loadGames() {
+                const g = $('gameFilter').value;
+                const r = await req('/admin/game-scores' + (g ? '?game=' + g : ''));
+                const rows = r.ok ? await r.json() : [];
+                let html = '<div class="thead g-grid"><span>#</span><span>游戏</span><span>玩家</span>' +
+                    '<span>分数</span><span class="col-detail">说明</span><span class="col-time">时间</span><span></span></div>';
+                if (!rows.length) html += '<div class="empty">暂无战绩</div>';
+                rows.forEach((row, i) => {
+                    const isEdit = editing && editing.kind === 'game' && editing.id === row.id;
+                    if (isEdit) {
+                        html += `<div class="row g-grid" data-id="${row.id}"><span class="num">${i + 1}</span>` +
+                            `<span class="sub">${esc(GAME_NAMES[row.game] || row.game)}</span>` +
+                            `<input data-f="player_name" value="${esc(row.player_name)}" maxlength="20" />` +
+                            `<input data-f="score" class="short" value="${esc(row.score)}" />` +
+                            `<input data-f="detail" class="col-detail" value="${esc(row.detail || '')}" maxlength="60" />` +
+                            `<span class="sub col-time">${fmtTime(row.created_at)}</span>` +
+                            `<span class="acts"><button class="icon-btn" data-act="save" title="保存"><i class="fas fa-check"></i></button>` +
+                            `<button class="icon-btn" data-act="cancel" title="取消"><i class="fas fa-xmark"></i></button></span></div>`;
+                    } else {
+                        html += `<div class="row g-grid" data-id="${row.id}"><span class="num">${i + 1}</span>` +
+                            `<span class="sub">${esc(GAME_NAMES[row.game] || row.game)}</span>` +
+                            `<span class="name">${esc(row.player_name)}</span>` +
+                            `<span class="score">${esc(row.score)}</span>` +
+                            `<span class="sub col-detail">${esc(row.detail || '')}</span>` +
+                            `<span class="sub col-time">${fmtTime(row.created_at)}</span>` +
+                            `<span class="acts"><button class="icon-btn" data-act="edit" title="编辑"><i class="fas fa-pen"></i></button>` +
+                            `<button class="icon-btn" data-act="del" title="删除"><i class="fas fa-trash"></i></button></span></div>`;
+                    }
+                });
+                $('tableBox').innerHTML = html;
+            }
+
+            async function loadTyping() {
+                const r = await req('/admin/rankings');
+                const rows = r.ok ? await r.json() : [];
+                let html = '<div class="thead t-grid"><span>#</span><span>玩家</span><span>WPM</span>' +
+                    '<span class="col-acc">正确率</span><span class="col-mode">模式</span><span class="col-ttime">时间</span><span></span></div>';
+                if (!rows.length) html += '<div class="empty">暂无记录</div>';
+                rows.forEach((row, i) => {
+                    const isEdit = editing && editing.kind === 'typing' && editing.id === row.id;
+                    if (isEdit) {
+                        html += `<div class="row t-grid" data-id="${row.id}"><span class="num">${i + 1}</span>` +
+                            `<input data-f="player_name" value="${esc(row.player_name)}" maxlength="20" />` +
+                            `<input data-f="wpm" class="short" value="${esc(row.wpm)}" />` +
+                            `<input data-f="accuracy" class="short col-acc" value="${esc(row.accuracy)}" />` +
+                            `<input data-f="mode" class="col-mode" value="${esc(row.mode || '')}" maxlength="10" />` +
+                            `<span class="sub col-ttime">${fmtTime(row.created_at)}</span>` +
+                            `<span class="acts"><button class="icon-btn" data-act="save" title="保存"><i class="fas fa-check"></i></button>` +
+                            `<button class="icon-btn" data-act="cancel" title="取消"><i class="fas fa-xmark"></i></button></span></div>`;
+                    } else {
+                        html += `<div class="row t-grid" data-id="${row.id}"><span class="num">${i + 1}</span>` +
+                            `<span class="name">${esc(row.player_name)}</span>` +
+                            `<span class="score">${esc(row.wpm)}</span>` +
+                            `<span class="sub col-acc">${esc(row.accuracy)}%</span>` +
+                            `<span class="sub col-mode">${esc(row.mode || '-')}</span>` +
+                            `<span class="sub col-ttime">${fmtTime(row.created_at)}</span>` +
+                            `<span class="acts"><button class="icon-btn" data-act="edit" title="编辑"><i class="fas fa-pen"></i></button>` +
+                            `<button class="icon-btn" data-act="del" title="删除"><i class="fas fa-trash"></i></button></span></div>`;
+                    }
+                });
+                $('tableBox').innerHTML = html;
+            }
+
+            async function loadMessages() {
+                const r = await fetch(API + '/messages');
+                const rows = r.ok ? await r.json() : [];
+                let html = '<div class="thead m-grid"><span>#</span><span>昵称</span><span>留言</span>' +
+                    '<span class="col-mtime">时间</span><span></span></div>';
+                if (!rows.length) html += '<div class="empty">暂无留言</div>';
+                rows.forEach((row, i) => {
+                    html += `<div class="row m-grid" data-id="${row.id}"><span class="num">${i + 1}</span>` +
+                        `<span class="name">${esc(row.name)}</span>` +
+                        `<span class="sub" title="${esc(row.text)}">${esc(row.text)}</span>` +
+                        `<span class="sub col-mtime">${fmtTime(row.created_at)}</span>` +
+                        `<span class="acts"><button class="icon-btn" data-act="del" title="删除"><i class="fas fa-trash"></i></button></span></div>`;
+                });
+                $('tableBox').innerHTML = html;
+            }
+
+            function reload() {
+                if (tab === 'games') return loadGames();
+                if (tab === 'typing') return loadTyping();
+                return loadMessages();
+            }
+
+            /* ---------- 行操作 ---------- */
+            $('tableBox').addEventListener('click', async (e) => {
+                const btn = e.target.closest('[data-act]');
+                if (!btn) return;
+                const rowEl = btn.closest('.row');
+                const id = Number(rowEl?.dataset.id);
+                const act = btn.dataset.act;
+                const kind = tab === 'games' ? 'game' : tab === 'typing' ? 'typing' : 'msg';
+
+                if (act === 'edit') {
+                    editing = { kind, id };
+                    reload();
+                    return;
+                }
+                if (act === 'cancel') {
+                    editing = null;
+                    reload();
+                    return;
+                }
+                if (act === 'save') {
+                    const get = f => rowEl.querySelector(`[data-f="${f}"]`)?.value.trim();
+                    let path, body;
+                    if (kind === 'game') {
+                        path = `/admin/game-scores/${id}`;
+                        body = { player_name: get('player_name'), score: Number(get('score')), detail: get('detail') };
+                    } else {
+                        path = `/admin/rankings/${id}`;
+                        body = { player_name: get('player_name'), wpm: Number(get('wpm')), accuracy: Number(get('accuracy')), mode: get('mode') };
+                    }
+                    const r = await req(path, { method: 'PUT', body: JSON.stringify(body) });
+                    if (r.ok) { toast('已保存'); editing = null; reload(); loadStats(); }
+                    else toast(await r.text(), true);
+                    return;
+                }
+                if (act === 'del') {
+                    if (!confirm('确定删除这条记录？')) return;
+                    const path = kind === 'game' ? `/admin/game-scores/${id}`
+                        : kind === 'typing' ? `/admin/rankings/${id}`
+                            : `/messages/${id}`;
+                    const r = await req(path, { method: 'DELETE' });
+                    if (r.ok) { toast('已删除'); reload(); loadStats(); }
+                    else toast(await r.text(), true);
+                }
+            });
+
+            /* ---------- 标签页/工具 ---------- */
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.addEventListener('click', () => {
+                    document.querySelectorAll('.tab-btn').forEach(x => x.classList.toggle('active', x === b));
+                    tab = b.dataset.tab;
+                    editing = null;
+                    $('gameFilter').style.visibility = tab === 'games' ? 'visible' : 'hidden';
+                    reload();
+                });
+            });
+            $('gameFilter').addEventListener('change', () => { editing = null; loadGames(); });
+            $('refreshBtn').addEventListener('click', () => { editing = null; reload(); loadStats(); });
+            $('logoutBtn').addEventListener('click', () => logout(false));
+
+            /* ---------- 启动 ---------- */
+            async function boot() {
+                $('panel').hidden = false;
+                $('loginBox').hidden = true;
+                $('gameFilter').style.visibility = tab === 'games' ? 'visible' : 'hidden';
+                await loadStats();
+                await reload();
+            }
+            if (token) {
+                boot().catch(() => logout(true));
+            } else {
+                $('loginBox').hidden = false;
+            }
+            async function doLogin() {
+                const tk = $('tokenInput').value.trim();
+                if (!tk) return;
+                $('loginBtn').disabled = true;
+                const ok = await tryLogin(tk).catch(() => false);
+                $('loginBtn').disabled = false;
+                if (ok) { $('loginErr').textContent = ''; $('tokenInput').value = ''; boot(); }
+                else $('loginErr').textContent = '✗ 密钥错误';
+            }
+            $('loginBtn').addEventListener('click', doLogin);
+            $('tokenInput').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+        })();
+    </script>
+
+</body>
+
+</html>
