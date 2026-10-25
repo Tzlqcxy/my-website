@@ -35,6 +35,55 @@
     --danger-color: #ff6b6b;
 }
 
+/* ============================================================
+   白天模式：theme.js 在 <html> 上写 data-mode="light"，
+   背景翻亮；主色族由 theme.js 按模式重算（文字压暗、边框加重）
+   ============================================================ */
+html[data-mode="light"] {
+    --text-primary: #1d2733;
+    --bg-body: #e9eef5;
+    --bg-card: rgba(255, 255, 255, 0.88);
+    --bg-input: rgba(16, 34, 52, 0.05);
+    --bg-panel: rgba(16, 34, 52, 0.04);
+    --correct-color: #2f9e44;
+    --incorrect-color: #e03131;
+    --warn-color: #e8590c;
+    --danger-color: #e03131;
+}
+
+/* 页面自己的 body 深色 radial-gradient（同条规则、后加载会赢不了，
+   这里靠 html[data-mode] 提高优先级统一翻亮） */
+html[data-mode="light"] body {
+    background-image: radial-gradient(circle at 10% 20%, #f6f9fc 0%, #dfe6ef 90%);
+}
+
+/* 页面里写死深色底的表单控件，白天模式统一翻亮 */
+html[data-mode="light"] input:not([type="color"]):not(.gt-picker),
+html[data-mode="light"] textarea {
+    background: rgba(255, 255, 255, 0.85) !important;
+    color: var(--text-primary) !important;
+    border-color: rgba(16, 34, 52, 0.16) !important;
+}
+
+html[data-mode="light"] input:not([type="color"]):not(.gt-picker)::placeholder,
+html[data-mode="light"] textarea::placeholder {
+    color: var(--text-muted) !important;
+}
+
+/* 浮动控件在亮底上阴影减淡 */
+html[data-mode="light"] .gt-dock .gt-switch,
+html[data-mode="light"] .gt-pop .gt-switch {
+    box-shadow: 0 12px 30px rgba(30, 50, 70, 0.22);
+}
+
+html[data-mode="light"] .gt-fab {
+    box-shadow: 0 8px 24px rgba(30, 50, 70, 0.22), 0 0 14px var(--primary-glow);
+}
+
+html[data-mode="light"] .gt-pop .gt-switch {
+    background: var(--bg-card);
+}
+
 /* 槽位统一为 flex 容器：否则内部的 inline-flex 会产生行盒下降沿空隙（+4px），把页面顶下去 */
 [data-theme-switcher] {
     display: flex;
@@ -69,6 +118,62 @@
     border-color: var(--text-primary);
     box-shadow: 0 0 18px var(--primary-glow);
     transform: scale(1.1);
+}
+
+/* 白天/黑夜切换钮（色板第一位） */
+.gt-mode {
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    background: var(--bg-input);
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+}
+
+.gt-mode:hover {
+    transform: scale(1.15);
+    border-color: var(--primary-border-hover);
+    box-shadow: 0 0 14px var(--primary-glow);
+}
+
+/* 液态玻璃开关钮（色板第二位）：关闭时整体弱化 */
+.gt-lg {
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    background: var(--bg-input);
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s, opacity 0.18s, filter 0.18s;
+}
+
+.gt-lg:hover {
+    transform: scale(1.15);
+    border-color: var(--primary-border-hover);
+}
+
+.gt-lg[aria-pressed="true"] {
+    box-shadow: 0 0 14px var(--primary-glow);
+}
+
+.gt-lg[aria-pressed="false"] {
+    opacity: 0.45;
+    filter: saturate(0.35);
 }
 
 .gt-picker-wrap {
@@ -196,6 +301,18 @@
         width: 24px;
         height: 24px;
     }
+
+    .gt-mode {
+        width: 22px;
+        height: 22px;
+        font-size: 11px;
+    }
+
+    .gt-lg {
+        width: 22px;
+        height: 22px;
+        font-size: 10px;
+    }
 }
 
 /* 紧凑形态：窄容器里只占一个圆钮，点开在下方弹出色板 */
@@ -215,6 +332,18 @@
 .gt-pop .gt-fab {
     width: 22px;
     height: 22px;
+}
+
+.gt-pop .gt-mode {
+    width: 22px;
+    height: 22px;
+    font-size: 11px;
+}
+
+.gt-pop .gt-lg {
+    width: 22px;
+    height: 22px;
+    font-size: 10px;
 }
 
 .gt-pop .gt-fab span {
@@ -268,4 +397,211 @@
     .gt-dock {
         display: none;
     }
+}
+
+/* ============================================================
+   液态玻璃（Liquid Glass）：theme.js 在 <html> 上写 data-lg="on"
+   作用于各页面的主卡片（.card / .glass-card）：
+   - ::before 顶部/底部缘光 + 跟随鼠标的镜面高光（--lg-mx/--lg-my）
+   - ::after 悬停时缓慢扫过的液态光泽
+   覆盖的属性只有 backdrop-filter / position，其余用伪元素叠加，
+   不与页面自己的卡片样式打架
+   ============================================================ */
+html[data-lg="on"] .card,
+html[data-lg="on"] .glass-card {
+    --lg-spec: rgba(255, 255, 255, 0.10);
+    --lg-sheen: rgba(255, 255, 255, 0.09);
+    position: relative;
+    backdrop-filter: blur(18px) saturate(190%);
+    -webkit-backdrop-filter: blur(18px) saturate(190%);
+}
+
+/* 白天模式卡片底接近白色，白色高光不可见，换冷色镜面 */
+html[data-lg="on"][data-mode="light"] .card,
+html[data-lg="on"][data-mode="light"] .glass-card {
+    --lg-spec: rgba(140, 175, 215, 0.20);
+    --lg-sheen: rgba(140, 175, 215, 0.22);
+}
+
+html[data-lg="on"] .card::before,
+html[data-lg="on"] .glass-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background:
+        radial-gradient(460px circle at var(--lg-mx, 50%) var(--lg-my, -20%),
+            var(--lg-spec), transparent 62%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 24%),
+        linear-gradient(0deg, rgba(255, 255, 255, 0.05), transparent 14%);
+}
+
+html[data-lg="on"] .card::after,
+html[data-lg="on"] .glass-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(115deg,
+        transparent 34%,
+        var(--lg-sheen) 46%,
+        rgba(255, 255, 255, 0.02) 52%,
+        transparent 64%);
+    background-size: 280% 100%;
+    background-position: 160% 0;
+    animation: lg-sheen 9s ease-in-out infinite;
+    opacity: 0.45;
+    transition: opacity 0.45s;
+}
+
+html[data-lg="on"] .card:hover::after,
+html[data-lg="on"] .glass-card:hover::after {
+    opacity: 1;
+}
+
+@keyframes lg-sheen {
+    0% {
+        background-position: 160% 0;
+    }
+
+    60%,
+    100% {
+        background-position: -160% 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html[data-lg="on"] .card::after,
+    html[data-lg="on"] .glass-card::after {
+        animation: none;
+    }
+}
+
+/* ============================================================
+   云端战绩面板（assets/scores.js 渲染，各游戏页共用）
+   ============================================================ */
+.cloud-rank {
+    margin-top: 0.8rem;
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 1.2rem;
+    padding: 0.7rem 1rem;
+    text-align: left;
+}
+
+.gsc-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+}
+
+.gsc-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+}
+
+.gsc-title i {
+    color: var(--primary);
+    margin-right: 4px;
+}
+
+.gsc-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+}
+
+.gsc-name input {
+    width: 110px;
+    padding: 0.25rem 0.8rem;
+    border-radius: 30px;
+    border: 1px solid var(--border-color);
+    background: rgba(0, 0, 0, 0.3);
+    color: var(--text-primary);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.gsc-name input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 16px var(--primary-glow);
+}
+
+.gsc-list {
+    display: flex;
+    flex-direction: column;
+    max-height: 210px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.gsc-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding: 0.28rem 0.4rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    border-radius: 0.6rem;
+    transition: background 0.15s;
+}
+
+.gsc-row:hover {
+    background: rgba(var(--primary-rgb), 0.02);
+}
+
+.gsc-row.me {
+    background: rgba(var(--primary-rgb), 0.04);
+    border-left: 2px solid var(--primary);
+}
+
+.gsc-no {
+    width: 2.2em;
+    flex-shrink: 0;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.65rem;
+}
+
+.gsc-nm {
+    color: var(--text-accent);
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.gsc-dt {
+    color: var(--text-muted);
+    font-size: 0.6rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.gsc-sc {
+    margin-left: auto;
+    color: var(--primary);
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.gsc-empty {
+    padding: 0.8rem 0.4rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
 }

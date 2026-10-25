@@ -14,6 +14,8 @@
     var LS_CUSTOM = 'custom_theme_color';
     var LS_PRIMARY = 'current_primary_color';
     var LS_NAME = 'current_theme_name';
+    var LS_MODE = 'preferred_mode';
+    var LS_LG = 'preferred_liquid_glass';
 
     /* 预设：green/blue 的 accent、secondary、muted 沿用仓库里既有的手调值；
        其余 4 个预设由同一套关系式（accent=hsl(h,75%,82%) …）推导，保证色系一致 */
@@ -28,7 +30,11 @@
 
     var current = { id: 'green', name: '🌿 绿', primary: '#00e5b0' };
     var colorsCache = { primary: '#00e5b0', dark: '#00b894', light: '#55efc4', rgb: '0, 255, 200' };
+    var lastTheme = PRESETS[0];   // 最近一次完整应用的主题对象，切模式时重算变量用
+    var mode = 'dark';            // 'dark' | 'light'
     var switches = [];   // 已挂载的色板，用于同步选中态
+    var lgPending = null;   // 液态玻璃鼠标高光的 rAF 节流句柄
+    var lgOn = true;        // 液态玻璃总开关
 
     /* ---------- 颜色工具 ---------- */
     function hexToRgb(hex) {
@@ -102,25 +108,41 @@
     }
 
     /* ---------- 应用主题 ---------- */
-    function varsOf(t) {
+    function varsOf(t, m) {
+        var light = m === 'light';
+        var hue = { h: 165, s: 100 };
+        var c = hexToRgb(t.primary);
+        if (c) hue = rgbToHsl(c.r, c.g, c.b);
+        /* 白天模式下背景翻亮，原本为深底手调的浅色文字必须换成深色变体才可读 */
+        var text = light ? {
+            accent: hslToHex(hue.h, Math.min(hue.s, 70), 30),
+            secondary: hslToHex(hue.h, 14, 36),
+            muted: hslToHex(hue.h, 18, 48)
+        } : {
+            accent: t.accent,
+            secondary: t.secondary,
+            muted: t.muted
+        };
         return {
             '--primary': t.primary,
             '--primary-dark': t.dark,
-            '--primary-light': t.light,
+            /* primary-light 在页面里多作文字用，白天模式下压暗保证对比度 */
+            '--primary-light': light ? hslToHex(hue.h, Math.min(hue.s * 0.9, 90), 38) : t.light,
             '--primary-rgb': t.rgb,
-            '--primary-glow': 'rgba(' + t.rgb + ', 0.25)',
-            '--primary-border': 'rgba(' + t.rgb + ', 0.12)',
-            '--primary-border-hover': 'rgba(' + t.rgb + ', 0.25)',
-            '--border-color': 'rgba(' + t.rgb + ', 0.08)',
-            '--text-accent': t.accent,
-            '--text-secondary': t.secondary,
-            '--text-muted': t.muted
+            '--primary-glow': 'rgba(' + t.rgb + ', ' + (light ? '0.18' : '0.25') + ')',
+            '--primary-border': 'rgba(' + t.rgb + ', ' + (light ? '0.22' : '0.12') + ')',
+            '--primary-border-hover': 'rgba(' + t.rgb + ', ' + (light ? '0.42' : '0.25') + ')',
+            '--border-color': 'rgba(' + t.rgb + ', ' + (light ? '0.16' : '0.08') + ')',
+            '--text-accent': text.accent,
+            '--text-secondary': text.secondary,
+            '--text-muted': text.muted
         };
     }
 
     function applyTheme(t, persist) {
         var root = document.documentElement;
-        var vars = varsOf(t);
+        lastTheme = t;
+        var vars = varsOf(t, mode);
         for (var k in vars) if (Object.prototype.hasOwnProperty.call(vars, k)) root.style.setProperty(k, vars[k]);
         root.setAttribute('data-theme', t.id);
         current = { id: t.id, name: t.name, primary: t.primary };
@@ -152,6 +174,57 @@
         return null;
     }
 
+    /* ---------- 白天 / 黑夜模式 ---------- */
+    /* 读取已保存的模式；没选过则跟随系统 */
+    function resolveMode() {
+        try {
+            var m = localStorage.getItem(LS_MODE);
+            if (m === 'light' || m === 'dark') return m;
+        } catch (e) { /* 隐私模式下忽略 */ }
+        try {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
+        } catch (e) { /* 老浏览器忽略 */ }
+        return 'dark';
+    }
+
+    function applyMode(m, persist) {
+        mode = m === 'light' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-mode', mode);
+        /* 背景之外，文本/边框族变量也随模式重算 */
+        applyTheme(lastTheme, false);
+        if (persist) {
+            try { localStorage.setItem(LS_MODE, mode); } catch (e) { /* 隐私模式下忽略 */ }
+        }
+        syncUI();
+    }
+
+    function toggleMode() {
+        applyMode(mode === 'light' ? 'dark' : 'light', true);
+    }
+
+    /* ---------- 液态玻璃开关 ---------- */
+    /* 优先级：用户点过的记忆 > 页面静态声明（<html data-lg="off">）> 默认开 */
+    function resolveLg() {
+        try {
+            var s = localStorage.getItem(LS_LG);
+            if (s === 'on' || s === 'off') return s;
+        } catch (e) { /* 隐私模式下忽略 */ }
+        return document.documentElement.getAttribute('data-lg') === 'off' ? 'off' : 'on';
+    }
+
+    function applyLg(state, persist) {
+        lgOn = state !== 'off';
+        document.documentElement.setAttribute('data-lg', lgOn ? 'on' : 'off');
+        if (persist) {
+            try { localStorage.setItem(LS_LG, lgOn ? 'on' : 'off'); } catch (e) { /* 隐私模式下忽略 */ }
+        }
+        syncUI();
+    }
+
+    function toggleLg() {
+        applyLg(lgOn ? 'off' : 'on', true);
+    }
+
     /* 读取已保存的主题（兼容历史键值与旧页面写过的格式） */
     function resolveSaved() {
         var id, custom, savedPrimary;
@@ -173,12 +246,31 @@
     }
 
     /* ---------- 色板 UI ---------- */
+    function buildModeBtn() {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'gt-mode';
+        b.addEventListener('click', function () { toggleMode(); });
+        return b;
+    }
+
+    function buildLgBtn() {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'gt-lg';
+        b.textContent = '💧';
+        b.addEventListener('click', function () { toggleLg(); });
+        return b;
+    }
+
     function buildSwitch() {
         var wrap = document.createElement('div');
         wrap.className = 'gt-switch';
         wrap.setAttribute('role', 'group');
         wrap.setAttribute('aria-label', '主题配色');
 
+        wrap.appendChild(buildModeBtn());
+        wrap.appendChild(buildLgBtn());
         PRESETS.forEach(function (p) {
             var b = document.createElement('button');
             b.type = 'button';
@@ -262,6 +354,18 @@
 
     function syncUI() {
         switches.forEach(function (wrap) {
+            var mb = wrap.querySelector('.gt-mode');
+            if (mb) {
+                mb.textContent = mode === 'light' ? '☀️' : '🌙';
+                mb.title = mode === 'light' ? '切换到黑夜模式' : '切换到白天模式';
+                mb.setAttribute('aria-label', mb.title);
+            }
+            var lb = wrap.querySelector('.gt-lg');
+            if (lb) {
+                lb.setAttribute('aria-pressed', lgOn ? 'true' : 'false');
+                lb.title = lgOn ? '液态玻璃：开（点击关闭）' : '液态玻璃：关（点击开启）';
+                lb.setAttribute('aria-label', lb.title);
+            }
             var dots = wrap.querySelectorAll('.gt-dot');
             Array.prototype.forEach.call(dots, function (d) {
                 var on = d.getAttribute('data-gt-preset') === current.id;
@@ -304,8 +408,24 @@
         return applyTheme(p || PRESETS[0], true);
     }
 
-    // 1) 立刻应用，避免首屏闪一下绿色再变蓝
+    // 1) 立刻应用，避免首屏闪一下绿色再变蓝；模式先定，变量按模式算
+    applyMode(resolveMode(), false);
     applyTheme(resolveSaved(), false);
+
+    // 1.5) 液态玻璃：按记忆/页面声明初始化 + 鼠标高光跟随（关闭时零开销）
+    applyLg(resolveLg(), false);
+    document.addEventListener('pointermove', function (e) {
+        if (!lgOn || lgPending || !e.target || !e.target.closest) return;
+        lgPending = requestAnimationFrame(function () {
+            lgPending = null;
+            var el = e.target.closest('.card, .glass-card');
+            if (!el) return;
+            var r = el.getBoundingClientRect();
+            if (!r.width || !r.height) return;
+            el.style.setProperty('--lg-mx', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%');
+            el.style.setProperty('--lg-my', ((e.clientY - r.top) / r.height * 100).toFixed(1) + '%');
+        });
+    }, { passive: true });
 
     // 2) 解析完 DOM 再挂控件
     if (document.readyState === 'loading') {
@@ -319,6 +439,12 @@
         if (e.key === LS_THEME || e.key === LS_CUSTOM || e.key === LS_PRIMARY) {
             applyTheme(resolveSaved(), false);
         }
+        if (e.key === LS_MODE) {
+            applyMode(resolveMode(), false);
+        }
+        if (e.key === LS_LG) {
+            applyLg(resolveLg(), false);
+        }
     });
 
     window.GeekTheme = {
@@ -326,6 +452,12 @@
         set: set,
         get: function () { return { id: current.id, name: current.name, primary: current.primary }; },
         colors: function () { return colorsCache; },   // 给 canvas / JS 用的当前主题色
+        mode: function () { return mode; },
+        setMode: function (m) { applyMode(m, true); },
+        toggleMode: toggleMode,
+        lg: function () { return lgOn ? 'on' : 'off'; },
+        setLg: function (s) { applyLg(s, true); },
+        toggleLg: toggleLg,
         apply: function () { return applyTheme(resolveSaved(), false); },
         mount: mount
     };

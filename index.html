@@ -837,6 +837,28 @@
         align-self: flex-end;
       }
     }
+
+    /* ===== 白天模式：翻亮页面里写死的深色块 ===== */
+    html[data-mode="light"] .avatar-wrapper {
+      background: linear-gradient(145deg, #dfe8f3, #c8d5e6);
+    }
+
+    html[data-mode="light"] .avatar-placeholder {
+      background: #eef2f8;
+      background-image: radial-gradient(circle at 30% 30%, #e2ebf5, #d0dcea);
+    }
+
+    html[data-mode="light"] .social-links a {
+      background: rgba(255, 255, 255, 0.85);
+    }
+
+    html[data-mode="light"] .message-item {
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    html[data-mode="light"] .rank-header {
+      background: rgba(16, 34, 52, 0.06);
+    }
   </style>
 </head>
 
@@ -915,6 +937,11 @@
               <i class="fas fa-terminal"></i>
               <span>GeekTool</span>
               <small>工具箱 · 开发利器</small>
+            </a>
+            <a href="https://blog.eggfish.dpdns.org" class="work-item">
+              <i class="fas fa-blog"></i>
+              <span>Blog</span>
+              <small>博客 · 记录生活</small>
             </a>
           </div>
         </div>
