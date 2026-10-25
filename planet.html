@@ -607,20 +607,50 @@
                 const maxD = focus ? Math.max(minD * 50, 6000) : overviewDist() * 3.2;
                 dist = Math.max(minD, Math.min(maxD, dist));
             }
-            let dragging = false, px = 0, py = 0, downX = 0, downY = 0;
+            /* ---------- 指针交互：单指拖拽旋转 · 双指捏合缩放 · 轻点聚焦 ---------- */
+            const pointers = new Map();   // pointerId → {x, y}
+            let pinchDist = 0, downX = 0, downY = 0;
             const cvs = renderer.domElement;
-            cvs.addEventListener('pointerdown', e => { dragging = true; px = downX = e.clientX; py = downY = e.clientY; });
+
+            cvs.addEventListener('pointerdown', e => {
+                pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+                if (pointers.size === 1) { downX = e.clientX; downY = e.clientY; }
+                if (pointers.size === 2) {
+                    const [a, b] = [...pointers.values()];
+                    pinchDist = Math.hypot(a.x - b.x, a.y - b.y);
+                }
+            });
             window.addEventListener('pointermove', e => {
-                if (!dragging) return;
-                // 拖右 → 相机绕行方向使场景跟随光标（抓球体手感）
-                theta += (e.clientX - px) * 0.005;
-                phi -= (e.clientY - py) * 0.005;
-                px = e.clientX; py = e.clientY;
-                clampView();
+                const p = pointers.get(e.pointerId);
+                if (!p) return;
+                if (pointers.size === 1) {
+                    // 拖右 → 场景跟随光标（抓球体手感）
+                    theta += (e.clientX - p.x) * 0.005;
+                    phi -= (e.clientY - p.y) * 0.005;
+                    clampView();
+                } else if (pointers.size === 2) {
+                    // 双指张开 → 拉近；捏合 → 拉远
+                    p.x = e.clientX; p.y = e.clientY;
+                    const [a, b] = [...pointers.values()];
+                    const d = Math.hypot(a.x - b.x, a.y - b.y);
+                    if (pinchDist > 0 && d > 0) {
+                        dist *= pinchDist / d;
+                        clampView();
+                    }
+                    pinchDist = d;
+                    return;
+                }
+                p.x = e.clientX; p.y = e.clientY;
             });
             window.addEventListener('pointerup', e => {
-                if (dragging && Math.hypot(e.clientX - downX, e.clientY - downY) < 6) pick(e);
-                dragging = false;
+                // 仅单指轻点（几乎无位移）才触发聚焦，避免捏合误触
+                if (pointers.size === 1 && Math.hypot(e.clientX - downX, e.clientY - downY) < 6) pick(e);
+                pointers.delete(e.pointerId);
+                if (pointers.size < 2) pinchDist = 0;
+            });
+            window.addEventListener('pointercancel', e => {
+                pointers.delete(e.pointerId);
+                if (pointers.size < 2) pinchDist = 0;
             });
             cvs.addEventListener('wheel', e => {
                 e.preventDefault();
@@ -643,11 +673,10 @@
             const infoFacts = document.getElementById('infoFacts');
             function setFocus(hitObj, cfg) {
                 focus = hitObj;
-                const isSun = hitObj === sunHit;
-                cfg = cfg || (isSun ? null : planets.find(p => p.hit === hitObj)?.cfg);
-                focus.userData = hitObj.userData;
-                if (cfg) focus.userData.cfg = cfg;
                 if (hitObj) {
+                    const isSun = hitObj === sunHit;
+                    if (!cfg && !isSun) cfg = planets.find(p => p.hit === hitObj)?.cfg;
+                    if (cfg) hitObj.userData.cfg = cfg;
                     const r = isSun ? sunTargetR() : targetR(cfg);
                     dist = Math.max(r * 5.5, mode === 'real' ? 0.4 : 8);
                     infoName.textContent = hitObj.userData.name;
@@ -706,7 +735,7 @@
 
             const hintBox = document.getElementById('hintBox');
             const HINTS = {
-                art: '<b>拖拽</b> 旋转视角 · <b>滚轮</b> 缩放<br /><b>点击星球</b> 聚焦跟随 · 再点空处回全景<br />轨道线跟随站点主题色 ✦',
+                art: '<b>拖拽</b> 旋转视角 · <b>滚轮 / 双指捏合</b> 缩放<br /><b>点击星球</b> 聚焦跟随 · 再点空处回全景<br />轨道线跟随站点主题色 ✦',
                 real: '<b>真实比例</b>：大小与距离都按真实比例<br />太空远比想象中空旷——用下方导航条寻星<br />档案卡附带真实直径与距离数据'
             };
             scaleBtn.addEventListener('click', () => {
