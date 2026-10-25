@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="assets/theme.css" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" data-theme-icon />
     <script src="assets/theme.js"></script>
+    <script src="assets/scores.js"></script>
     <style>
 
         * {
@@ -251,6 +252,8 @@
             <i class="fas fa-hand-pointer"></i> 鼠标 / 触屏 / WASD 控制游动 · <i class="fas fa-keyboard"></i> 空格 暂停
             · <i class="fas fa-coins"></i> 吃小鱼长大得分，<b style="color:#ffd166">金鱼 ×3</b>，躲开大鱼！
         </div>
+
+        <div class="cloud-rank" data-cloud-rank="fish"></div>
     </div>
 
     <script>
@@ -458,6 +461,7 @@
                     best = score;
                     localStorage.setItem('fish_best', best);
                 }
+                if (window.GameScores) GameScores.submit('fish', score, stageOf(player.r).name);
                 syncHud();
                 syncButtons();
             }

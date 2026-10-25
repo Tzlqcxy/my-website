@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="assets/theme.css" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" data-theme-icon />
     <script src="assets/theme.js"></script>
+    <script src="assets/scores.js"></script>
     <style>
         /* ---------- 全局重置 · 极客暗色 ---------- */
         * {
@@ -391,6 +392,8 @@
                 <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> 或 <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 控制 · <kbd>空格</kbd> 暂停
             </div>
         </div>
+
+        <div class="cloud-rank" data-cloud-rank="snake"></div>
     </main>
 
     <script>
@@ -514,6 +517,7 @@
                     clearInterval(gameInterval);
                     gameInterval = null;
                     setStatus('💀 游戏结束 · 按「开始」重试', '#ff7a7a');
+                    if (window.GameScores) GameScores.submit('snake', score, '长度 ' + snake.length);
                     draw();
                     return;
                 }
@@ -531,6 +535,7 @@
                         clearInterval(gameInterval);
                         gameInterval = null;
                         setStatus('✨ 你赢了！ 完美通关', '#8cf0d0');
+                        if (window.GameScores) GameScores.submit('snake', score, '通关');
                         draw();
                         return;
                     }

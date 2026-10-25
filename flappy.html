@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="assets/theme.css" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" data-theme-icon />
     <script src="assets/theme.js"></script>
+    <script src="assets/scores.js"></script>
     <style>
 
         * {
@@ -223,6 +224,8 @@
             <button class="btn btn-primary" id="startBtn"><i class="fas fa-play"></i> 开始</button>
             <button class="btn" id="resetBtn"><i class="fas fa-undo"></i> 重置</button>
         </div>
+
+        <div class="cloud-rank" data-cloud-rank="flappy"></div>
     </div>
 
     <script>
@@ -349,6 +352,7 @@
                         localStorage.setItem('flappy_best', bestScore);
                         bestDisplay.textContent = bestScore;
                     }
+                    if (window.GameScores) GameScores.submit('flappy', score);
                 }
             }
 
